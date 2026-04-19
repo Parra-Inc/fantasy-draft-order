@@ -1,0 +1,67 @@
+enum DraftStatus {
+  SCHEDULED
+  DRAWING
+  COMPLETED
+}
+
+enum ImportSource {
+  SLEEPER
+  MFL
+  FLEAFLICKER
+  ESPN
+  MANUAL
+}
+
+model Draft {
+  id              String       @id @default(dbgenerated("'drf_' || gen_random_uuid()::text"))
+  slug            String       @unique
+  leagueName      String
+  creatorName     String
+  creatorEmail    String?
+  scheduledFor    DateTime
+  status          DraftStatus  @default(SCHEDULED)
+  importSource    ImportSource @default(MANUAL)
+  importLeagueId  String?
+  qstashMessageId String?
+  seed            String?
+  commitSha       String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime     @default(now())
+
+  teams Team[]
+  picks Pick[]
+
+  @@index([scheduledFor])
+}
+
+model Team {
+  id        String  @id @default(dbgenerated("'tm_' || gen_random_uuid()::text"))
+  draftId   String
+  name      String
+  ownerName String?
+  avatarUrl String?
+  sourceId  String?
+  position  Int
+
+  draft Draft  @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  picks Pick[]
+
+  @@unique([draftId, position])
+  @@index([draftId])
+}
+
+model Pick {
+  id         String   @id @default(dbgenerated("'pck_' || gen_random_uuid()::text"))
+  draftId    String
+  teamId     String
+  pickNumber Int
+  revealedAt DateTime
+
+  draft Draft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  team  Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([draftId, pickNumber])
+  @@unique([draftId, teamId])
+  @@index([draftId, revealedAt])
+}
