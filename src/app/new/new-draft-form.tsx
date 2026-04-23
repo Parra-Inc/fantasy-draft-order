@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Check, Sparkles, Users } from "lucide-react";
 
 type Mode = "manual" | "import";
 type ImportSource = "SLEEPER" | "MFL" | "FLEAFLICKER" | "ESPN";
@@ -21,7 +22,7 @@ function defaultScheduledFor() {
 
 export function NewDraftForm() {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>("manual");
+  const [mode, setMode] = useState<Mode>("import");
   const [leagueName, setLeagueName] = useState("");
   const [creatorName, setCreatorName] = useState("");
   const [creatorEmail, setCreatorEmail] = useState("");
@@ -44,6 +45,9 @@ export function NewDraftForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "import failed");
       setImportedTeams(data.teams);
+      if (data.leagueName && !leagueName.trim()) {
+        setLeagueName(data.leagueName);
+      }
       toast.success(`Found ${data.teams.length} teams`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "import failed");
@@ -102,76 +106,89 @@ export function NewDraftForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <Field label="League name">
-        <input
-          required
-          value={leagueName}
-          onChange={(e) => setLeagueName(e.target.value)}
-          placeholder="The Thursday Night League"
-          className="input"
-        />
-      </Field>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field label="Your name">
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <Card title="League details">
+        <Field label="League name">
           <input
             required
-            value={creatorName}
-            onChange={(e) => setCreatorName(e.target.value)}
-            placeholder="Commissioner"
+            value={leagueName}
+            onChange={(e) => setLeagueName(e.target.value)}
+            placeholder="The Thursday Night League"
             className="input"
           />
         </Field>
-        <Field label="Email (optional)">
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Your name">
+            <input
+              required
+              value={creatorName}
+              onChange={(e) => setCreatorName(e.target.value)}
+              placeholder="Commissioner"
+              className="input"
+            />
+          </Field>
+          <Field label="Email" hint="optional">
+            <input
+              type="email"
+              value={creatorEmail}
+              onChange={(e) => setCreatorEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="input"
+            />
+          </Field>
+        </div>
+
+        <Field
+          label="Scheduled for"
+          hint="local time · locked once created"
+        >
           <input
-            type="email"
-            value={creatorEmail}
-            onChange={(e) => setCreatorEmail(e.target.value)}
-            placeholder="you@example.com"
+            type="datetime-local"
+            required
+            value={scheduledFor}
+            onChange={(e) => setScheduledFor(e.target.value)}
             className="input"
           />
         </Field>
-      </div>
+      </Card>
 
-      <Field label="Scheduled for (local time)">
-        <input
-          type="datetime-local"
-          required
-          value={scheduledFor}
-          onChange={(e) => setScheduledFor(e.target.value)}
-          className="input"
-        />
-        <p className="mt-1 text-xs text-muted-foreground">
-          Must be at least 30 seconds in the future. Cannot be changed after creation.
-        </p>
-      </Field>
-
-      <div className="space-y-3">
-        <div className="flex gap-2 rounded-lg border p-1">
-          <TabButton active={mode === "manual"} onClick={() => setMode("manual")}>
-            Manual entry
-          </TabButton>
-          <TabButton active={mode === "import"} onClick={() => setMode("import")}>
+      <Card title="Teams">
+        <div className="grid grid-cols-2 gap-2 rounded-xl border border-sideline/60 bg-midnight/40 p-1">
+          <TabButton
+            active={mode === "import"}
+            icon={Sparkles}
+            onClick={() => setMode("import")}
+          >
             Import league
+          </TabButton>
+          <TabButton
+            active={mode === "manual"}
+            icon={Users}
+            onClick={() => setMode("manual")}
+          >
+            Manual entry
           </TabButton>
         </div>
 
         {mode === "manual" && (
-          <Field label="Team names (one per line)">
+          <Field
+            label="Team names"
+            hint="one per line · min 2"
+          >
             <textarea
               value={teamsText}
               onChange={(e) => setTeamsText(e.target.value)}
               rows={10}
-              placeholder={"Team Alpha\nTeam Bravo\nTeam Charlie"}
+              placeholder={"Gridiron Goons\nBlitz Brigade\nRed Zone Royals"}
               className="input font-mono"
             />
           </Field>
         )}
 
         {mode === "import" && (
-          <div className="space-y-3">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[160px_1fr_auto]">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[180px_1fr_auto]">
               <Field label="Platform">
                 <select
                   value={source}
@@ -197,22 +214,36 @@ export function NewDraftForm() {
                   type="button"
                   onClick={handlePreview}
                   disabled={importing || !leagueId}
-                  className="btn h-10"
+                  className="btn btn-outline h-10 w-full sm:w-auto"
                 >
                   {importing ? "Loading…" : "Preview"}
                 </button>
               </div>
             </div>
+
             {importedTeams && (
-              <div className="rounded-lg border bg-muted/30 p-3">
-                <p className="mb-2 text-sm font-medium">{importedTeams.length} teams found:</p>
-                <ul className="grid grid-cols-1 gap-1 text-sm sm:grid-cols-2">
+              <div className="rounded-xl border border-signal/30 bg-signal/5 p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <div className="flex size-6 items-center justify-center rounded-full bg-signal/20">
+                    <Check className="size-3.5 text-signal" />
+                  </div>
+                  <p className="text-sm font-semibold text-chalk">
+                    {importedTeams.length} teams found
+                  </p>
+                </div>
+                <ul className="grid grid-cols-1 gap-1.5 text-sm sm:grid-cols-2">
                   {importedTeams.map((t, i) => (
                     <li key={i} className="flex items-center gap-2">
-                      <span className="text-muted-foreground">{i + 1}.</span>
-                      <span className="font-medium">{t.name}</span>
+                      <span className="w-5 text-right font-mono text-xs text-hashmark">
+                        {i + 1}
+                      </span>
+                      <span className="truncate font-medium text-chalk">
+                        {t.name}
+                      </span>
                       {t.ownerName && (
-                        <span className="text-muted-foreground">— {t.ownerName}</span>
+                        <span className="truncate text-xs text-hashmark">
+                          — {t.ownerName}
+                        </span>
                       )}
                     </li>
                   ))}
@@ -221,48 +252,53 @@ export function NewDraftForm() {
             )}
           </div>
         )}
-      </div>
+      </Card>
 
-      <div className="flex items-center justify-end gap-3 pt-4">
-        <button type="submit" disabled={submitting} className="btn btn-primary">
-          {submitting ? "Creating…" : "Create draft"}
+      <div className="flex items-center justify-end gap-3">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="btn btn-primary h-12 px-8 text-base shadow-lg shadow-signal/20"
+        >
+          {submitting ? "Creating…" : "Create draft →"}
         </button>
       </div>
-
-      <style>{`
-        .input {
-          display: block;
-          width: 100%;
-          border-radius: 0.5rem;
-          border: 1px solid var(--border);
-          background: var(--background);
-          padding: 0.5rem 0.75rem;
-          font-size: 0.875rem;
-        }
-        .input:focus { outline: 2px solid var(--ring); outline-offset: -1px; }
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 0.5rem;
-          border: 1px solid var(--border);
-          padding: 0 1rem;
-          height: 2.5rem;
-          font-size: 0.875rem;
-          font-weight: 500;
-          cursor: pointer;
-        }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
-      `}</style>
     </form>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Card({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-sideline/50 bg-sideline/20 p-6 sm:p-7">
+      <h2 className="mb-5 font-display text-sm font-bold uppercase tracking-wider text-signal">
+        {title}
+      </h2>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
+}
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium">{label}</span>
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="text-sm font-medium text-chalk">{label}</span>
+        {hint && <span className="text-xs text-hashmark">{hint}</span>}
+      </div>
       {children}
     </label>
   );
@@ -270,10 +306,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function TabButton({
   active,
+  icon: Icon,
   onClick,
   children,
 }: {
   active: boolean;
+  icon: React.ComponentType<{ className?: string }>;
   onClick: () => void;
   children: React.ReactNode;
 }) {
@@ -281,10 +319,13 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-        active ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+      className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+        active
+          ? "bg-signal text-midnight"
+          : "text-hashmark hover:bg-sideline/50 hover:text-chalk"
       }`}
     >
+      <Icon className="size-4" />
       {children}
     </button>
   );
