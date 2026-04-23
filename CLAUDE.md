@@ -22,14 +22,21 @@ Open-source website for transparent, scheduled fantasy football draft order rand
 ## Commands
 
 ```bash
-pnpm docker:up    # start docker services (Postgres)
-pnpm docker:down  # stop docker services
+pnpm dev          # Orchestrated: frees ports, starts Postgres, syncs DB, runs Next on :3042 + infra logs in a TUI
+pnpm dev:force    # Same as dev, but tears down volumes and re-seeds
+pnpm up           # start docker services (Postgres)
+pnpm down         # stop docker services
 pnpm db:sync      # validate + generate + push schema
 pnpm db:seed      # sync + run prisma/seed.ts (creates demo-league)
-pnpm db:studio    # Prisma Studio
-pnpm dev          # Next.js dev on :3000
+pnpm db:studio    # Prisma Studio on :5564
 pnpm test         # Vitest
 ```
+
+## Ports
+
+- Web (Next.js): **3042**
+- Postgres: **5438**
+- Prisma Studio: **5564**
 
 ## Structure
 

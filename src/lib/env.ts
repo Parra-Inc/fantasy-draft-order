@@ -5,7 +5,7 @@ const envSchema = z.object({
   QSTASH_TOKEN: z.string().optional(),
   QSTASH_CURRENT_SIGNING_KEY: z.string().optional(),
   QSTASH_NEXT_SIGNING_KEY: z.string().optional(),
-  NEXT_PUBLIC_BASE_URL: z.string().url().default("http://localhost:3000"),
+  NEXT_PUBLIC_BASE_URL: z.string().url().default("http://localhost:3042"),
   VERCEL_GIT_COMMIT_SHA: z.string().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });

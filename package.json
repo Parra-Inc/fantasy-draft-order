@@ -2,23 +2,30 @@
   "name": "fantasy-draft-order",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "dev": "next dev --turbopack --port 3000",
+    "dev": "bash scripts/dev.sh",
+    "dev:force": "bash scripts/dev.sh --force",
+    "dev:ngrok": "bash scripts/dev.sh --ngrok",
+    "dev:web": "next dev --turbopack --port 3042",
+    "dev:infra": "docker compose -f dev/docker-compose.yml logs -f",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "docker:up": "docker compose -f dev/docker-compose.yml up -d --wait",
-    "docker:down": "docker compose -f dev/docker-compose.yml down",
+    "up": "docker compose -f dev/docker-compose.yml up -d --wait",
+    "down": "docker compose -f dev/docker-compose.yml down",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio --browser none",
+    "db:studio": "prisma studio --port 5564 --browser none",
     "db:validate": "prisma validate",
     "db:sync": "pnpm db:validate && pnpm db:generate && pnpm db:push",
+    "db:sync:force": "pnpm db:validate && pnpm db:generate && prisma db push --accept-data-loss",
     "db:seed": "pnpm db:sync && prisma db seed",
     "db:reset": "prisma migrate reset",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "icons:export": "bash scripts/export-icons.sh"
   },
   "prisma": {
     "seed": "pnpm exec tsx prisma/seed.ts"
@@ -57,6 +64,7 @@
     "prisma": "^7.7.0",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
+    "turbo": "^2.5.4",
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
   }
