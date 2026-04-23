@@ -1,5 +1,9 @@
 import type { Importer, ImportedTeam } from "./types";
 
+type SleeperLeague = {
+  name?: string;
+};
+
 type SleeperUser = {
   user_id: string;
   display_name: string;
@@ -15,14 +19,16 @@ type SleeperRoster = {
 const BASE = "https://api.sleeper.app/v1";
 
 export const sleeperImporter: Importer = {
-  async fetchTeams(leagueId) {
-    const [usersRes, rostersRes] = await Promise.all([
+  async fetchLeague(leagueId) {
+    const [leagueRes, usersRes, rostersRes] = await Promise.all([
+      fetch(`${BASE}/league/${leagueId}`, { cache: "no-store" }),
       fetch(`${BASE}/league/${leagueId}/users`, { cache: "no-store" }),
       fetch(`${BASE}/league/${leagueId}/rosters`, { cache: "no-store" }),
     ]);
-    if (!usersRes.ok || !rostersRes.ok) {
+    if (!leagueRes.ok || !usersRes.ok || !rostersRes.ok) {
       throw new Error(`Sleeper league ${leagueId} not found`);
     }
+    const league = (await leagueRes.json()) as SleeperLeague | null;
     const users = (await usersRes.json()) as SleeperUser[];
     const rosters = (await rostersRes.json()) as SleeperRoster[];
     const userById = new Map(users.map((u) => [u.user_id, u]));
@@ -39,6 +45,6 @@ export const sleeperImporter: Importer = {
         sourceId: String(roster.roster_id),
       };
     });
-    return teams;
+    return { name: league?.name, teams };
   },
 };

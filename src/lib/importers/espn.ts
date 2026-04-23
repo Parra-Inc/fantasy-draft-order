@@ -10,13 +10,14 @@ type EspnTeam = {
 };
 
 type EspnResponse = {
+  settings?: { name?: string };
   teams?: EspnTeam[];
 };
 
 export const espnImporter: Importer = {
-  async fetchTeams(leagueId) {
+  async fetchLeague(leagueId) {
     const year = new Date().getFullYear();
-    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${year}/segments/0/leagues/${encodeURIComponent(leagueId)}?view=mTeam`;
+    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${year}/segments/0/leagues/${encodeURIComponent(leagueId)}?view=mTeam&view=mSettings`;
     const res = await fetch(url, { cache: "no-store" });
     if (res.status === 401 || res.status === 403) {
       throw new Error(
@@ -27,7 +28,7 @@ export const espnImporter: Importer = {
     const json = (await res.json()) as EspnResponse;
     if (!json.teams?.length) throw new Error("ESPN: no teams in response");
 
-    return json.teams.map<ImportedTeam>((t) => {
+    const teams = json.teams.map<ImportedTeam>((t) => {
       const combined = [t.location, t.nickname].filter(Boolean).join(" ");
       return {
         name: t.name || combined || `Team ${t.id}`,
@@ -35,5 +36,6 @@ export const espnImporter: Importer = {
         sourceId: String(t.id),
       };
     });
+    return { name: json.settings?.name, teams };
   },
 };

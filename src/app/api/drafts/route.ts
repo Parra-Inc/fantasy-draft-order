@@ -57,11 +57,11 @@ export async function POST(req: Request) {
 
   if (body.import) {
     try {
-      const imported = await getImporter(body.import.source).fetchTeams(body.import.leagueId);
-      if (imported.length < 2) {
+      const imported = await getImporter(body.import.source).fetchLeague(body.import.leagueId);
+      if (imported.teams.length < 2) {
         return NextResponse.json({ error: "imported league has fewer than 2 teams" }, { status: 400 });
       }
-      teams = imported;
+      teams = imported.teams;
       importSource = body.import.source;
       importLeagueId = body.import.leagueId;
     } catch (err) {

@@ -15,4 +15,4 @@ export function getImporter(source: ImportSource): Importer {
   return IMPORTERS[source];
 }
 
-export type { ImportedTeam, ImportSource } from "./types";
+export type { ImportedLeague, ImportedTeam, ImportSource } from "./types";

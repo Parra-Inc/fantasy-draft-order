@@ -13,8 +13,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ source: string 
   if (!leagueId) return NextResponse.json({ error: "leagueId required" }, { status: 400 });
 
   try {
-    const teams = await getImporter(upper).fetchTeams(leagueId);
-    return NextResponse.json({ teams });
+    const league = await getImporter(upper).fetchLeague(leagueId);
+    return NextResponse.json({ leagueName: league.name, teams: league.teams });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "import failed" },

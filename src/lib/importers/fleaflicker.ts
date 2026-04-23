@@ -16,11 +16,12 @@ type FleaflickerDivision = {
 };
 
 type FleaflickerResponse = {
+  league?: { name?: string };
   divisions?: FleaflickerDivision[];
 };
 
 export const fleaflickerImporter: Importer = {
-  async fetchTeams(leagueId) {
+  async fetchLeague(leagueId) {
     const url = `https://www.fleaflicker.com/api/FetchLeagueStandings?league_id=${encodeURIComponent(leagueId)}`;
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`Fleaflicker league ${leagueId} not found`);
@@ -38,6 +39,6 @@ export const fleaflickerImporter: Importer = {
       }
     }
     if (teams.length === 0) throw new Error("Fleaflicker: no teams in response");
-    return teams;
+    return { name: json.league?.name, teams };
   },
 };

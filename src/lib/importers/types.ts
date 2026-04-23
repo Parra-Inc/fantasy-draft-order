@@ -5,8 +5,13 @@ export type ImportedTeam = {
   sourceId?: string;
 };
 
+export type ImportedLeague = {
+  name?: string;
+  teams: ImportedTeam[];
+};
+
 export type Importer = {
-  fetchTeams(leagueId: string): Promise<ImportedTeam[]>;
+  fetchLeague(leagueId: string): Promise<ImportedLeague>;
 };
 
 export type ImportSource = "SLEEPER" | "MFL" | "FLEAFLICKER" | "ESPN";
