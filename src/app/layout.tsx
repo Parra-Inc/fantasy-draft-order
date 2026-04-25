@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, DM_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { OrganizationLd, WebsiteLd } from "@/lib/seo/jsonld";
-import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/seo/metadata";
+import {
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_TWITTER,
+  SITE_URL,
+} from "@/lib/seo/metadata";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -84,6 +89,8 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — Free, Open-Source Fantasy Draft Randomizer`,
     description: SITE_TAGLINE,
     images: ["/opengraph-image"],
+    site: SITE_TWITTER,
+    creator: SITE_TWITTER,
   },
   robots: {
     index: true,
@@ -97,6 +104,9 @@ export const metadata: Metadata = {
     },
   },
   category: "sports",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export default function RootLayout({

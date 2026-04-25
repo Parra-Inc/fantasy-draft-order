@@ -50,6 +50,8 @@ export function buildMetadata({
       title,
       description,
       images: [ogImage],
+      site: SITE_TWITTER,
+      creator: SITE_TWITTER,
     },
     robots: noindex
       ? { index: false, follow: false }
