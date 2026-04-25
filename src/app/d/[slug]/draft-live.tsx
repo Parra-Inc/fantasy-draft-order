@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
-import { Calendar, Shield, Trophy, Users } from "lucide-react";
+import { Calendar, Check, Copy, Loader2, Shield, Trophy, Users } from "lucide-react";
 
 type Team = {
   id: string;
@@ -45,24 +45,37 @@ export function DraftLive({ slug, initial }: { slug: string; initial: DraftState
     return () => clearInterval(id);
   }, []);
 
-  const drawing = initial.status === "DRAWING" || now >= scheduledAt;
-  const refreshInterval = drawing ? 1000 : now + 60_000 >= scheduledAt ? 1500 : 4000;
+  const pastScheduled = now >= scheduledAt;
+  const refreshInterval = pastScheduled
+    ? 1000
+    : now + 60_000 >= scheduledAt
+      ? 1500
+      : 4000;
 
-  const { data } = useSWR<DraftState>(
+  const { data, mutate } = useSWR<DraftState>(
     `/api/drafts/${slug}/state`,
     fetcher,
     {
       fallbackData: initial,
       refreshInterval: (latest) =>
         latest?.status === "COMPLETED" && !latest.nextPickAt ? 0 : refreshInterval,
-      revalidateOnFocus: false,
+      revalidateOnFocus: true,
     },
   );
 
   const state = data ?? initial;
 
+  const crossedRef = useRef(false);
+  useEffect(() => {
+    if (!crossedRef.current && pastScheduled && state.status === "SCHEDULED") {
+      crossedRef.current = true;
+      mutate();
+    }
+  }, [pastScheduled, state.status, mutate]);
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      <ShareCard slug={slug} />
       <Header state={state} now={now} scheduledAt={scheduledAt} />
       {state.status === "SCHEDULED" ? (
         <TeamsGrid teams={state.teams} />
@@ -71,6 +84,55 @@ export function DraftLive({ slug, initial }: { slug: string; initial: DraftState
       )}
       <TrustPanel state={state} />
     </div>
+  );
+}
+
+function ShareCard({ slug }: { slug: string }) {
+  const [url, setUrl] = useState(`/d/${slug}`);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setUrl(`${window.location.origin}/d/${slug}`);
+  }, [slug]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // ignore
+    }
+  };
+
+  return (
+    <section className="rounded-2xl border border-signal/30 bg-signal/5 p-4 sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+            Share this link with your league
+          </p>
+          <p className="mt-1.5 truncate font-mono text-sm text-chalk">{url}</p>
+        </div>
+        <button
+          type="button"
+          onClick={copy}
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-signal px-4 text-sm font-semibold text-midnight transition-colors hover:bg-signal-dark sm:w-auto"
+        >
+          {copied ? (
+            <>
+              <Check className="size-4" />
+              Copied
+            </>
+          ) : (
+            <>
+              <Copy className="size-4" />
+              Copy link
+            </>
+          )}
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -136,7 +198,7 @@ function Header({
         {state.leagueName}
       </h1>
 
-      {state.status === "SCHEDULED" && (
+      {state.status === "SCHEDULED" && remaining > 0 && (
         <div className="mt-6 rounded-xl border border-signal/20 bg-midnight/60 p-5">
           <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
             Drawing in
@@ -148,6 +210,27 @@ function Header({
           </div>
           <p className="mt-2 text-sm text-hashmark">
             {new Date(state.scheduledFor).toLocaleString()}
+          </p>
+        </div>
+      )}
+
+      {state.status === "SCHEDULED" && remaining === 0 && (
+        <div className="mt-6 rounded-xl border border-signal/30 bg-midnight/60 p-5">
+          <p className="flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-signal">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-signal" />
+            </span>
+            Starting now
+          </p>
+          <div className="mt-2 flex items-center gap-3">
+            <Loader2 className="size-7 shrink-0 animate-spin text-signal sm:size-8" />
+            <span className="font-display text-3xl font-bold text-chalk sm:text-4xl">
+              Your draft is starting now…
+            </span>
+          </div>
+          <p className="mt-2 text-sm text-hashmark">
+            Connecting to the draw — this should only take a moment.
           </p>
         </div>
       )}
@@ -203,114 +286,204 @@ function DrawBoard({ state }: { state: DraftState }) {
     () => new Map(state.teams.map((t) => [t.id, t])),
     [state.teams],
   );
-  const slots = Array.from({ length: state.teams.length }, (_, i) => i + 1);
-  const pickByNumber = new Map(state.picks.map((p) => [p.pickNumber, p]));
+  const pickedTeamIds = useMemo(
+    () => new Set(state.picks.map((p) => p.teamId)),
+    [state.picks],
+  );
+  const unpickedTeams = useMemo(
+    () => state.teams.filter((t) => !pickedTeamIds.has(t.id)),
+    [state.teams, pickedTeamIds],
+  );
   const nextPickNumber = state.picks.length + 1;
-  const [tick, setTick] = useState(0);
-  const spinnerRef = useRef(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      spinnerRef.current = (spinnerRef.current + 1) % Math.max(state.teams.length, 1);
-      setTick((t) => t + 1);
-    }, 80);
-    return () => clearInterval(id);
-  }, [state.teams.length]);
-
-  const spinningTeam =
-    state.status === "DRAWING" && nextPickNumber <= state.teams.length
-      ? state.teams[spinnerRef.current % state.teams.length]
-      : null;
+  const drafting =
+    state.status === "DRAWING" && nextPickNumber <= state.teams.length;
 
   return (
-    <section>
-      <div className="mb-4 flex items-center justify-between">
+    <section className="space-y-6">
+      {drafting && (
+        <SpinnerCard
+          key={nextPickNumber}
+          pickNumber={nextPickNumber}
+          totalPicks={state.teams.length}
+          unpickedTeams={unpickedTeams}
+        />
+      )}
+      <RevealedList
+        picks={state.picks}
+        teamById={teamById}
+        total={state.teams.length}
+        status={state.status}
+      />
+    </section>
+  );
+}
+
+function SpinnerCard({
+  pickNumber,
+  totalPicks,
+  unpickedTeams,
+}: {
+  pickNumber: number;
+  totalPicks: number;
+  unpickedTeams: Team[];
+}) {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    if (unpickedTeams.length === 0) return;
+    const id = setInterval(() => setTick((t) => t + 1), 90);
+    return () => clearInterval(id);
+  }, [unpickedTeams.length]);
+
+  const spinning = unpickedTeams[tick % Math.max(unpickedTeams.length, 1)] ?? null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="relative overflow-hidden rounded-2xl border border-signal/30 bg-gradient-to-b from-signal/10 to-midnight/60 p-6 sm:p-8"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,255,200,0.12),transparent_60%)]" />
+      <div className="relative flex items-center justify-between gap-3">
+        <p className="flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-signal">
+          <span className="relative flex size-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
+            <span className="relative inline-flex size-2 rounded-full bg-signal" />
+          </span>
+          Drafting pick {pickNumber} of {totalPicks}
+        </p>
+        <span className="font-mono text-xs text-hashmark">
+          {totalPicks - unpickedTeams.length} / {totalPicks} drawn
+        </span>
+      </div>
+
+      <div className="relative mt-6 flex flex-col items-center gap-5">
+        <div className="relative flex size-32 items-center justify-center sm:size-40">
+          <span className="absolute inset-0 rounded-full border-2 border-signal/20" />
+          <span
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-signal animate-spin"
+            style={{ animationDuration: "0.9s" }}
+          />
+          {spinning && (
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={spinning.id + tick}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.12 }}
+                className="absolute inset-3 flex items-center justify-center sm:inset-4"
+              >
+                <BigAvatar name={spinning.name} url={spinning.avatarUrl} />
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </div>
+        {spinning && (
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={spinning.id + "-name-" + tick}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.12 }}
+              className="text-center"
+            >
+              <p className="font-display text-2xl font-bold text-chalk sm:text-3xl">
+                {spinning.name}
+              </p>
+              {spinning.ownerName && (
+                <p className="mt-1 text-sm text-hashmark">{spinning.ownerName}</p>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function RevealedList({
+  picks,
+  teamById,
+  total,
+  status,
+}: {
+  picks: Pick[];
+  teamById: Map<string, Team>;
+  total: number;
+  status: DraftState["status"];
+}) {
+  if (picks.length === 0) {
+    return null;
+  }
+  const ordered = [...picks].sort((a, b) => a.pickNumber - b.pickNumber);
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
         <h2 className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
-          Draft order
+          {status === "COMPLETED" ? "Final draft order" : "Drawn so far"}
         </h2>
         <span className="text-xs text-hashmark">
-          {state.picks.length} / {state.teams.length} revealed
+          {picks.length} / {total} revealed
         </span>
       </div>
       <ol className="overflow-hidden rounded-2xl border border-sideline/50 bg-sideline/10">
-        {slots.map((pickNumber, idx) => {
-          const pick = pickByNumber.get(pickNumber);
-          const team = pick ? teamById.get(pick.teamId) : null;
-          const isSpinning = !pick && pickNumber === nextPickNumber && spinningTeam;
-          const revealed = !!team;
+        {ordered.map((pick, idx) => {
+          const team = teamById.get(pick.teamId);
+          if (!team) return null;
           return (
-            <li
-              key={pickNumber}
-              className={`flex items-center gap-4 px-4 py-3 transition-colors sm:px-6 ${
+            <motion.li
+              key={pick.pickNumber}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`flex items-center gap-4 bg-midnight/40 px-4 py-3 sm:px-6 ${
                 idx !== 0 ? "border-t border-sideline/30" : ""
-              } ${revealed ? "bg-midnight/40" : ""}`}
+              }`}
             >
-              <div
-                className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold tabular-nums ${
-                  revealed
-                    ? "bg-signal/15 text-signal ring-1 ring-signal/30"
-                    : isSpinning
-                      ? "bg-signal/10 text-signal ring-1 ring-signal/30"
-                      : "bg-sideline/40 text-hashmark"
-                }`}
-              >
-                {pickNumber}
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-signal/15 font-mono text-sm font-bold tabular-nums text-signal ring-1 ring-signal/30">
+                {pick.pickNumber}
               </div>
-              {team ? (
-                <motion.div
-                  key={team.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35 }}
-                  className="flex flex-1 items-center gap-3 min-w-0"
-                >
-                  <Avatar name={team.name} url={team.avatarUrl} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-chalk">
-                      {team.name}
-                    </p>
-                    {team.ownerName && (
-                      <p className="truncate text-xs text-hashmark">
-                        {team.ownerName}
-                      </p>
-                    )}
-                  </div>
-                  <span className="hidden font-mono text-[10px] text-hashmark/60 sm:inline">
-                    pck_{pickNumber.toString().padStart(3, "0")}
-                  </span>
-                </motion.div>
-              ) : isSpinning ? (
-                <div className="flex flex-1 items-center gap-3 min-w-0">
-                  <AnimatePresence mode="popLayout">
-                    <motion.div
-                      key={spinningTeam!.id + tick}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.15 }}
-                      className="flex items-center gap-3 min-w-0"
-                    >
-                      <Avatar
-                        name={spinningTeam!.name}
-                        url={spinningTeam!.avatarUrl}
-                      />
-                      <span className="truncate font-semibold text-signal">
-                        {spinningTeam!.name}
-                      </span>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <div className="flex flex-1 items-center gap-3 min-w-0">
-                  <div className="size-9 rounded-full border border-dashed border-hashmark/30" />
-                  <span className="text-sm text-hashmark/60">—</span>
-                </div>
-              )}
-            </li>
+              <Avatar name={team.name} url={team.avatarUrl} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-chalk">{team.name}</p>
+                {team.ownerName && (
+                  <p className="truncate text-xs text-hashmark">{team.ownerName}</p>
+                )}
+              </div>
+              <span className="hidden font-mono text-[10px] text-hashmark/60 sm:inline">
+                pck_{pick.pickNumber.toString().padStart(3, "0")}
+              </span>
+            </motion.li>
           );
         })}
       </ol>
-    </section>
+    </div>
+  );
+}
+
+function BigAvatar({ name, url }: { name: string; url: string | null }) {
+  if (url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img
+        src={url}
+        alt=""
+        className="size-full rounded-full object-cover ring-2 ring-signal/40"
+      />
+    );
+  }
+  const initials = name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((s) => s[0]?.toUpperCase() ?? "")
+    .join("");
+  return (
+    <div className="flex size-full items-center justify-center rounded-full bg-signal/15 font-display text-3xl font-bold text-signal ring-2 ring-signal/40 sm:text-4xl">
+      {initials}
+    </div>
   );
 }
 
