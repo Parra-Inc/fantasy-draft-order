@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
+import { deriveStatus } from "@/lib/reveal";
 
 export const alt = "Fantasy draft order draw";
 export const size = { width: 1200, height: 630 };
@@ -25,15 +26,18 @@ export default async function DraftOgImage({ params }: Props) {
     where: { slug },
     select: {
       leagueName: true,
-      status: true,
       scheduledFor: true,
       teams: { select: { id: true } },
+      picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
     },
   });
 
   const leagueName = draft?.leagueName ?? "Fantasy Draft Order";
   const teamCount = draft?.teams.length ?? 0;
-  const statusLabel = STATUS_LABEL[draft?.status ?? "SCHEDULED"];
+  const status = draft
+    ? deriveStatus({ now: new Date(), picks: draft.picks })
+    : "SCHEDULED";
+  const statusLabel = STATUS_LABEL[status];
   const when = draft?.scheduledFor
     ? new Date(draft.scheduledFor).toLocaleString("en-US", {
         weekday: "short",

@@ -1,9 +1,3 @@
-enum DraftStatus {
-  SCHEDULED
-  DRAWING
-  COMPLETED
-}
-
 enum ImportSource {
   SLEEPER
   MFL
@@ -13,21 +7,17 @@ enum ImportSource {
 }
 
 model Draft {
-  id              String       @id @default(dbgenerated("'drf_' || gen_random_uuid()::text"))
-  slug            String       @unique
-  leagueName      String
-  creatorName     String
-  creatorEmail    String?
-  scheduledFor    DateTime
-  status          DraftStatus  @default(SCHEDULED)
-  importSource    ImportSource @default(MANUAL)
-  importLeagueId  String?
-  qstashMessageId String?
-  seed            String?
-  commitSha       String?
-  startedAt       DateTime?
-  completedAt     DateTime?
-  createdAt       DateTime     @default(now())
+  id             String       @id @default(dbgenerated("'drf_' || gen_random_uuid()::text"))
+  slug           String       @unique
+  leagueName     String
+  creatorName    String
+  creatorEmail   String?
+  scheduledFor   DateTime
+  importSource   ImportSource @default(MANUAL)
+  importLeagueId String?
+  seed           String
+  commitSha      String?
+  createdAt      DateTime     @default(now())
 
   teams Team[]
   picks Pick[]

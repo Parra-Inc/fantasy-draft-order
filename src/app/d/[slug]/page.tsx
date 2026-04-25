@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { BrandMark } from "@/components/brand-mark";
 import { buildMetadata, SITE_NAME } from "@/lib/seo/metadata";
 import { BreadcrumbLd, EventLd } from "@/lib/seo/jsonld";
+import { deriveStatus } from "@/lib/reveal";
 import { DraftLive } from "./draft-live";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -14,9 +15,9 @@ export async function generateMetadata({ params }: Props) {
     where: { slug },
     select: {
       leagueName: true,
-      status: true,
       scheduledFor: true,
       teams: { select: { id: true } },
+      picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
     },
   });
   if (!draft) {
@@ -28,10 +29,11 @@ export async function generateMetadata({ params }: Props) {
     });
   }
 
+  const status = deriveStatus({ now: new Date(), picks: draft.picks });
   const teamCount = draft.teams.length;
   const when = draft.scheduledFor.toUTCString();
   const description =
-    draft.status === "COMPLETED"
+    status === "COMPLETED"
       ? `${draft.leagueName} — final fantasy draft order for ${teamCount} teams, drawn live from open-source code with a permanent audit trail.`
       : `${draft.leagueName} — fantasy draft order draw for ${teamCount} teams, scheduled for ${when}. Watch it live, transparent and tamper-proof.`;
 
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: Props) {
     description,
     path: `/d/${slug}`,
     image: `/d/${slug}/opengraph-image`,
-    noindex: draft.status !== "COMPLETED",
+    noindex: status !== "COMPLETED",
   });
 }
 
@@ -50,9 +52,19 @@ export default async function DraftPage({ params }: Props) {
     where: { slug },
     include: {
       teams: { orderBy: { position: "asc" } },
+      picks: { orderBy: { pickNumber: "asc" } },
     },
   });
   if (!draft) notFound();
+
+  const now = new Date();
+  const initialStatus = deriveStatus({ now, picks: draft.picks });
+  const firstPick = draft.picks[0] ?? null;
+  const lastPick = draft.picks[draft.picks.length - 1] ?? null;
+  const startedAt =
+    firstPick && firstPick.revealedAt <= now ? firstPick.revealedAt : null;
+  const completedAt =
+    lastPick && lastPick.revealedAt <= now ? lastPick.revealedAt : null;
 
   return (
     <div className="flex min-h-full flex-col">
@@ -65,9 +77,9 @@ export default async function DraftPage({ params }: Props) {
       <EventLd
         name={`${draft.leagueName} draft order draw`}
         startDate={draft.scheduledFor.toISOString()}
-        endDate={draft.completedAt?.toISOString()}
+        endDate={completedAt?.toISOString()}
         url={`/d/${slug}`}
-        status={draft.status}
+        status={initialStatus}
         organizerName={draft.creatorName ?? SITE_NAME}
       />
       <header className="border-b border-sideline/50 bg-midnight/90 backdrop-blur-md">
@@ -98,13 +110,13 @@ export default async function DraftPage({ params }: Props) {
               leagueName: draft.leagueName,
               creatorName: draft.creatorName,
               scheduledFor: draft.scheduledFor.toISOString(),
-              status: draft.status,
+              status: initialStatus,
               importSource: draft.importSource,
               importLeagueId: draft.importLeagueId,
               seed: draft.seed,
               commitSha: draft.commitSha,
-              startedAt: draft.startedAt?.toISOString() ?? null,
-              completedAt: draft.completedAt?.toISOString() ?? null,
+              startedAt: startedAt?.toISOString() ?? null,
+              completedAt: completedAt?.toISOString() ?? null,
               createdAt: draft.createdAt.toISOString(),
               teams: draft.teams.map((t) => ({
                 id: t.id,
@@ -113,9 +125,17 @@ export default async function DraftPage({ params }: Props) {
                 avatarUrl: t.avatarUrl,
                 position: t.position,
               })),
-              picks: [],
-              nextPickAt: null,
-              serverTime: new Date().toISOString(),
+              picks: draft.picks
+                .filter((p) => p.revealedAt <= now)
+                .map((p) => ({
+                  teamId: p.teamId,
+                  pickNumber: p.pickNumber,
+                  revealedAt: p.revealedAt.toISOString(),
+                })),
+              nextPickAt:
+                draft.picks.find((p) => p.revealedAt > now)?.revealedAt.toISOString() ??
+                null,
+              serverTime: now.toISOString(),
             }}
           />
         </div>

@@ -1,8 +1,11 @@
+import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { env } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 import { generateSlug } from "@/lib/slug";
-import { scheduleDraft } from "@/lib/qstash";
+import { generateDraftOrder } from "@/lib/randomizer";
+import { getRevealConfig, pickRevealedAt } from "@/lib/reveal";
 import { getImporter } from "@/lib/importers";
 
 const teamInput = z.object({
@@ -38,9 +41,9 @@ export async function POST(req: Request) {
   const body = parsed.data;
 
   const scheduledFor = new Date(body.scheduledFor);
-  if (scheduledFor.getTime() < Date.now() + 30_000) {
+  if (scheduledFor.getTime() < Date.now() + 1_000) {
     return NextResponse.json(
-      { error: "scheduledFor must be at least 30 seconds in the future" },
+      { error: "scheduledFor must be in the future" },
       { status: 400 },
     );
   }
@@ -75,34 +78,46 @@ export async function POST(req: Request) {
   if (!teams) return NextResponse.json({ error: "no teams" }, { status: 400 });
 
   const slug = generateSlug();
-  const draft = await prisma.draft.create({
-    data: {
-      slug,
-      leagueName: body.leagueName,
-      creatorName: body.creatorName,
-      creatorEmail: body.creatorEmail,
-      scheduledFor,
-      importSource,
-      importLeagueId,
-      teams: {
-        create: teams.map((t, i) => ({
-          name: t.name,
-          ownerName: t.ownerName,
-          avatarUrl: t.avatarUrl,
-          sourceId: t.sourceId,
-          position: i,
-        })),
+  const seed = randomBytes(16).toString("hex");
+  const revealConfig = getRevealConfig();
+
+  const result = await prisma.$transaction(async (tx) => {
+    const draft = await tx.draft.create({
+      data: {
+        slug,
+        leagueName: body.leagueName,
+        creatorName: body.creatorName,
+        creatorEmail: body.creatorEmail,
+        scheduledFor,
+        importSource,
+        importLeagueId,
+        seed,
+        commitSha: env.VERCEL_GIT_COMMIT_SHA ?? null,
+        teams: {
+          create: teams.map((t, i) => ({
+            name: t.name,
+            ownerName: t.ownerName,
+            avatarUrl: t.avatarUrl,
+            sourceId: t.sourceId,
+            position: i,
+          })),
+        },
       },
-    },
+      include: { teams: { orderBy: { position: "asc" } } },
+    });
+
+    const order = generateDraftOrder(draft.teams.map((t) => ({ teamId: t.id })));
+    await tx.pick.createMany({
+      data: order.map((p, idx) => ({
+        draftId: draft.id,
+        teamId: p.teamId,
+        pickNumber: p.pickNumber,
+        revealedAt: pickRevealedAt(scheduledFor, idx, revealConfig),
+      })),
+    });
+
+    return draft;
   });
 
-  const schedule = await scheduleDraft(draft.id, scheduledFor);
-  if (schedule.scheduled) {
-    await prisma.draft.update({
-      where: { id: draft.id },
-      data: { qstashMessageId: schedule.messageId },
-    });
-  }
-
-  return NextResponse.json({ slug: draft.slug, scheduled: schedule.scheduled });
+  return NextResponse.json({ slug: result.slug });
 }

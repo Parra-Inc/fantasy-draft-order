@@ -9,13 +9,24 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.NEXT_PUBLIC_BASE_URL;
 
-  const completed = await prisma.draft
+  const now = new Date();
+  const completedRows = await prisma.draft
     .findMany({
-      where: { status: "COMPLETED" },
-      select: { slug: true, completedAt: true },
+      where: { picks: { some: { revealedAt: { lte: now } } } },
+      select: {
+        slug: true,
+        picks: {
+          select: { revealedAt: true },
+          orderBy: { pickNumber: "desc" },
+          take: 1,
+        },
+      },
       take: 5000,
     })
     .catch(() => []);
+  const completed = completedRows
+    .filter((d) => d.picks[0] && d.picks[0].revealedAt <= now)
+    .map((d) => ({ slug: d.slug, completedAt: d.picks[0]!.revealedAt }));
 
   const guides = listGuides();
 
@@ -48,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...completed.map((d) => ({
       url: `${base}/d/${d.slug}`,
-      lastModified: d.completedAt ?? undefined,
+      lastModified: d.completedAt,
       changeFrequency: "yearly" as const,
       priority: 0.4,
     })),
