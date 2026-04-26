@@ -254,11 +254,11 @@ export function NewDraftForm() {
         )}
       </Card>
 
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="submit"
           disabled={submitting}
-          className="btn btn-primary h-12 px-8 text-base shadow-lg shadow-signal/20"
+          className="btn btn-primary h-12 w-full px-8 text-base shadow-lg shadow-signal/20 sm:w-auto"
         >
           {submitting ? "Creating…" : "Create draft →"}
         </button>
