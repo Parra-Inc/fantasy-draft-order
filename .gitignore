@@ -42,3 +42,8 @@ next-env.d.ts
 
 # turbo
 .turbo
+
+# playwright
+/playwright-report/
+/test-results/
+/tests/e2e/screenshots/
