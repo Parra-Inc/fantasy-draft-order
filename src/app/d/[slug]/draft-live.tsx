@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import { AlertTriangle, Calendar, Check, Copy, History, Loader2, Shield, Trophy, Users } from "lucide-react";
 
@@ -23,6 +23,13 @@ type Sibling = {
   status: "SCHEDULED" | "DRAWING" | "COMPLETED";
 };
 
+type CurrentSpin = {
+  teamId: string;
+  pickNumber: number;
+  revealedAt: string;
+  spinStartAt: string;
+};
+
 type DraftState = {
   slug: string;
   leagueName: string;
@@ -38,6 +45,8 @@ type DraftState = {
   createdAt: string;
   teams: Team[];
   picks: Pick[];
+  currentSpin: CurrentSpin | null;
+  spinDurationMs: number;
   nextPickAt: string | null;
   serverTime: string;
 };
@@ -62,22 +71,26 @@ export function DraftLive({
   }, []);
 
   const pastScheduled = now >= scheduledAt;
-  const refreshInterval = pastScheduled
-    ? 1000
-    : now + 60_000 >= scheduledAt
-      ? 1500
-      : 4000;
 
   const { data, mutate } = useSWR<DraftState>(
     `/api/drafts/${slug}/state`,
     fetcher,
     {
       fallbackData: initial,
-      refreshInterval: (latest) =>
-        latest?.status === "COMPLETED" && !latest.nextPickAt ? 0 : refreshInterval,
       revalidateOnFocus: true,
     },
   );
+
+  const isDone = data?.status === "COMPLETED" && !data?.nextPickAt;
+
+  useEffect(() => {
+    if (isDone) return;
+    const intervalMs = pastScheduled ? 500 : 1500;
+    const id = setInterval(() => {
+      void mutate();
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [pastScheduled, mutate, isDone]);
 
   const state = data ?? initial;
 
@@ -97,7 +110,9 @@ export function DraftLive({
         <DrawStartedNotice scheduledFor={state.scheduledFor} />
       )}
       <Header state={state} now={now} scheduledAt={scheduledAt} />
-      {state.status === "SCHEDULED" ? (
+      {!state.currentSpin &&
+      state.picks.length === 0 &&
+      state.status !== "COMPLETED" ? (
         <TeamsGrid teams={state.teams} />
       ) : (
         <DrawBoard state={state} />
@@ -340,7 +355,11 @@ function StatusPill({
 }) {
   if (status === "DRAWING") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal">
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal"
+        data-testid="status-pill"
+        data-status="DRAWING"
+      >
         <span className="relative flex size-1.5">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
           <span className="relative inline-flex size-1.5 rounded-full bg-signal" />
@@ -351,14 +370,22 @@ function StatusPill({
   }
   if (status === "COMPLETED") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal">
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal"
+        data-testid="status-pill"
+        data-status="COMPLETED"
+      >
         <Trophy className="size-3" />
         Complete
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-sideline bg-sideline/40 px-3 py-1 text-xs font-semibold text-hashmark">
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-sideline bg-sideline/40 px-3 py-1 text-xs font-semibold text-hashmark"
+      data-testid="status-pill"
+      data-status="SCHEDULED"
+    >
       <Calendar className="size-3" />
       Scheduled
     </span>
@@ -491,18 +518,24 @@ function DrawBoard({ state }: { state: DraftState }) {
     () => state.teams.filter((t) => !pickedTeamIds.has(t.id)),
     [state.teams, pickedTeamIds],
   );
-  const nextPickNumber = state.picks.length + 1;
-  const drafting =
-    state.status === "DRAWING" && nextPickNumber <= state.teams.length;
+
+  const spinWinnerTeam = state.currentSpin
+    ? (teamById.get(state.currentSpin.teamId) ?? null)
+    : null;
 
   return (
-    <section className="space-y-6">
-      {drafting && (
-        <SpinnerCard
-          key={nextPickNumber}
-          pickNumber={nextPickNumber}
+    <section className="space-y-6" data-testid="draw-board">
+      {state.currentSpin && spinWinnerTeam && (
+        <ReelSpinner
+          key={state.currentSpin.pickNumber}
+          pickNumber={state.currentSpin.pickNumber}
           totalPicks={state.teams.length}
+          drawnCount={state.picks.length}
           unpickedTeams={unpickedTeams}
+          winnerTeamId={spinWinnerTeam.id}
+          spinStartAt={state.currentSpin.spinStartAt}
+          revealedAt={state.currentSpin.revealedAt}
+          spinDurationMs={state.spinDurationMs}
         />
       )}
       <RevealedList
@@ -515,87 +548,127 @@ function DrawBoard({ state }: { state: DraftState }) {
   );
 }
 
-function SpinnerCard({
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+const REEL_ITEM_HEIGHT = 96;
+const REEL_LOOPS = 5;
+
+function ReelSpinner({
   pickNumber,
   totalPicks,
+  drawnCount,
   unpickedTeams,
+  winnerTeamId,
+  spinStartAt,
+  revealedAt,
+  spinDurationMs,
 }: {
   pickNumber: number;
   totalPicks: number;
+  drawnCount: number;
   unpickedTeams: Team[];
+  winnerTeamId: string;
+  spinStartAt: string;
+  revealedAt: string;
+  spinDurationMs: number;
 }) {
-  const [tick, setTick] = useState(0);
+  const reelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (unpickedTeams.length === 0) return;
-    const id = setInterval(() => setTick((t) => t + 1), 90);
-    return () => clearInterval(id);
-  }, [unpickedTeams.length]);
+  const winnerIndex = useMemo(
+    () => Math.max(0, unpickedTeams.findIndex((t) => t.id === winnerTeamId)),
+    [unpickedTeams, winnerTeamId],
+  );
 
-  const spinning = unpickedTeams[tick % Math.max(unpickedTeams.length, 1)] ?? null;
+  const repeatedTeams = useMemo(() => {
+    const out: Team[] = [];
+    for (let i = 0; i < REEL_LOOPS + 1; i++) out.push(...unpickedTeams);
+    return out;
+  }, [unpickedTeams]);
+
+  const finalOffset =
+    (REEL_LOOPS * unpickedTeams.length + winnerIndex) * REEL_ITEM_HEIGHT;
+
+  useLayoutEffect(() => {
+    const startMs = new Date(spinStartAt).getTime();
+    const endMs = new Date(revealedAt).getTime();
+    const total = Math.max(1, endMs - startMs);
+    let raf = 0;
+    const tick = () => {
+      const t = Date.now();
+      const elapsed = Math.max(0, t - startMs);
+      const progress = Math.min(1, elapsed / total);
+      const eased = easeOutCubic(progress);
+      const offset = finalOffset * eased;
+      if (reelRef.current) {
+        reelRef.current.style.transform = `translate3d(0, ${-offset}px, 0)`;
+      }
+      if (progress < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [spinStartAt, revealedAt, finalOffset]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+      initial={{ opacity: 0, y: -8, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="relative overflow-hidden rounded-2xl border border-signal/30 bg-gradient-to-b from-signal/10 to-midnight/60 p-6 sm:p-8"
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="relative overflow-hidden rounded-2xl border border-signal/30 bg-gradient-to-b from-signal/10 to-midnight/60 p-5 sm:p-7"
+      data-testid="reel-spinner"
+      data-spin-pick={pickNumber}
+      data-spin-duration={spinDurationMs}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,255,200,0.12),transparent_60%)]" />
+
       <div className="relative flex items-center justify-between gap-3">
-        <p className="flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <p className="flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
           <span className="relative flex size-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
             <span className="relative inline-flex size-2 rounded-full bg-signal" />
           </span>
           Drafting pick {pickNumber} of {totalPicks}
         </p>
-        <span className="font-mono text-xs text-hashmark">
-          {totalPicks - unpickedTeams.length} / {totalPicks} drawn
+        <span className="font-mono text-[11px] text-hashmark sm:text-xs">
+          {drawnCount} / {totalPicks} drawn
         </span>
       </div>
 
-      <div className="relative mt-6 flex flex-col items-center gap-5">
-        <div className="relative flex size-32 items-center justify-center sm:size-40">
-          <span className="absolute inset-0 rounded-full border-2 border-signal/20" />
-          <span
-            className="absolute inset-0 rounded-full border-2 border-transparent border-t-signal animate-spin"
-            style={{ animationDuration: "0.9s" }}
-          />
-          {spinning && (
-            <AnimatePresence mode="popLayout">
-              <motion.div
-                key={spinning.id + tick}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.12 }}
-                className="absolute inset-3 flex items-center justify-center sm:inset-4"
+      <div className="relative mt-5">
+        <div
+          className="relative mx-auto overflow-hidden rounded-xl border border-sideline/60 bg-midnight/70"
+          style={{ height: REEL_ITEM_HEIGHT }}
+        >
+          <div
+            ref={reelRef}
+            className="will-change-transform"
+            style={{ transform: "translate3d(0, 0, 0)" }}
+          >
+            {repeatedTeams.map((team, idx) => (
+              <div
+                key={`${team.id}-${idx}`}
+                className="flex items-center gap-4 px-4 sm:px-6"
+                style={{ height: REEL_ITEM_HEIGHT }}
               >
-                <BigAvatar name={spinning.name} url={spinning.avatarUrl} />
-              </motion.div>
-            </AnimatePresence>
-          )}
+                <Avatar name={team.name} url={team.avatarUrl} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-lg font-bold text-chalk sm:text-xl">
+                    {team.name}
+                  </p>
+                  {team.ownerName && (
+                    <p className="truncate text-xs text-hashmark">
+                      {team.ownerName}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-midnight to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3 bg-gradient-to-t from-midnight to-transparent" />
+          <div className="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-signal/40 ring-inset" />
         </div>
-        {spinning && (
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={spinning.id + "-name-" + tick}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.12 }}
-              className="text-center"
-            >
-              <p className="font-display text-2xl font-bold text-chalk sm:text-3xl">
-                {spinning.name}
-              </p>
-              {spinning.ownerName && (
-                <p className="mt-1 text-sm text-hashmark">{spinning.ownerName}</p>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        )}
       </div>
     </motion.div>
   );
@@ -626,7 +699,11 @@ function RevealedList({
           {picks.length} / {total} revealed
         </span>
       </div>
-      <ol className="overflow-hidden rounded-2xl border border-sideline/50 bg-sideline/10">
+      <ol
+        className="overflow-hidden rounded-2xl border border-sideline/50 bg-sideline/10"
+        data-testid="revealed-list"
+        data-count={picks.length}
+      >
         {ordered.map((pick, idx) => {
           const team = teamById.get(pick.teamId);
           if (!team) return null;

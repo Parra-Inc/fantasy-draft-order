@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { BrandMark } from "@/components/brand-mark";
 import { buildMetadata, SITE_NAME } from "@/lib/seo/metadata";
 import { BreadcrumbLd, EventLd } from "@/lib/seo/jsonld";
-import { deriveStatus } from "@/lib/reveal";
+import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 import { DraftLive } from "./draft-live";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -58,13 +58,38 @@ export default async function DraftPage({ params }: Props) {
   if (!draft) notFound();
 
   const now = new Date();
+  const config = getRevealConfig();
   const initialStatus = deriveStatus({ now, picks: draft.picks });
-  const firstPick = draft.picks[0] ?? null;
-  const lastPick = draft.picks[draft.picks.length - 1] ?? null;
+  const picksByRevealAsc = [...draft.picks].sort(
+    (a, b) => a.revealedAt.getTime() - b.revealedAt.getTime(),
+  );
+  const firstByReveal = picksByRevealAsc[0] ?? null;
+  const lastByReveal = picksByRevealAsc[picksByRevealAsc.length - 1] ?? null;
   const startedAt =
-    firstPick && firstPick.revealedAt <= now ? firstPick.revealedAt : null;
+    firstByReveal && firstByReveal.revealedAt <= now
+      ? firstByReveal.revealedAt
+      : null;
   const completedAt =
-    lastPick && lastPick.revealedAt <= now ? lastPick.revealedAt : null;
+    lastByReveal && lastByReveal.revealedAt <= now
+      ? lastByReveal.revealedAt
+      : null;
+  const spinningPick = picksByRevealAsc.find((p) => {
+    const start = pickSpinStartAt(p.revealedAt, config);
+    return start <= now && p.revealedAt > now;
+  });
+  const initialCurrentSpin = spinningPick
+    ? {
+        teamId: spinningPick.teamId,
+        pickNumber: spinningPick.pickNumber,
+        revealedAt: spinningPick.revealedAt.toISOString(),
+        spinStartAt: pickSpinStartAt(
+          spinningPick.revealedAt,
+          config,
+        ).toISOString(),
+      }
+    : null;
+  const initialNextPick =
+    picksByRevealAsc.find((p) => p.revealedAt > now) ?? null;
 
   const siblingsRaw = await prisma.draft.findMany({
     where: {
@@ -156,9 +181,9 @@ export default async function DraftPage({ params }: Props) {
                   pickNumber: p.pickNumber,
                   revealedAt: p.revealedAt.toISOString(),
                 })),
-              nextPickAt:
-                draft.picks.find((p) => p.revealedAt > now)?.revealedAt.toISOString() ??
-                null,
+              currentSpin: initialCurrentSpin,
+              spinDurationMs: config.spinDurationMs,
+              nextPickAt: initialNextPick?.revealedAt.toISOString() ?? null,
               serverTime: now.toISOString(),
             }}
           />

@@ -108,11 +108,15 @@ export async function POST(req: Request) {
 
     const order = generateDraftOrder(draft.teams.map((t) => ({ teamId: t.id })));
     await tx.pick.createMany({
-      data: order.map((p, idx) => ({
+      data: order.map((p) => ({
         draftId: draft.id,
         teamId: p.teamId,
         pickNumber: p.pickNumber,
-        revealedAt: pickRevealedAt(scheduledFor, idx, revealConfig),
+        revealedAt: pickRevealedAt(
+          scheduledFor,
+          order.length - p.pickNumber,
+          revealConfig,
+        ),
       })),
     });
 
