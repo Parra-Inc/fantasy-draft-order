@@ -142,7 +142,7 @@ function DrawStartedNotice({ scheduledFor }: { scheduledFor: string }) {
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-300" />
           <div className="min-w-0">
             <p className="font-display text-[13px] font-bold leading-snug text-chalk sm:text-sm">
-              No or unsure? Commish might be on some sneaky ish.
+              No or unsure? Your commish might be stacking the deck.
             </p>
             <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
               Check below for other drafts under this league name.
