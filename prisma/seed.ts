@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { randomBytes } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
@@ -29,6 +30,7 @@ async function main() {
       creatorName: "Seed Script",
       scheduledFor,
       importSource: "MANUAL",
+      seed: randomBytes(16).toString("hex"),
       teams: {
         create: Array.from({ length: 10 }, (_, i) => ({
           name: `Team ${i + 1}`,
