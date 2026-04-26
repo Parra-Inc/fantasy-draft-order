@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, DM_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import { FeedbackButton } from "@/components/feedback-button";
 import { OrganizationLd, WebsiteLd } from "@/lib/seo/jsonld";
 import {
   SITE_NAME,
@@ -121,6 +122,7 @@ export default function RootLayout({
     >
       <body className="relative flex min-h-full flex-col bg-midnight text-chalk">
         <div className="relative z-10 flex min-h-full flex-col">{children}</div>
+        <FeedbackButton />
         <Toaster
           theme="dark"
           richColors

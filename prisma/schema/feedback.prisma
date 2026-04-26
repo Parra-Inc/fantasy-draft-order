@@ -1,0 +1,19 @@
+enum FeedbackType {
+  BUG
+  FEATURE
+  PRAISE
+  OTHER
+}
+
+model Feedback {
+  id        String       @id @default(dbgenerated("'fb_' || gen_random_uuid()::text"))
+  type      FeedbackType
+  message   String
+  page      String?
+  email     String?
+  userAgent String?
+  createdAt DateTime     @default(now())
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+}
