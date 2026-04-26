@@ -99,12 +99,14 @@ body::before {
 .input {
   display: block;
   width: 100%;
+  min-height: 2.625rem;
   border-radius: 0.75rem;
   border: 1px solid var(--color-sideline);
   background: rgba(30, 41, 59, 0.4);
   color: var(--color-chalk);
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
+  line-height: 1.25rem;
   transition: border-color 150ms, background-color 150ms;
 }
 .input::placeholder { color: var(--color-hashmark); }
