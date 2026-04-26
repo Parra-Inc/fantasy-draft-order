@@ -66,6 +66,29 @@ export default async function DraftPage({ params }: Props) {
   const completedAt =
     lastPick && lastPick.revealedAt <= now ? lastPick.revealedAt : null;
 
+  const siblingsRaw = await prisma.draft.findMany({
+    where: {
+      leagueName: { equals: draft.leagueName, mode: "insensitive" },
+      slug: { not: draft.slug },
+    },
+    select: {
+      slug: true,
+      leagueName: true,
+      scheduledFor: true,
+      createdAt: true,
+      picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 25,
+  });
+  const siblings = siblingsRaw.map((s) => ({
+    slug: s.slug,
+    leagueName: s.leagueName,
+    scheduledFor: s.scheduledFor.toISOString(),
+    createdAt: s.createdAt.toISOString(),
+    status: deriveStatus({ now, picks: s.picks }),
+  }));
+
   return (
     <div className="flex min-h-full flex-col">
       <BreadcrumbLd
@@ -105,6 +128,7 @@ export default async function DraftPage({ params }: Props) {
         <div className="relative mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
           <DraftLive
             slug={draft.slug}
+            siblings={siblings}
             initial={{
               slug: draft.slug,
               leagueName: draft.leagueName,

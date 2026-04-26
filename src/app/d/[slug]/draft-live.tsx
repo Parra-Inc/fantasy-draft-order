@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
-import { Calendar, Check, Copy, Loader2, Shield, Trophy, Users } from "lucide-react";
+import { AlertTriangle, Calendar, Check, Copy, History, Loader2, Shield, Trophy, Users } from "lucide-react";
 
 type Team = {
   id: string;
@@ -14,6 +14,14 @@ type Team = {
 };
 
 type Pick = { teamId: string; pickNumber: number; revealedAt: string };
+
+type Sibling = {
+  slug: string;
+  leagueName: string;
+  scheduledFor: string;
+  createdAt: string;
+  status: "SCHEDULED" | "DRAWING" | "COMPLETED";
+};
 
 type DraftState = {
   slug: string;
@@ -36,7 +44,15 @@ type DraftState = {
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export function DraftLive({ slug, initial }: { slug: string; initial: DraftState }) {
+export function DraftLive({
+  slug,
+  initial,
+  siblings,
+}: {
+  slug: string;
+  initial: DraftState;
+  siblings: Sibling[];
+}) {
   const scheduledAt = new Date(initial.scheduledFor).getTime();
   const [now, setNow] = useState(() => Date.now());
 
@@ -75,21 +91,116 @@ export function DraftLive({ slug, initial }: { slug: string; initial: DraftState
 
   return (
     <div className="space-y-6">
-      <ShareCard slug={slug} />
+      {now < scheduledAt && <ShareCard slug={slug} />}
       <Header state={state} now={now} scheduledAt={scheduledAt} />
       {state.status === "SCHEDULED" ? (
         <TeamsGrid teams={state.teams} />
       ) : (
         <DrawBoard state={state} />
       )}
+      <PreShareWarning />
+      <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
       <TrustPanel state={state} />
     </div>
+  );
+}
+
+function PreShareWarning() {
+  return (
+    <section className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 sm:p-6">
+      <div className="flex gap-3">
+        <AlertTriangle className="size-5 shrink-0 text-amber-300" />
+        <div className="space-y-2 text-sm text-hashmark">
+          <p className="font-display text-sm font-bold uppercase tracking-wider text-amber-200">
+            Read this before you trust the result
+          </p>
+          <p>
+            The draw is only fair if you saw this exact link{" "}
+            <span className="font-semibold text-chalk">before</span> the draft time —
+            i.e. your commissioner posted it in your group chat, email thread, or
+            league chat ahead of the scheduled draw.
+          </p>
+          <p>
+            Anyone can create a draft. A commissioner who creates several drafts
+            and only shares the one they like is gaming the system. If this URL
+            showed up after the draw — or if there are sibling drafts below for
+            the same league name that you weren&apos;t told about — treat the
+            result as suspect.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SiblingDrafts({
+  siblings,
+  leagueName,
+}: {
+  siblings: Sibling[];
+  leagueName: string;
+}) {
+  if (siblings.length === 0) return null;
+  return (
+    <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <History className="size-4 text-signal" />
+        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-signal">
+          Other drafts under &ldquo;{leagueName}&rdquo;
+        </h3>
+      </div>
+      <p className="mb-4 text-sm text-hashmark">
+        We found {siblings.length} other{" "}
+        {siblings.length === 1 ? "draft" : "drafts"} created under this league
+        name. If your commissioner didn&apos;t share these with you, ask why
+        they exist before trusting any single result.
+      </p>
+      <ol className="overflow-hidden rounded-xl border border-sideline/30">
+        {siblings.map((s, idx) => (
+          <li
+            key={s.slug}
+            className={`flex flex-col gap-2 bg-midnight/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 ${
+              idx !== 0 ? "border-t border-sideline/30" : ""
+            }`}
+          >
+            <div className="min-w-0">
+              <a
+                href={`/d/${s.slug}`}
+                className="font-mono text-sm text-chalk underline underline-offset-2 hover:text-signal"
+              >
+                /d/{s.slug}
+              </a>
+              <p className="mt-1 text-xs text-hashmark">
+                Created {new Date(s.createdAt).toLocaleString()} · scheduled{" "}
+                {new Date(s.scheduledFor).toLocaleString()}
+              </p>
+            </div>
+            <SiblingStatusPill status={s.status} />
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function SiblingStatusPill({ status }: { status: Sibling["status"] }) {
+  const label =
+    status === "COMPLETED"
+      ? "Complete"
+      : status === "DRAWING"
+        ? "Drawing"
+        : "Scheduled";
+  return (
+    <span className="inline-flex shrink-0 items-center rounded-full border border-sideline bg-sideline/40 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-hashmark">
+      {label}
+    </span>
   );
 }
 
 function ShareCard({ slug }: { slug: string }) {
   const [url, setUrl] = useState(`/d/${slug}`);
   const [copied, setCopied] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setUrl(`${window.location.origin}/d/${slug}`);
@@ -98,6 +209,7 @@ function ShareCard({ slug }: { slug: string }) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
+      inputRef.current?.select();
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -107,29 +219,59 @@ function ShareCard({ slug }: { slug: string }) {
 
   return (
     <section className="rounded-2xl border border-signal/30 bg-signal/5 p-4 sm:p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
-            Share this link with your league
-          </p>
-          <p className="mt-1.5 truncate font-mono text-sm text-chalk">{url}</p>
-        </div>
+      <div className="flex items-center gap-2">
+        <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+          Share this link with your league prior to the draft time
+        </p>
+      </div>
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-2">
+        <input
+          ref={inputRef}
+          type="text"
+          readOnly
+          value={url}
+          onFocus={(e) => e.currentTarget.select()}
+          onClick={(e) => e.currentTarget.select()}
+          className="min-w-0 flex-1 rounded-xl border border-sideline/60 bg-midnight/70 px-3.5 py-2.5 font-mono text-sm text-chalk outline-none transition-colors focus:border-signal/60 focus:ring-2 focus:ring-signal/30"
+          aria-label="Shareable draft link"
+        />
         <button
           type="button"
           onClick={copy}
-          className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-signal px-4 text-sm font-semibold text-midnight transition-colors hover:bg-signal-dark sm:w-auto"
+          aria-label={copied ? "Link copied" : "Copy link"}
+          className={`relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-5 text-sm font-semibold transition-colors sm:w-32 ${
+            copied
+              ? "bg-signal/20 text-signal ring-1 ring-signal/40"
+              : "bg-signal text-midnight hover:bg-signal-dark"
+          }`}
         >
-          {copied ? (
-            <>
-              <Check className="size-4" />
-              Copied
-            </>
-          ) : (
-            <>
-              <Copy className="size-4" />
-              Copy link
-            </>
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            {copied ? (
+              <motion.span
+                key="copied"
+                initial={{ opacity: 0, y: 8, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.9 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="inline-flex items-center gap-1.5"
+              >
+                <Check className="size-4" />
+                Copied
+              </motion.span>
+            ) : (
+              <motion.span
+                key="copy"
+                initial={{ opacity: 0, y: 8, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.9 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="inline-flex items-center gap-1.5"
+              >
+                <Copy className="size-4" />
+                Copy link
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </div>
     </section>
@@ -513,6 +655,11 @@ function TrustPanel({ state }: { state: DraftState }) {
           <li className="flex gap-2">
             <span className="text-signal">·</span>
             Teams above are locked in — they cannot be edited.
+          </li>
+          <li className="flex gap-2">
+            <span className="text-signal">·</span>
+            The result is only trustworthy if you got this link{" "}
+            <span className="font-semibold text-chalk">before</span> the draw time. See the warning below.
           </li>
           <li className="flex gap-2">
             <span className="text-signal">·</span>
