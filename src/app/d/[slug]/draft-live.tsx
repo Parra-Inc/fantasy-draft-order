@@ -91,17 +91,66 @@ export function DraftLive({
 
   return (
     <div className="space-y-6">
-      {now < scheduledAt && <ShareCard slug={slug} />}
+      {now < scheduledAt ? (
+        <ShareCard slug={slug} />
+      ) : (
+        <DrawStartedNotice scheduledFor={state.scheduledFor} />
+      )}
       <Header state={state} now={now} scheduledAt={scheduledAt} />
       {state.status === "SCHEDULED" ? (
         <TeamsGrid teams={state.teams} />
       ) : (
         <DrawBoard state={state} />
       )}
-      <PreShareWarning />
+      {now < scheduledAt && <PreShareWarning />}
       <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
       <TrustPanel state={state} />
     </div>
+  );
+}
+
+function DrawStartedNotice({ scheduledFor }: { scheduledFor: string }) {
+  const when = new Date(scheduledFor).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return (
+    <section className="overflow-hidden rounded-2xl border border-signal/30 bg-signal/5">
+      <div className="border-b border-sideline/40 px-3.5 py-2.5 sm:px-5 sm:py-3">
+        <p className="font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
+          Was this link in your league chat before
+        </p>
+        <p className="mt-0.5 font-display text-sm font-bold tabular-nums text-chalk sm:text-base">
+          {when}?
+        </p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2">
+        <div className="flex items-start gap-2.5 border-b border-sideline/40 p-3.5 sm:gap-3 sm:border-r sm:border-b-0 sm:p-5">
+          <Check className="mt-0.5 size-4 shrink-0 text-signal" />
+          <div className="min-w-0">
+            <p className="font-display text-[13px] font-bold leading-snug text-chalk sm:text-sm">
+              Yes — you&apos;re good.
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+              Result is locked, audited, and tamper-proof.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2.5 p-3.5 sm:gap-3 sm:p-5">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-300" />
+          <div className="min-w-0">
+            <p className="font-display text-[13px] font-bold leading-snug text-chalk sm:text-sm">
+              No or unsure? Commish might be on some sneaky ish.
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+              Check below for other drafts under this league name.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -142,14 +191,14 @@ function SiblingDrafts({
 }) {
   if (siblings.length === 0) return null;
   return (
-    <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-6">
-      <div className="mb-4 flex items-center gap-2">
-        <History className="size-4 text-signal" />
-        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-signal">
+    <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-4 sm:p-6">
+      <div className="mb-3 flex items-center gap-2 sm:mb-4">
+        <History className="size-4 shrink-0 text-signal" />
+        <h3 className="font-display text-xs font-bold uppercase tracking-wider text-signal sm:text-sm">
           Other drafts under &ldquo;{leagueName}&rdquo;
         </h3>
       </div>
-      <p className="mb-4 text-sm text-hashmark">
+      <p className="mb-3 text-xs text-hashmark sm:mb-4 sm:text-sm">
         We found {siblings.length} other{" "}
         {siblings.length === 1 ? "draft" : "drafts"} created under this league
         name. If your commissioner didn&apos;t share these with you, ask why
@@ -159,20 +208,26 @@ function SiblingDrafts({
         {siblings.map((s, idx) => (
           <li
             key={s.slug}
-            className={`flex flex-col gap-2 bg-midnight/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 ${
+            className={`flex flex-col gap-1.5 bg-midnight/40 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 ${
               idx !== 0 ? "border-t border-sideline/30" : ""
             }`}
           >
             <div className="min-w-0">
               <a
                 href={`/d/${s.slug}`}
-                className="font-mono text-sm text-chalk underline underline-offset-2 hover:text-signal"
+                className="block truncate font-mono text-xs text-chalk underline underline-offset-2 hover:text-signal sm:text-sm"
               >
                 /d/{s.slug}
               </a>
-              <p className="mt-1 text-xs text-hashmark">
-                Created {new Date(s.createdAt).toLocaleString()} · scheduled{" "}
-                {new Date(s.scheduledFor).toLocaleString()}
+              <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+                Created {new Date(s.createdAt).toLocaleString()}
+                <span className="hidden sm:inline">
+                  {" "}
+                  · scheduled {new Date(s.scheduledFor).toLocaleString()}
+                </span>
+              </p>
+              <p className="mt-0.5 text-[11px] leading-snug text-hashmark sm:hidden">
+                Scheduled {new Date(s.scheduledFor).toLocaleString()}
               </p>
             </div>
             <SiblingStatusPill status={s.status} />
@@ -218,13 +273,13 @@ function ShareCard({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-signal/30 bg-signal/5 p-4 sm:p-5">
+    <section className="rounded-2xl border border-signal/30 bg-signal/5 p-3.5 sm:p-5">
       <div className="flex items-center gap-2">
-        <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <p className="font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
           Share this link with your league prior to the draft time
         </p>
       </div>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-2">
+      <div className="mt-2.5 flex flex-col gap-2 sm:mt-3 sm:flex-row sm:items-stretch">
         <input
           ref={inputRef}
           type="text"
