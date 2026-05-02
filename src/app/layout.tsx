@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, DM_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import { FeedbackButton } from "@/components/feedback-button";
 import { OrganizationLd, WebsiteLd } from "@/lib/seo/jsonld";
@@ -136,6 +137,7 @@ export default function RootLayout({
         />
         <OrganizationLd />
         <WebsiteLd />
+        <Analytics />
       </body>
     </html>
   );
