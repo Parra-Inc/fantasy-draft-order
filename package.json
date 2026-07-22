@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "bash scripts/dev.sh",
     "dev:force": "bash scripts/dev.sh --force",
-    "dev:ngrok": "bash scripts/dev.sh --ngrok",
+    "dev:tunnel": "bash scripts/dev.sh --tunnel",
     "dev:web": "next dev --turbopack --port 3042",
+    "dev:studio": "prisma studio --port 5564 --browser none",
     "dev:infra": "docker compose -f dev/docker-compose.yml logs -f",
     "build": "prisma generate && next build",
     "start": "next start",
