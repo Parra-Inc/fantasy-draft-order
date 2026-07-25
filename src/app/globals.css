@@ -95,6 +95,14 @@ body::before {
   outline-offset: 2px;
 }
 
+/* Opt-out for a control whose wrapper already draws the focus state (e.g. the
+   league-ID pill, which uses focus-within). This rule is unlayered on purpose:
+   Tailwind utilities live in @layer utilities and can never win against the
+   unlayered *:focus-visible above. */
+[data-focus-ring="parent"]:focus-visible {
+  outline: none;
+}
+
 /* Field inputs */
 .input {
   display: block;

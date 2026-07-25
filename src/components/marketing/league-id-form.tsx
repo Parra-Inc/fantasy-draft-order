@@ -102,7 +102,7 @@ export function LeagueIdForm({
               aria-haspopup="listbox"
               aria-expanded={open}
               aria-label={`Platform: ${platform.label}`}
-              className="text-chalk hover:bg-sideline/60 flex h-11 w-full items-center justify-between gap-2 rounded-xl px-4 text-sm font-semibold transition-colors sm:w-auto sm:justify-start sm:rounded-full"
+              className="border-sideline/60 bg-midnight/40 text-chalk hover:bg-sideline/60 flex h-12 w-full shrink-0 items-center justify-between gap-2 rounded-xl border px-4 text-base font-semibold transition-colors sm:h-11 sm:w-auto sm:justify-start sm:rounded-full sm:border-transparent sm:bg-transparent sm:text-sm"
             >
               <span className="flex items-center gap-2">
                 <span className="bg-signal size-1.5 rounded-full" />
@@ -116,7 +116,7 @@ export function LeagueIdForm({
             {open && (
               <div
                 role="listbox"
-                className="border-sideline bg-midnight/95 absolute top-full left-0 z-20 mt-2 w-56 overflow-hidden rounded-xl border p-1 shadow-2xl backdrop-blur-md"
+                className="border-sideline bg-midnight/95 absolute top-full left-0 z-20 mt-2 w-full overflow-hidden rounded-xl border p-1 shadow-2xl backdrop-blur-md sm:w-56"
               >
                 {PLATFORMS.map((p) => (
                   <button
@@ -128,7 +128,7 @@ export function LeagueIdForm({
                       setSource(p.source);
                       setOpen(false);
                     }}
-                    className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                    className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-base transition-colors sm:py-2 sm:text-sm ${
                       p.source === source
                         ? "bg-signal/10 text-signal"
                         : "text-chalk hover:bg-sideline/60"
@@ -151,13 +151,14 @@ export function LeagueIdForm({
             autoComplete="off"
             aria-label={`${platform.label} league ID`}
             placeholder={`League ID · ${platform.placeholder}`}
-            className="border-sideline/60 bg-midnight/40 text-chalk placeholder:text-hashmark h-11 min-w-0 flex-1 rounded-xl border px-4 text-sm focus:outline-none sm:border-transparent sm:bg-transparent"
+            data-focus-ring="parent"
+            className="border-sideline/60 bg-midnight/40 text-chalk placeholder:text-hashmark h-12 w-full min-w-0 shrink-0 rounded-xl border px-4 text-base focus:outline-none sm:h-11 sm:flex-1 sm:border-transparent sm:bg-transparent sm:text-sm"
           />
 
           <button
             type="submit"
             disabled={!leagueId.trim() || submitting}
-            className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl px-6 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:rounded-full"
+            className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl px-6 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:rounded-full"
           >
             {submitting ? "Loading…" : "Import league"}
             <ArrowRight className="size-4" />
@@ -165,8 +166,8 @@ export function LeagueIdForm({
         </div>
       </form>
 
-      <p className="text-hashmark/80 mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1 text-left text-xs">
-        <span className="font-mono">{platform.hint}</span>
+      <p className="text-hashmark/80 mt-3 flex flex-col items-start gap-x-4 gap-y-1 px-1 text-left text-xs sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <span className="font-mono break-words">{platform.hint}</span>
         {showHelpLink && (
           <Link
             href={platform.helpPath}
