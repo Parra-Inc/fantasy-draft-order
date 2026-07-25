@@ -1,0 +1,14 @@
+{
+  "name": "fantasy-draft-order-program",
+  "private": true,
+  "main": "index.ts",
+  "dependencies": {
+    "@parra/cloudflare-pulumi": "git+https://github.com/Parra-Inc/cloudflare-infra.git#v1.4.0",
+    "@pulumi/cloudflare": "^5.49.0",
+    "@pulumi/pulumi": "^3.140.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

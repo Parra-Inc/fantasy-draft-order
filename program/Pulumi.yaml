@@ -1,0 +1,6 @@
+name: fantasy-draft-order
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: Cloudflare config for fantasyfootballdraftorder.com (analytics, WAF, email routing).
