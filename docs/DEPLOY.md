@@ -37,6 +37,7 @@ are set per-repo. The `cloudflare-env` skill fans the Cloudflare ones out.
 | `CLOUDFLARE_API_TOKEN` | Worker deploys, D1, and the Pulumi Cloudflare provider |
 | `CLOUDFLARE_S3_ACCESS_KEY_ID` / `CLOUDFLARE_S3_SECRET_ACCESS_KEY` | R2 key used as the `AWS_*` creds for the Pulumi state backend |
 | `PULUMI_CONFIG_PASSPHRASE` | Encrypts Pulumi secret config/state. Losing it means losing state decryption |
+| `CLOUDFLARE_GLOBAL_API_KEY` / `CLOUDFLARE_EMAIL` | Web Analytics (RUM) only. RUM has no API-token permission group, so that one component calls the REST API directly with Global API Key auth |
 | `INFRA_INSTALL_TOKEN` | PAT with read access to Parra-Inc repos, so npm can install the private `@parra/cloudflare-pulumi` package |
 
 | Variable | Value |
@@ -45,9 +46,18 @@ are set per-repo. The `cloudflare-env` skill fans the Cloudflare ones out.
 | `PULUMI_STATE_BUCKET` | `pulumi-state` |
 | `R2_ENDPOINT_HOST` | `b428f294c89acfbe189aa1556f15cc07.r2.cloudflarestorage.com` |
 
+Variables are **not masked in Actions logs** and this repo is public, so anything that
+needs masking belongs in the secrets table, not this one. The three above are identifiers
+that are useless without a credential.
+
 The API token needs **Workers Scripts:Edit**, **D1:Edit**, **Workers R2 Storage:Edit**,
 and **Zone:Edit**. D1:Edit is the one the other repos' tokens may not have yet: without
 it, the provision and migrate steps fail.
+
+`CLOUDFLARE_GLOBAL_API_KEY` is account-wide, covers every service, and cannot be scoped
+down, so the workflow attaches it to the two `pulumi/actions` steps rather than to the
+job. Nothing else in the pipeline should ever be given it. If Cloudflare ever ships a RUM
+token permission, replace it and delete both secrets.
 
 Check what is already set:
 
