@@ -20,14 +20,23 @@ type Props = {
  * page whose whole claim is "this cannot be rigged" cannot afford to look like
  * it is selling something.
  *
- * Never render this during DRAWING. The staggered reveal is the product.
+ * Sized by CONTAINER queries, not viewport ones, because there is exactly one
+ * instance of this and it lives in two very different boxes: the full-width
+ * stack below `lg`, and a ~17-20rem sticky rail at `lg` and up. A viewport
+ * `sm:grid-cols-3` would put three cards side by side inside a 272px rail.
+ * Rendering it twice with `lg:hidden` / `hidden lg:block` would duplicate the
+ * `aria-labelledby` target ids, so it stays one node that measures its parent.
+ *
+ * It stays mounted in every draft state, DRAWING included. Everything above is
+ * what makes that safe: it never competes with the reveal, and taking it out
+ * mid-draw would reflow the page at the one second everyone is watching it.
  */
 export function PromoShelf({ surface }: Props) {
   if (livePromos.length === 0) return null;
 
   return (
     <section
-      className="border-sideline/50 bg-sideline/10 rounded-2xl border p-5 sm:p-6"
+      className="border-sideline/50 bg-sideline/10 @container rounded-2xl border p-5 @xl:p-6"
       aria-labelledby={`promo-shelf-${surface}`}
     >
       <div className="mb-1 flex items-center gap-2">
@@ -40,11 +49,12 @@ export function PromoShelf({ surface }: Props) {
         </h3>
       </div>
       <p className="text-hashmark mb-4 text-xs">
-        This site is free and always will be. Nothing below is a paid placement,
-        they are just my other apps.
+        This site is free and always will be. Nothing here is a paid placement,
+        they are just my other apps. If you want to keep this going, take a look
+        at one, or send it to someone who would like it.
       </p>
 
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-3 @xl:grid-cols-3">
         {livePromos.map((promo) => (
           <li key={promo.key}>
             <a
@@ -73,9 +83,10 @@ export function PromoShelf({ surface }: Props) {
                     wraps to three lines does not leave one card's link sitting
                     below its neighbours' in the 3-up grid. */}
                 <p className="text-signal/70 group-hover:text-signal mt-auto pt-2 text-[11px] font-medium transition-colors">
-                  {promo.destination === "app-store"
-                    ? "Free on the App Store"
-                    : "diyproject.ai"}
+                  {promo.cta ??
+                    (promo.destination === "app-store"
+                      ? "Free on the App Store"
+                      : "diyproject.ai")}
                 </p>
               </div>
             </a>

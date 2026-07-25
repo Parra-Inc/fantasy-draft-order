@@ -83,9 +83,15 @@ export function DraftLive({
   siblings: Sibling[];
 }) {
   const scheduledAt = new Date(initial.scheduledFor).getTime();
-  const [now, setNow] = useState(() => Date.now());
+  // Seed from the server clock that produced this HTML, not `Date.now()`: the
+  // browser hydrates seconds after the render, so a client-seeded countdown is
+  // guaranteed to disagree with the markup. `initial.serverTime` is part of the
+  // payload, so the first client render is byte-identical to the server's. Only
+  // after mount do we switch to the local clock and start ticking.
+  const [now, setNow] = useState(() => new Date(initial.serverTime).getTime());
 
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(id);
   }, []);
@@ -124,60 +130,70 @@ export function DraftLive({
   }, [pastScheduled, state.status, mutate]);
 
   return (
-    <div className="space-y-6">
-      {now < scheduledAt ? (
-        <ShareCard
-          slug={slug}
-          teams={state.teams}
-          myTeamId={myTeamId}
-          onChoose={choose}
-        />
-      ) : (
-        <DrawStartedNotice scheduledFor={state.scheduledFor} />
-      )}
-      <Header
-        state={state}
-        now={now}
-        scheduledAt={scheduledAt}
-        slug={slug}
-      />
-      {!state.currentSpin &&
-      state.picks.length === 0 &&
-      state.status !== "COMPLETED" ? (
-        <TeamsGrid teams={state.teams} />
-      ) : (
-        <DrawBoard state={state} />
-      )}
-      {/* The last pick has landed and the whole league is still on the page.
-          This is the only moment the product has their attention, so the share
-          artifact and the call to action both fire here rather than living in
-          a header nobody reads during a countdown. */}
-      {isDone && (
-        <>
-          <ResultShare
+    /*
+      Two shapes, one DOM order. Below `lg` this is a single column and the
+      shelf sits between the draw and the trust narrative. At `lg` and up the
+      shelf becomes a sticky right rail spanning both content rows, so the
+      trust narrative (pre-share warning, sibling drafts, audit trail) stays
+      contiguous under the draw instead of being pushed down by it.
+
+      The shelf renders in every state, including DRAWING. It is deliberately
+      the quietest thing on the page (see PromoShelf), and pulling it mid-draw
+      would both reflow the whole layout at the exact second everyone is
+      watching and hide it during the only minute this page has an audience.
+    */
+    <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="flex flex-col gap-6 lg:col-start-1 lg:row-start-1">
+        {now < scheduledAt ? (
+          <ShareCard
             slug={slug}
-            leagueName={state.leagueName}
             teams={state.teams}
-            picks={state.picks}
             myTeamId={myTeamId}
             onChoose={choose}
           />
-          <AfterDrawCta slug={slug} leagueName={state.leagueName} />
-        </>
-      )}
-      {now < scheduledAt && <PreShareWarning />}
-      <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
-      <TrustPanel state={state} />
-      {/*
-        Last thing on the page, and never during DRAWING: the reveal is the
-        product, and everything above this point is the trust narrative
-        (pre-share warning, sibling drafts, audit trail). Both stay contiguous.
-      */}
-      {state.status !== "DRAWING" && (
+        ) : (
+          <DrawStartedNotice scheduledFor={state.scheduledFor} />
+        )}
+        <Header state={state} now={now} scheduledAt={scheduledAt} slug={slug} />
+        {!state.currentSpin &&
+        state.picks.length === 0 &&
+        state.status !== "COMPLETED" ? (
+          <TeamsGrid teams={state.teams} />
+        ) : (
+          <DrawBoard state={state} />
+        )}
+        {/* The last pick has landed and the whole league is still on the page.
+            This is the only moment the product has their attention, so the share
+            artifact and the call to action both fire here rather than living in
+            a header nobody reads during a countdown. */}
+        {isDone && (
+          <>
+            <ResultShare
+              slug={slug}
+              leagueName={state.leagueName}
+              teams={state.teams}
+              picks={state.picks}
+              myTeamId={myTeamId}
+              onChoose={choose}
+            />
+            <AfterDrawCta slug={slug} leagueName={state.leagueName} />
+          </>
+        )}
+      </div>
+
+      {/* `self-start` is what makes the sticky work: a stretched grid item is
+          already as tall as its area and has nowhere to travel. */}
+      <aside className="lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
         <PromoShelf
           surface={state.status === "COMPLETED" ? "results" : "pre-draw"}
         />
-      )}
+      </aside>
+
+      <div className="flex flex-col gap-6 lg:col-start-1 lg:row-start-2">
+        {now < scheduledAt && <PreShareWarning />}
+        <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
+        <TrustPanel state={state} />
+      </div>
     </div>
   );
 }

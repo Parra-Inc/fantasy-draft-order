@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { env } from "@/lib/env";
+import { Popover } from "@/components/popover";
 import {
   ArrowRight,
   CalendarPlus,
   Check,
   Download,
+  ImageIcon,
+  Link2,
   RefreshCw,
   Share2,
   Trophy,
@@ -92,8 +95,7 @@ export function useMyTeam(slug: string, teams: Team[]) {
 
   // Guard against a team that no longer exists: a stale id would silently
   // personalize nothing, which looks like a bug rather than a cleared choice.
-  const myTeamId =
-    stored && teams.some((t) => t.id === stored) ? stored : null;
+  const myTeamId = stored && teams.some((t) => t.id === stored) ? stored : null;
 
   const choose = useCallback(
     (teamId: string | null) => writeTeamId(slug, teamId),
@@ -187,13 +189,50 @@ export function AddToCalendarButton({ slug }: { slug: string }) {
   );
 }
 
+/** Nothing to subscribe to: neither capability below changes after mount. */
+const noSubscribe = () => () => {};
+
+function readTimeZone(): string | null {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone ?? null;
+  } catch {
+    // Leave the card on UTC.
+    return null;
+  }
+}
+
+/**
+ * Everything only the browser can answer.
+ *
+ * `navigator.share` and the IANA time zone both differ between the worker that
+ * rendered this HTML and the phone reading it, and the zone ends up in the card
+ * URL, which is an href in the markup. useSyncExternalStore is what keeps that
+ * honest: the server snapshot says "no zone, no share sheet", so the first
+ * client render matches the HTML exactly and the real values land right after.
+ */
+function useClientCapabilities() {
+  const canShare = useSyncExternalStore(
+    noSubscribe,
+    () => typeof navigator.share === "function",
+    () => false,
+  );
+  const tz = useSyncExternalStore(noSubscribe, readTimeZone, () => null);
+  return { canShare, tz };
+}
+
 /**
  * The results share panel: the artifact people actually post.
  *
- * Prefers sharing the PNG itself over a link. On a phone that puts the result
- * into iMessage or Instagram as an image, which is a different act from pasting
- * a URL and converts far better; the URL share and the clipboard are fallbacks
- * for browsers without file sharing (desktop Safari, Firefox).
+ * The one button hides a real fork, so it opens a popover instead of guessing:
+ * the image and the link travel very differently. The PNG is what lands in
+ * iMessage or a story and it carries the whole result with it, but it is a dead
+ * end; the link is what actually brings the next league here. Sharing the image
+ * with the URL in the message text is the best of both, so that is what the
+ * first row does, and the rest are there for when it is not what someone wants.
+ *
+ * With a team claimed, both artifacts default to that team's pick, with a
+ * toggle back to the whole order. That claim is localStorage only, never a
+ * server write.
  */
 export function ResultShare({
   slug,
@@ -212,6 +251,8 @@ export function ResultShare({
 }) {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [scope, setScope] = useState<"mine" | "all">("mine");
+  const { canShare, tz } = useClientCapabilities();
 
   // The canonical origin, not window.location.origin: this URL is about to be
   // pasted somewhere permanent, and it should say fantasyfootballdraftorder.com
@@ -221,10 +262,25 @@ export function ResultShare({
     ? (picks.find((p) => p.teamId === myTeamId) ?? null)
     : null;
   const myTeam = teams.find((t) => t.id === myTeamId) ?? null;
-  const cardUrl = `/d/${slug}/card${myPick ? `?t=${myTeamId}` : ""}`;
+  // The toggle only exists once a team is claimed, so "mine" with no pick is
+  // just the whole order.
+  const activePick = scope === "mine" ? myPick : null;
+  const mine = activePick !== null;
 
-  const shareText = myPick
-    ? `I got the ${myPick.pickNumber}${ordinalSuffix(myPick.pickNumber)} pick of ${teams.length} in ${leagueName}.\n\nDrawn live from open-source code, with the seed recorded before anyone saw it:`
+  const cardUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    if (mine && myTeamId) params.set("t", myTeamId);
+    // Without this the worker has no zone and stamps the card in UTC, which is
+    // never the time the league agreed to meet at.
+    if (tz) params.set("tz", tz);
+    const query = params.toString();
+    return `/d/${slug}/card${query ? `?${query}` : ""}`;
+  }, [slug, mine, myTeamId, tz]);
+
+  const fileName = `${slug}-draft-order${mine ? "-my-pick" : ""}.png`;
+
+  const shareText = activePick
+    ? `I got the ${activePick.pickNumber}${ordinalSuffix(activePick.pickNumber)} pick of ${teams.length} in ${leagueName}.\n\nDrawn live from open-source code, with the seed recorded before anyone saw it:`
     : `${leagueName} draft order, drawn live from open-source code:\n\n${picks
         .slice()
         .sort((a, b) => a.pickNumber - b.pickNumber)
@@ -235,29 +291,36 @@ export function ResultShare({
         )
         .join("\n")}\n`;
 
-  async function share() {
+  function flashCopied() {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  }
+
+  /** Hands the OS the actual PNG, with the link in the message text. */
+  async function shareImage() {
     setBusy(true);
     try {
-      // Best case: hand the OS the actual image.
+      const res = await fetch(cardUrl);
+      if (!res.ok) throw new Error(`card ${res.status}`);
+      const blob = await res.blob();
+      const file = new File([blob], fileName, { type: "image/png" });
+      if (!navigator.canShare?.({ files: [file] })) {
+        // Desktop Safari and Firefox have navigator.share but no file support.
+        await shareLink();
+        return;
+      }
+      await navigator.share({ files: [file], text: `${shareText}\n${url}` });
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      toast.error("Could not share the image. Try downloading it instead.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function shareLink() {
+    try {
       if (typeof navigator.share === "function") {
-        try {
-          const res = await fetch(cardUrl);
-          if (res.ok) {
-            const blob = await res.blob();
-            const file = new File([blob], `${slug}-draft-order.png`, {
-              type: "image/png",
-            });
-            if (navigator.canShare?.({ files: [file] })) {
-              await navigator.share({
-                files: [file],
-                text: `${shareText}\n${url}`,
-              });
-              return;
-            }
-          }
-        } catch {
-          // Fall through to the link share below.
-        }
         await navigator.share({
           title: `${leagueName} draft order`,
           text: shareText,
@@ -266,16 +329,25 @@ export function ResultShare({
         return;
       }
       await navigator.clipboard.writeText(`${shareText}\n${url}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      flashCopied();
     } catch (err) {
-      // AbortError just means the user dismissed the share sheet.
       if (err instanceof Error && err.name === "AbortError") return;
       toast.error("Could not share. Copy the link instead.");
-    } finally {
-      setBusy(false);
     }
   }
+
+  async function copyLink(close: () => void) {
+    try {
+      await navigator.clipboard.writeText(url);
+      flashCopied();
+      close();
+    } catch {
+      toast.error("Could not copy the link.");
+    }
+  }
+
+  const itemClass =
+    "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-chalk transition-colors hover:bg-sideline/60 focus-visible:bg-sideline/60 disabled:opacity-60";
 
   return (
     <section className="border-signal/30 bg-signal/5 space-y-4 rounded-2xl border p-4 sm:p-5">
@@ -302,27 +374,137 @@ export function ResultShare({
       )}
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <button
-          type="button"
-          onClick={share}
-          disabled={busy}
-          className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-sm font-semibold transition-colors disabled:opacity-60"
+        <Popover
+          label="Share options"
+          triggerClassName="bg-signal text-midnight hover:bg-signal-dark inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl px-5 text-sm font-semibold transition-colors sm:w-auto"
+          trigger={
+            copied ? (
+              <>
+                <Check className="size-4" />
+                Copied
+              </>
+            ) : (
+              <>
+                <Share2 className="size-4" />
+                Share {mine ? "your pick" : "the order"}
+              </>
+            )
+          }
         >
-          {copied ? (
-            <>
-              <Check className="size-4" />
-              Copied
-            </>
-          ) : (
-            <>
-              <Share2 className="size-4" />
-              Share {myPick ? "your pick" : "the order"}
-            </>
+          {(close) => (
+            <div className="space-y-3">
+              {/* The card is the point, so show the actual card. It is the
+                  same URL the buttons below use, so this costs one render that
+                  is then served from cache. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={cardUrl}
+                alt={
+                  mine
+                    ? `${myTeam?.name ?? "Your team"}'s pick`
+                    : `${leagueName} draft order`
+                }
+                className="border-sideline/60 bg-midnight w-full rounded-xl border"
+              />
+
+              {myPick && (
+                <div className="border-sideline/60 bg-midnight/60 flex rounded-xl border p-1">
+                  {(
+                    [
+                      ["mine", "Your pick"],
+                      ["all", "Whole order"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setScope(value)}
+                      aria-pressed={scope === value}
+                      className={`flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                        scope === value
+                          ? "bg-signal text-midnight"
+                          : "text-hashmark hover:text-chalk"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="space-y-0.5">
+                {canShare && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await shareImage();
+                      close();
+                    }}
+                    disabled={busy}
+                    className={itemClass}
+                  >
+                    <ImageIcon className="text-signal size-4 shrink-0" />
+                    <span className="flex flex-col">
+                      Share image
+                      <span className="text-hashmark text-xs font-normal">
+                        The card, with the link in the message
+                      </span>
+                    </span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await shareLink();
+                    close();
+                  }}
+                  className={itemClass}
+                >
+                  <Share2 className="text-signal size-4 shrink-0" />
+                  <span className="flex flex-col">
+                    Share link
+                    {/* Everyone who opens it sees the live page, not a
+                        screenshot of it. */}
+                    <span className="text-hashmark text-xs font-normal">
+                      {canShare ? "Send the draft page" : "Copy the draft page"}
+                    </span>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void copyLink(close)}
+                  className={itemClass}
+                >
+                  <Link2 className="text-signal size-4 shrink-0" />
+                  <span className="flex flex-col">
+                    Copy link
+                    <span className="text-hashmark truncate text-xs font-normal">
+                      {url.replace(/^https?:\/\//, "")}
+                    </span>
+                  </span>
+                </button>
+                <a
+                  href={cardUrl}
+                  download={fileName}
+                  onClick={close}
+                  className={itemClass}
+                >
+                  <Download className="text-signal size-4 shrink-0" />
+                  <span className="flex flex-col">
+                    Download image
+                    <span className="text-hashmark text-xs font-normal">
+                      PNG, 1080x1350
+                    </span>
+                  </span>
+                </a>
+              </div>
+            </div>
           )}
-        </button>
+        </Popover>
+
         <a
           href={cardUrl}
-          download={`${slug}-draft-order.png`}
+          download={fileName}
           className="border-sideline/60 bg-midnight/50 text-chalk hover:border-signal/40 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-5 text-sm font-semibold transition-colors"
         >
           <Download className="size-4" />
@@ -377,6 +559,25 @@ export function AfterDrawCta({
         Re-drawing creates a separate draft with its own link and its own seed.
         This one is permanent and cannot be changed.
       </p>
+      {/*
+        Deliberately here rather than in the header: the league that just drew
+        its order in the summer is the same league that needs a punishment
+        wheel in December, and this page is the link they keep. The two
+        products share a season, in opposite halves of it.
+      */}
+      <div className="border-sideline/50 mt-6 border-t pt-5">
+        <p className="text-hashmark text-sm">
+          Settle last place the same way.{" "}
+          <Link
+            href="/fantasy-football-punishments"
+            className="text-chalk hover:text-signal font-semibold underline underline-offset-2"
+          >
+            Build a punishment wheel
+          </Link>{" "}
+          for the end of the season, drawn publicly so nobody can say the
+          commissioner went easy on their friend.
+        </p>
+      </div>
     </section>
   );
 }

@@ -44,6 +44,13 @@ export type Promo = {
    * meaningless off-store and the CTA has to promise something different.
    */
   destination: "app-store" | "web";
+  /**
+   * Overrides the CTA line rendered under the tagline. The default for an
+   * `app-store` promo claims the app is free, which is only true of some of
+   * them, so anything with a price or a paywall sets this instead of shipping a
+   * claim the store listing contradicts.
+   */
+  cta?: string;
   /** See file header. */
   live: boolean;
 };
@@ -74,6 +81,7 @@ export const PROMOS: Promo[] = [
     icon: "/img/apps/skimmer.png",
     url: "https://apps.apple.com/us/app/skimmer-pool-care-log/id6775022955",
     destination: "app-store",
+    cta: "Download on the App Store",
     live: true,
   },
   {
