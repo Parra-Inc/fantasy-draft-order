@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { toImportSource } from "@/lib/db-enums";
 import { prisma } from "@/lib/prisma";
 import { BrandMark } from "@/components/brand-mark";
+import { Wordmark } from "@/components/wordmark";
 import { buildMetadata, SITE_NAME } from "@/lib/seo/metadata";
 import { BreadcrumbLd, EventLd } from "@/lib/seo/jsonld";
 import { submitCompletedDraft } from "@/lib/indexnow";
@@ -108,9 +110,18 @@ export default async function DraftPage({ params }: Props) {
   const initialNextPick =
     picksByRevealAsc.find((p) => p.revealedAt > now) ?? null;
 
-  const siblingsRaw = await prisma.draft.findMany({
+  // Other draws for the same league, matched case-insensitively.
+  //
+  // Prisma's `mode: "insensitive"` is Postgres-only, and on SQLite `equals`
+  // compiles to a case-sensitive `=`. `contains` compiles to LIKE, which IS
+  // case-insensitive for ASCII in SQLite, so it does the filtering in the
+  // database — but as a substring match it returns a superset (and would
+  // over-match a name containing % or _). The exact comparison below narrows
+  // it back down, so the visible behavior matches what Postgres did.
+  const SIBLING_LIMIT = 25;
+  const siblingCandidates = await prisma.draft.findMany({
     where: {
-      leagueName: { equals: draft.leagueName, mode: "insensitive" },
+      leagueName: { contains: draft.leagueName },
       slug: { not: draft.slug },
     },
     select: {
@@ -121,15 +132,21 @@ export default async function DraftPage({ params }: Props) {
       picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
     },
     orderBy: { createdAt: "desc" },
-    take: 25,
+    // Over-fetch a little so the exact filter below rarely truncates a real
+    // match in favor of a substring one.
+    take: SIBLING_LIMIT * 4,
   });
-  const siblings = siblingsRaw.map((s) => ({
-    slug: s.slug,
-    leagueName: s.leagueName,
-    scheduledFor: s.scheduledFor.toISOString(),
-    createdAt: s.createdAt.toISOString(),
-    status: deriveStatus({ now, picks: s.picks }),
-  }));
+  const targetName = draft.leagueName.toLowerCase();
+  const siblings = siblingCandidates
+    .filter((s) => s.leagueName.toLowerCase() === targetName)
+    .slice(0, SIBLING_LIMIT)
+    .map((s) => ({
+      slug: s.slug,
+      leagueName: s.leagueName,
+      scheduledFor: s.scheduledFor.toISOString(),
+      createdAt: s.createdAt.toISOString(),
+      status: deriveStatus({ now, picks: s.picks }),
+    }));
 
   return (
     <div className="flex min-h-full flex-col">
@@ -147,25 +164,23 @@ export default async function DraftPage({ params }: Props) {
         status={initialStatus}
         organizerName={draft.creatorName ?? SITE_NAME}
       />
-      <header className="border-b border-sideline/50 bg-midnight/90 backdrop-blur-md">
+      <header className="border-sideline/50 bg-midnight/90 border-b backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
             <BrandMark />
-            <span className="font-display text-base font-bold tracking-tight text-chalk sm:text-lg">
-              Fantasy Draft Order
-            </span>
+            <Wordmark />
           </Link>
           <Link
-            href="/new"
-            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-signal px-4 text-sm font-semibold text-midnight transition-colors hover:bg-signal-dark"
+            href={`/new?from=${slug}&src=DRAFT_HEADER`}
+            className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold transition-colors"
           >
-            New draft
+            Schedule the draw
           </Link>
         </div>
       </header>
       <main className="relative flex-1">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-signal/5 blur-[120px]" />
+          <div className="bg-signal/5 absolute top-0 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full blur-[120px]" />
         </div>
         <div className="relative mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
           <DraftLive
@@ -177,7 +192,7 @@ export default async function DraftPage({ params }: Props) {
               creatorName: draft.creatorName,
               scheduledFor: draft.scheduledFor.toISOString(),
               status: initialStatus,
-              importSource: draft.importSource,
+              importSource: toImportSource(draft.importSource),
               importLeagueId: draft.importLeagueId,
               seed: draft.seed,
               commitSha: draft.commitSha,

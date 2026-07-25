@@ -3,7 +3,27 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
-import { AlertTriangle, Calendar, Check, Copy, History, Loader2, Shield, Trophy, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  Check,
+  Copy,
+  History,
+  Loader2,
+  Shield,
+  Trophy,
+  Users,
+} from "lucide-react";
+import { env } from "@/lib/env";
+import { ViewerCount } from "./presence";
+import {
+  AddToCalendarButton,
+  AfterDrawCta,
+  ResultShare,
+  TeamPicker,
+  useMyTeam,
+} from "./share";
+import { PromoShelf } from "@/components/promo-shelf";
 
 type Team = {
   id: string;
@@ -93,6 +113,7 @@ export function DraftLive({
   }, [pastScheduled, mutate, isDone]);
 
   const state = data ?? initial;
+  const { myTeamId, choose } = useMyTeam(slug, state.teams);
 
   const crossedRef = useRef(false);
   useEffect(() => {
@@ -105,11 +126,21 @@ export function DraftLive({
   return (
     <div className="space-y-6">
       {now < scheduledAt ? (
-        <ShareCard slug={slug} />
+        <ShareCard
+          slug={slug}
+          teams={state.teams}
+          myTeamId={myTeamId}
+          onChoose={choose}
+        />
       ) : (
         <DrawStartedNotice scheduledFor={state.scheduledFor} />
       )}
-      <Header state={state} now={now} scheduledAt={scheduledAt} />
+      <Header
+        state={state}
+        now={now}
+        scheduledAt={scheduledAt}
+        slug={slug}
+      />
       {!state.currentSpin &&
       state.picks.length === 0 &&
       state.status !== "COMPLETED" ? (
@@ -117,9 +148,36 @@ export function DraftLive({
       ) : (
         <DrawBoard state={state} />
       )}
+      {/* The last pick has landed and the whole league is still on the page.
+          This is the only moment the product has their attention, so the share
+          artifact and the call to action both fire here rather than living in
+          a header nobody reads during a countdown. */}
+      {isDone && (
+        <>
+          <ResultShare
+            slug={slug}
+            leagueName={state.leagueName}
+            teams={state.teams}
+            picks={state.picks}
+            myTeamId={myTeamId}
+            onChoose={choose}
+          />
+          <AfterDrawCta slug={slug} leagueName={state.leagueName} />
+        </>
+      )}
       {now < scheduledAt && <PreShareWarning />}
       <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
       <TrustPanel state={state} />
+      {/*
+        Last thing on the page, and never during DRAWING: the reveal is the
+        product, and everything above this point is the trust narrative
+        (pre-share warning, sibling drafts, audit trail). Both stay contiguous.
+      */}
+      {state.status !== "DRAWING" && (
+        <PromoShelf
+          surface={state.status === "COMPLETED" ? "results" : "pre-draw"}
+        />
+      )}
     </div>
   );
 }
@@ -132,23 +190,23 @@ function DrawStartedNotice({ scheduledFor }: { scheduledFor: string }) {
     minute: "2-digit",
   });
   return (
-    <section className="overflow-hidden rounded-2xl border border-signal/30 bg-signal/5">
-      <div className="border-b border-sideline/40 px-3.5 py-2.5 sm:px-5 sm:py-3">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
+    <section className="border-signal/30 bg-signal/5 overflow-hidden rounded-2xl border">
+      <div className="border-sideline/40 border-b px-3.5 py-2.5 sm:px-5 sm:py-3">
+        <p className="text-signal font-mono text-[11px] font-medium tracking-wider uppercase sm:text-xs">
           Was this link in your league chat before
         </p>
-        <p className="mt-0.5 font-display text-sm font-bold tabular-nums text-chalk sm:text-base">
+        <p className="font-display text-chalk mt-0.5 text-sm font-bold tabular-nums sm:text-base">
           {when}?
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2">
-        <div className="flex items-start gap-2.5 border-b border-sideline/40 p-3.5 sm:gap-3 sm:border-r sm:border-b-0 sm:p-5">
-          <Check className="mt-0.5 size-4 shrink-0 text-signal" />
+        <div className="border-sideline/40 flex items-start gap-2.5 border-b p-3.5 sm:gap-3 sm:border-r sm:border-b-0 sm:p-5">
+          <Check className="text-signal mt-0.5 size-4 shrink-0" />
           <div className="min-w-0">
-            <p className="font-display text-[13px] font-bold leading-snug text-chalk sm:text-sm">
+            <p className="font-display text-chalk text-[13px] leading-snug font-bold sm:text-sm">
               Yes — you&apos;re good.
             </p>
-            <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+            <p className="text-hashmark mt-1 text-[11px] leading-snug sm:text-xs">
               Result is locked, audited, and tamper-proof.
             </p>
           </div>
@@ -156,10 +214,10 @@ function DrawStartedNotice({ scheduledFor }: { scheduledFor: string }) {
         <div className="flex items-start gap-2.5 p-3.5 sm:gap-3 sm:p-5">
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-300" />
           <div className="min-w-0">
-            <p className="font-display text-[13px] font-bold leading-snug text-chalk sm:text-sm">
+            <p className="font-display text-chalk text-[13px] leading-snug font-bold sm:text-sm">
               No or unsure? Your commish might be stacking the deck.
             </p>
-            <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+            <p className="text-hashmark mt-1 text-[11px] leading-snug sm:text-xs">
               Check below for other drafts under this league name.
             </p>
           </div>
@@ -174,15 +232,15 @@ function PreShareWarning() {
     <section className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 sm:p-6">
       <div className="flex gap-3">
         <AlertTriangle className="size-5 shrink-0 text-amber-300" />
-        <div className="space-y-2 text-sm text-hashmark">
-          <p className="font-display text-sm font-bold uppercase tracking-wider text-amber-200">
+        <div className="text-hashmark space-y-2 text-sm">
+          <p className="font-display text-sm font-bold tracking-wider text-amber-200 uppercase">
             Read this before you trust the result
           </p>
           <p>
             The draw is only fair if you saw this exact link{" "}
-            <span className="font-semibold text-chalk">before</span> the draft time —
-            i.e. your commissioner posted it in your group chat, email thread, or
-            league chat ahead of the scheduled draw.
+            <span className="text-chalk font-semibold">before</span> the draft
+            time — i.e. your commissioner posted it in your group chat, email
+            thread, or league chat ahead of the scheduled draw.
           </p>
           <p>
             Anyone can create a draft. A commissioner who creates several drafts
@@ -190,6 +248,14 @@ function PreShareWarning() {
             showed up after the draw — or if there are sibling drafts below for
             the same league name that you weren&apos;t told about — treat the
             result as suspect.
+          </p>
+          <p>
+            <a
+              href="/ask-your-commissioner"
+              className="text-chalk hover:text-signal underline underline-offset-2"
+            >
+              How to raise this with your league without starting a fight →
+            </a>
           </p>
         </div>
       </div>
@@ -206,42 +272,42 @@ function SiblingDrafts({
 }) {
   if (siblings.length === 0) return null;
   return (
-    <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-4 sm:p-6">
+    <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-4 sm:p-6">
       <div className="mb-3 flex items-center gap-2 sm:mb-4">
-        <History className="size-4 shrink-0 text-signal" />
-        <h3 className="font-display text-xs font-bold uppercase tracking-wider text-signal sm:text-sm">
+        <History className="text-signal size-4 shrink-0" />
+        <h3 className="font-display text-signal text-xs font-bold tracking-wider uppercase sm:text-sm">
           Other drafts under &ldquo;{leagueName}&rdquo;
         </h3>
       </div>
-      <p className="mb-3 text-xs text-hashmark sm:mb-4 sm:text-sm">
+      <p className="text-hashmark mb-3 text-xs sm:mb-4 sm:text-sm">
         We found {siblings.length} other{" "}
         {siblings.length === 1 ? "draft" : "drafts"} created under this league
         name. If your commissioner didn&apos;t share these with you, ask why
         they exist before trusting any single result.
       </p>
-      <ol className="overflow-hidden rounded-xl border border-sideline/30">
+      <ol className="border-sideline/30 overflow-hidden rounded-xl border">
         {siblings.map((s, idx) => (
           <li
             key={s.slug}
-            className={`flex flex-col gap-1.5 bg-midnight/40 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 ${
-              idx !== 0 ? "border-t border-sideline/30" : ""
+            className={`bg-midnight/40 flex flex-col gap-1.5 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 ${
+              idx !== 0 ? "border-sideline/30 border-t" : ""
             }`}
           >
             <div className="min-w-0">
               <a
                 href={`/d/${s.slug}`}
-                className="block truncate font-mono text-xs text-chalk underline underline-offset-2 hover:text-signal sm:text-sm"
+                className="text-chalk hover:text-signal block truncate font-mono text-xs underline underline-offset-2 sm:text-sm"
               >
                 /d/{s.slug}
               </a>
-              <p className="mt-1 text-[11px] leading-snug text-hashmark sm:text-xs">
+              <p className="text-hashmark mt-1 text-[11px] leading-snug sm:text-xs">
                 Created {new Date(s.createdAt).toLocaleString()}
                 <span className="hidden sm:inline">
                   {" "}
                   · scheduled {new Date(s.scheduledFor).toLocaleString()}
                 </span>
               </p>
-              <p className="mt-0.5 text-[11px] leading-snug text-hashmark sm:hidden">
+              <p className="text-hashmark mt-0.5 text-[11px] leading-snug sm:hidden">
                 Scheduled {new Date(s.scheduledFor).toLocaleString()}
               </p>
             </div>
@@ -261,20 +327,32 @@ function SiblingStatusPill({ status }: { status: Sibling["status"] }) {
         ? "Drawing"
         : "Scheduled";
   return (
-    <span className="inline-flex shrink-0 items-center rounded-full border border-sideline bg-sideline/40 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-hashmark">
+    <span className="border-sideline bg-sideline/40 text-hashmark inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider uppercase">
       {label}
     </span>
   );
 }
 
-function ShareCard({ slug }: { slug: string }) {
-  const [url, setUrl] = useState(`/d/${slug}`);
+function ShareCard({
+  slug,
+  teams,
+  myTeamId,
+  onChoose,
+}: {
+  slug: string;
+  teams: Team[];
+  myTeamId: string | null;
+  onChoose: (teamId: string | null) => void;
+}) {
+  // The canonical origin rather than window.location.origin. This is the one
+  // string in the app that has to be right: the whole promise is that the
+  // league saw THIS link before the draw, so it must not vary with whichever
+  // host the commissioner happened to open (workers.dev, www, localhost).
+  // It also means no post-hydration swap of a URL somebody may already be
+  // copying.
+  const url = `${env.NEXT_PUBLIC_BASE_URL}/d/${slug}`;
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setUrl(`${window.location.origin}/d/${slug}`);
-  }, [slug]);
 
   const copy = async () => {
     try {
@@ -288,9 +366,9 @@ function ShareCard({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-signal/30 bg-signal/5 p-3.5 sm:p-5">
+    <section className="border-signal/30 bg-signal/5 rounded-2xl border p-3.5 sm:p-5">
       <div className="flex items-center gap-2">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
+        <p className="text-signal font-mono text-[11px] font-medium tracking-wider uppercase sm:text-xs">
           Share this link with your league prior to the draft time
         </p>
       </div>
@@ -302,7 +380,7 @@ function ShareCard({ slug }: { slug: string }) {
           value={url}
           onFocus={(e) => e.currentTarget.select()}
           onClick={(e) => e.currentTarget.select()}
-          className="min-w-0 flex-1 rounded-xl border border-sideline/60 bg-midnight/70 px-3.5 py-2.5 font-mono text-sm text-chalk outline-none transition-colors focus:border-signal/60 focus:ring-2 focus:ring-signal/30"
+          className="border-sideline/60 bg-midnight/70 text-chalk focus:border-signal/60 focus:ring-signal/30 min-w-0 flex-1 rounded-xl border px-3.5 py-2.5 font-mono text-sm transition-colors outline-none focus:ring-2"
           aria-label="Shareable draft link"
         />
         <button
@@ -311,7 +389,7 @@ function ShareCard({ slug }: { slug: string }) {
           aria-label={copied ? "Link copied" : "Copy link"}
           className={`relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-5 text-sm font-semibold transition-colors sm:w-32 ${
             copied
-              ? "bg-signal/20 text-signal ring-1 ring-signal/40"
+              ? "bg-signal/20 text-signal ring-signal/40 ring-1"
               : "bg-signal text-midnight hover:bg-signal-dark"
           }`}
         >
@@ -343,26 +421,28 @@ function ShareCard({ slug }: { slug: string }) {
             )}
           </AnimatePresence>
         </button>
+        <AddToCalendarButton slug={slug} />
+      </div>
+      {/* Asked before the draw rather than after, so the reveal lands on a
+          named team. Purely client-side: see the header of ./share.tsx. */}
+      <div className="border-sideline/40 mt-3.5 border-t pt-3.5">
+        <TeamPicker teams={teams} myTeamId={myTeamId} onChoose={onChoose} />
       </div>
     </section>
   );
 }
 
-function StatusPill({
-  status,
-}: {
-  status: DraftState["status"];
-}) {
+function StatusPill({ status }: { status: DraftState["status"] }) {
   if (status === "DRAWING") {
     return (
       <span
-        className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal"
+        className="border-signal/30 bg-signal/10 text-signal inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
         data-testid="status-pill"
         data-status="DRAWING"
       >
         <span className="relative flex size-1.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-          <span className="relative inline-flex size-1.5 rounded-full bg-signal" />
+          <span className="bg-signal absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+          <span className="bg-signal relative inline-flex size-1.5 rounded-full" />
         </span>
         Drawing live
       </span>
@@ -371,7 +451,7 @@ function StatusPill({
   if (status === "COMPLETED") {
     return (
       <span
-        className="inline-flex items-center gap-1.5 rounded-full border border-signal/30 bg-signal/10 px-3 py-1 text-xs font-semibold text-signal"
+        className="border-signal/30 bg-signal/10 text-signal inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
         data-testid="status-pill"
         data-status="COMPLETED"
       >
@@ -382,7 +462,7 @@ function StatusPill({
   }
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full border border-sideline bg-sideline/40 px-3 py-1 text-xs font-semibold text-hashmark"
+      className="border-sideline bg-sideline/40 text-hashmark inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
       data-testid="status-pill"
       data-status="SCHEDULED"
     >
@@ -396,77 +476,80 @@ function Header({
   state,
   now,
   scheduledAt,
+  slug,
 }: {
   state: DraftState;
   now: number;
   scheduledAt: number;
+  slug: string;
 }) {
   const remaining = Math.max(0, scheduledAt - now);
 
   return (
-    <header className="rounded-2xl border border-sideline/50 bg-sideline/20 p-6 sm:p-8">
+    <header className="border-sideline/50 bg-sideline/20 rounded-2xl border p-6 sm:p-8">
       <div className="flex flex-wrap items-center gap-3">
         <StatusPill status={state.status} />
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-hashmark">
+        <ViewerCount slug={slug} />
+        <span className="text-hashmark inline-flex items-center gap-1.5 text-xs font-medium">
           <Users className="size-3.5" />
           {state.teams.length} teams
         </span>
         {state.importSource && state.importSource !== "MANUAL" && (
-          <span className="font-mono text-xs uppercase text-hashmark">
+          <span className="text-hashmark font-mono text-xs uppercase">
             · {state.importSource}
           </span>
         )}
-        <span className="text-xs text-hashmark">· by {state.creatorName}</span>
+        <span className="text-hashmark text-xs">· by {state.creatorName}</span>
       </div>
-      <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-chalk sm:text-5xl">
+      <h1 className="font-display text-chalk mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
         {state.leagueName}
       </h1>
 
       {state.status === "SCHEDULED" && remaining > 0 && (
-        <div className="mt-6 rounded-xl border border-signal/20 bg-midnight/60 p-5">
-          <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <div className="border-signal/20 bg-midnight/60 mt-6 rounded-xl border p-5">
+          <p className="text-signal font-mono text-xs font-medium tracking-wider uppercase">
             Drawing in
           </p>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className="font-mono text-5xl font-bold tabular-nums text-chalk sm:text-6xl">
+            <span className="text-chalk font-mono text-5xl font-bold tabular-nums sm:text-6xl">
               {formatCountdown(remaining)}
             </span>
           </div>
-          <p className="mt-2 text-sm text-hashmark">
+          <p className="text-hashmark mt-2 text-sm">
             {new Date(state.scheduledFor).toLocaleString()}
           </p>
         </div>
       )}
 
       {state.status === "SCHEDULED" && remaining === 0 && (
-        <div className="mt-6 rounded-xl border border-signal/30 bg-midnight/60 p-5">
-          <p className="flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <div className="border-signal/30 bg-midnight/60 mt-6 rounded-xl border p-5">
+          <p className="text-signal flex items-center gap-2 font-mono text-xs font-medium tracking-wider uppercase">
             <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-signal" />
+              <span className="bg-signal absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+              <span className="bg-signal relative inline-flex size-2 rounded-full" />
             </span>
             Starting now
           </p>
           <div className="mt-2 flex items-center gap-3">
-            <Loader2 className="size-7 shrink-0 animate-spin text-signal sm:size-8" />
-            <span className="font-display text-3xl font-bold text-chalk sm:text-4xl">
+            <Loader2 className="text-signal size-7 shrink-0 animate-spin sm:size-8" />
+            <span className="font-display text-chalk text-3xl font-bold sm:text-4xl">
               Your draft is starting now…
             </span>
           </div>
-          <p className="mt-2 text-sm text-hashmark">
+          <p className="text-hashmark mt-2 text-sm">
             Connecting to the draw — this should only take a moment.
           </p>
         </div>
       )}
 
       {state.status === "DRAWING" && (
-        <p className="mt-4 font-display text-xl text-signal">
+        <p className="font-display text-signal mt-4 text-xl">
           The draw is running. Watch the picks appear live…
         </p>
       )}
 
       {state.status === "COMPLETED" && state.completedAt && (
-        <p className="mt-4 text-sm text-hashmark">
+        <p className="text-hashmark mt-4 text-sm">
           Completed {new Date(state.completedAt).toLocaleString()}
         </p>
       )}
@@ -478,10 +561,10 @@ function TeamsGrid({ teams }: { teams: Team[] }) {
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <h2 className="text-signal font-mono text-xs font-medium tracking-wider uppercase">
           Teams locked in
         </h2>
-        <span className="text-xs text-hashmark">
+        <span className="text-hashmark text-xs">
           order hidden until draw time
         </span>
       </div>
@@ -489,13 +572,15 @@ function TeamsGrid({ teams }: { teams: Team[] }) {
         {teams.map((team) => (
           <li
             key={team.id}
-            className="flex items-center gap-3 rounded-xl border border-sideline/50 bg-sideline/20 p-3 transition-colors hover:border-signal/30"
+            className="border-sideline/50 bg-sideline/20 hover:border-signal/30 flex items-center gap-3 rounded-xl border p-3 transition-colors"
           >
             <Avatar name={team.name} url={team.avatarUrl} />
             <div className="min-w-0">
-              <p className="truncate font-semibold text-chalk">{team.name}</p>
+              <p className="text-chalk truncate font-semibold">{team.name}</p>
               {team.ownerName && (
-                <p className="truncate text-xs text-hashmark">{team.ownerName}</p>
+                <p className="text-hashmark truncate text-xs">
+                  {team.ownerName}
+                </p>
               )}
             </div>
           </li>
@@ -577,7 +662,11 @@ function ReelSpinner({
   const reelRef = useRef<HTMLDivElement>(null);
 
   const winnerIndex = useMemo(
-    () => Math.max(0, unpickedTeams.findIndex((t) => t.id === winnerTeamId)),
+    () =>
+      Math.max(
+        0,
+        unpickedTeams.findIndex((t) => t.id === winnerTeamId),
+      ),
     [unpickedTeams, winnerTeamId],
   );
 
@@ -615,7 +704,7 @@ function ReelSpinner({
       initial={{ opacity: 0, y: -8, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="relative overflow-hidden rounded-2xl border border-signal/30 bg-gradient-to-b from-signal/10 to-midnight/60 p-5 sm:p-7"
+      className="border-signal/30 from-signal/10 to-midnight/60 relative overflow-hidden rounded-2xl border bg-gradient-to-b p-5 sm:p-7"
       data-testid="reel-spinner"
       data-spin-pick={pickNumber}
       data-spin-duration={spinDurationMs}
@@ -623,21 +712,21 @@ function ReelSpinner({
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,255,200,0.12),transparent_60%)]" />
 
       <div className="relative flex items-center justify-between gap-3">
-        <p className="flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-wider text-signal sm:text-xs">
+        <p className="text-signal flex items-center gap-2 font-mono text-[11px] font-medium tracking-wider uppercase sm:text-xs">
           <span className="relative flex size-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-signal" />
+            <span className="bg-signal absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+            <span className="bg-signal relative inline-flex size-2 rounded-full" />
           </span>
           Drafting pick {pickNumber} of {totalPicks}
         </p>
-        <span className="font-mono text-[11px] text-hashmark sm:text-xs">
+        <span className="text-hashmark font-mono text-[11px] sm:text-xs">
           {drawnCount} / {totalPicks} drawn
         </span>
       </div>
 
       <div className="relative mt-5">
         <div
-          className="relative mx-auto overflow-hidden rounded-xl border border-sideline/60 bg-midnight/70"
+          className="border-sideline/60 bg-midnight/70 relative mx-auto overflow-hidden rounded-xl border"
           style={{ height: REEL_ITEM_HEIGHT }}
         >
           <div
@@ -653,11 +742,11 @@ function ReelSpinner({
               >
                 <Avatar name={team.name} url={team.avatarUrl} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-display text-lg font-bold text-chalk sm:text-xl">
+                  <p className="font-display text-chalk truncate text-lg font-bold sm:text-xl">
                     {team.name}
                   </p>
                   {team.ownerName && (
-                    <p className="truncate text-xs text-hashmark">
+                    <p className="text-hashmark truncate text-xs">
                       {team.ownerName}
                     </p>
                   )}
@@ -665,9 +754,9 @@ function ReelSpinner({
               </div>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-midnight to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3 bg-gradient-to-t from-midnight to-transparent" />
-          <div className="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-signal/40 ring-inset" />
+          <div className="from-midnight pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b to-transparent" />
+          <div className="from-midnight pointer-events-none absolute inset-x-0 bottom-0 h-3 bg-gradient-to-t to-transparent" />
+          <div className="ring-signal/40 pointer-events-none absolute inset-0 rounded-xl ring-2 ring-inset" />
         </div>
       </div>
     </motion.div>
@@ -692,15 +781,15 @@ function RevealedList({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+        <h2 className="text-signal font-mono text-xs font-medium tracking-wider uppercase">
           {status === "COMPLETED" ? "Final draft order" : "Drawn so far"}
         </h2>
-        <span className="text-xs text-hashmark">
+        <span className="text-hashmark text-xs">
           {picks.length} / {total} revealed
         </span>
       </div>
       <ol
-        className="overflow-hidden rounded-2xl border border-sideline/50 bg-sideline/10"
+        className="border-sideline/50 bg-sideline/10 overflow-hidden rounded-2xl border"
         data-testid="revealed-list"
         data-count={picks.length}
       >
@@ -713,21 +802,23 @@ function RevealedList({
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className={`flex items-center gap-4 bg-midnight/40 px-4 py-3 sm:px-6 ${
-                idx !== 0 ? "border-t border-sideline/30" : ""
+              className={`bg-midnight/40 flex items-center gap-4 px-4 py-3 sm:px-6 ${
+                idx !== 0 ? "border-sideline/30 border-t" : ""
               }`}
             >
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-signal/15 font-mono text-sm font-bold tabular-nums text-signal ring-1 ring-signal/30">
+              <div className="bg-signal/15 text-signal ring-signal/30 flex size-10 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold tabular-nums ring-1">
                 {pick.pickNumber}
               </div>
               <Avatar name={team.name} url={team.avatarUrl} />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-chalk">{team.name}</p>
+                <p className="text-chalk truncate font-semibold">{team.name}</p>
                 {team.ownerName && (
-                  <p className="truncate text-xs text-hashmark">{team.ownerName}</p>
+                  <p className="text-hashmark truncate text-xs">
+                    {team.ownerName}
+                  </p>
                 )}
               </div>
-              <span className="hidden font-mono text-[10px] text-hashmark/60 sm:inline">
+              <span className="text-hashmark/60 hidden font-mono text-[10px] sm:inline">
                 pck_{pick.pickNumber.toString().padStart(3, "0")}
               </span>
             </motion.li>
@@ -745,7 +836,7 @@ function BigAvatar({ name, url }: { name: string; url: string | null }) {
       <img
         src={url}
         alt=""
-        className="size-full rounded-full object-cover ring-2 ring-signal/40"
+        className="ring-signal/40 size-full rounded-full object-cover ring-2"
       />
     );
   }
@@ -755,7 +846,7 @@ function BigAvatar({ name, url }: { name: string; url: string | null }) {
     .map((s) => s[0]?.toUpperCase() ?? "")
     .join("");
   return (
-    <div className="flex size-full items-center justify-center rounded-full bg-signal/15 font-display text-3xl font-bold text-signal ring-2 ring-signal/40 sm:text-4xl">
+    <div className="bg-signal/15 font-display text-signal ring-signal/40 flex size-full items-center justify-center rounded-full text-3xl font-bold ring-2 sm:text-4xl">
       {initials}
     </div>
   );
@@ -764,22 +855,23 @@ function BigAvatar({ name, url }: { name: string; url: string | null }) {
 function TrustPanel({ state }: { state: DraftState }) {
   if (state.status === "SCHEDULED") {
     return (
-      <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-6">
+      <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-6">
         <div className="mb-3 flex items-center gap-2">
-          <Shield className="size-4 text-signal" />
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-signal">
+          <Shield className="text-signal size-4" />
+          <h3 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
             How this draft works
           </h3>
         </div>
-        <ul className="space-y-2 text-sm text-hashmark">
+        <ul className="text-hashmark space-y-2 text-sm">
           <li className="flex gap-2">
             <span className="text-signal">·</span>
-            The draw fires automatically at the scheduled time. No one can run it early or twice.
+            The draw fires automatically at the scheduled time. No one can run
+            it early or twice.
           </li>
           <li className="flex gap-2">
             <span className="text-signal">·</span>
             The randomizer is a Fisher–Yates shuffle using Node&apos;s{" "}
-            <code className="rounded bg-midnight px-1.5 py-0.5 font-mono text-xs text-chalk">
+            <code className="bg-midnight text-chalk rounded px-1.5 py-0.5 font-mono text-xs">
               crypto.randomInt
             </code>{" "}
             (CSPRNG).
@@ -791,15 +883,16 @@ function TrustPanel({ state }: { state: DraftState }) {
           <li className="flex gap-2">
             <span className="text-signal">·</span>
             The result is only trustworthy if you got this link{" "}
-            <span className="font-semibold text-chalk">before</span> the draw time. See the warning below.
+            <span className="text-chalk font-semibold">before</span> the draw
+            time. See the warning below.
           </li>
           <li className="flex gap-2">
             <span className="text-signal">·</span>
             <a
-              href="https://github.com/fantasy-draft-order/fantasy-draft-order"
+              href="https://github.com/Parra-Inc/fantasy-draft-order"
               target="_blank"
               rel="noreferrer"
-              className="text-chalk underline underline-offset-2 hover:text-signal"
+              className="text-chalk hover:text-signal underline underline-offset-2"
             >
               Source code is public.
             </a>
@@ -809,20 +902,20 @@ function TrustPanel({ state }: { state: DraftState }) {
     );
   }
   const commitUrl = state.commitSha
-    ? `https://github.com/fantasy-draft-order/fantasy-draft-order/blob/${state.commitSha}/src/lib/randomizer.ts`
-    : "https://github.com/fantasy-draft-order/fantasy-draft-order/blob/main/src/lib/randomizer.ts";
+    ? `https://github.com/Parra-Inc/fantasy-draft-order/blob/${state.commitSha}/src/lib/randomizer.ts`
+    : "https://github.com/Parra-Inc/fantasy-draft-order/blob/main/src/lib/randomizer.ts";
   return (
-    <section className="rounded-2xl border border-sideline/50 bg-sideline/10 p-6">
+    <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-6">
       <div className="mb-4 flex items-center gap-2">
-        <Shield className="size-4 text-signal" />
-        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-signal">
+        <Shield className="text-signal size-4" />
+        <h3 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
           Audit trail
         </h3>
       </div>
       <dl className="grid grid-cols-1 gap-y-3 text-sm sm:grid-cols-[180px_1fr]">
         <AuditRow label="Method">
           Fisher–Yates shuffle ·{" "}
-          <code className="rounded bg-midnight px-1.5 py-0.5 font-mono text-xs text-chalk">
+          <code className="bg-midnight text-chalk rounded px-1.5 py-0.5 font-mono text-xs">
             crypto.randomInt
           </code>
         </AuditRow>
@@ -831,14 +924,17 @@ function TrustPanel({ state }: { state: DraftState }) {
             href={commitUrl}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-xs text-chalk underline underline-offset-2 hover:text-signal"
+            className="text-chalk hover:text-signal font-mono text-xs underline underline-offset-2"
           >
-            randomizer.ts{state.commitSha ? `@${state.commitSha.slice(0, 7)}` : ""}
+            randomizer.ts
+            {state.commitSha ? `@${state.commitSha.slice(0, 7)}` : ""}
           </a>
         </AuditRow>
         {state.seed && (
           <AuditRow label="Seed">
-            <span className="font-mono text-xs break-all text-chalk">{state.seed}</span>
+            <span className="text-chalk font-mono text-xs break-all">
+              {state.seed}
+            </span>
           </AuditRow>
         )}
         <AuditRow label="Scheduled">
@@ -868,7 +964,7 @@ function AuditRow({
 }) {
   return (
     <>
-      <dt className="font-mono text-xs uppercase tracking-wider text-hashmark">
+      <dt className="text-hashmark font-mono text-xs tracking-wider uppercase">
         {label}
       </dt>
       <dd className="text-chalk">{children}</dd>
@@ -883,7 +979,7 @@ function Avatar({ name, url }: { name: string; url: string | null }) {
       <img
         src={url}
         alt=""
-        className="size-9 shrink-0 rounded-full object-cover ring-1 ring-sideline"
+        className="ring-sideline size-9 shrink-0 rounded-full object-cover ring-1"
       />
     );
   }
@@ -893,7 +989,7 @@ function Avatar({ name, url }: { name: string; url: string | null }) {
     .map((s) => s[0]?.toUpperCase() ?? "")
     .join("");
   return (
-    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-signal/15 text-xs font-bold text-signal ring-1 ring-signal/30">
+    <div className="bg-signal/15 text-signal ring-signal/30 flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ring-1">
       {initials}
     </div>
   );
