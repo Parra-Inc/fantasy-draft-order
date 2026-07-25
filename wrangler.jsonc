@@ -80,13 +80,19 @@
       }
     ]
   },
-  // The class holds no storage at all, so it is declared as a plain new_class:
-  // new_sqlite_classes would provision a SQLite backend this object never
-  // touches.
+  // DraftPresence holds no storage at all, so a plain `new_classes` (key-value
+  // backed) namespace would be the honest declaration. Cloudflare no longer
+  // allows creating those: the deploy fails with "Creating new key-value backed
+  // Durable Object namespaces is no longer supported on this account"
+  // [code: 10099]. So it is declared as new_sqlite_classes, which provisions a
+  // SQLite backend this object never touches. Harmless, just not free.
+  //
+  // Do not "fix" this back to new_classes. Changing the backend of an existing
+  // namespace is not a thing either, so this tag stays as it is.
   "migrations": [
     {
       "tag": "v1",
-      "new_classes": ["DraftPresence"]
+      "new_sqlite_classes": ["DraftPresence"]
     }
   ],
   // Non-secret runtime config, committed. NEXT_PUBLIC_* is inlined at BUILD
