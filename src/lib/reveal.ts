@@ -5,11 +5,15 @@ export type RevealConfig = {
 };
 
 export function getRevealConfig(): RevealConfig {
-  const firstPickDelayMs = Number(process.env.DRAFT_FIRST_PICK_DELAY_MS ?? 5000);
+  const firstPickDelayMs = Number(
+    process.env.DRAFT_FIRST_PICK_DELAY_MS ?? 5000,
+  );
   const pickIntervalMs = Number(process.env.DRAFT_PICK_INTERVAL_MS ?? 7000);
   const spinDurationMs = Number(process.env.DRAFT_SPIN_DURATION_MS ?? 4000);
   return {
-    firstPickDelayMs: Number.isFinite(firstPickDelayMs) ? firstPickDelayMs : 5000,
+    firstPickDelayMs: Number.isFinite(firstPickDelayMs)
+      ? firstPickDelayMs
+      : 5000,
     pickIntervalMs: Number.isFinite(pickIntervalMs) ? pickIntervalMs : 7000,
     spinDurationMs: Number.isFinite(spinDurationMs) ? spinDurationMs : 4000,
   };

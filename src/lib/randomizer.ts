@@ -4,7 +4,10 @@ export type Rng = (maxExclusive: number) => number;
 
 export const cryptoRng: Rng = (maxExclusive) => randomInt(0, maxExclusive);
 
-export function fisherYatesShuffle<T>(items: readonly T[], rng: Rng = cryptoRng): T[] {
+export function fisherYatesShuffle<T>(
+  items: readonly T[],
+  rng: Rng = cryptoRng,
+): T[] {
   const out = items.slice();
   for (let i = out.length - 1; i > 0; i--) {
     const j = rng(i + 1);

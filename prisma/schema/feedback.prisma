@@ -1,18 +1,14 @@
-enum FeedbackType {
-  BUG
-  FEATURE
-  PRAISE
-  OTHER
-}
+// `type` is a plain String because SQLite has no enum type. Allowed values are
+// in src/lib/db-enums.ts and enforced by Zod in src/app/api/feedback/route.ts.
 
 model Feedback {
-  id        String       @id @default(dbgenerated("'fb_' || gen_random_uuid()::text"))
-  type      FeedbackType
+  id        String   @id
+  type      String
   message   String
   page      String?
   email     String?
   userAgent String?
-  createdAt DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([createdAt])
   @@index([type, createdAt])

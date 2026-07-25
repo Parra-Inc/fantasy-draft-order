@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // OpenNext build output. Linting the ~25 MB bundle OOMs and kills node.
+    ".open-next/**",
+    ".wrangler/**",
   ]),
 ]);
 

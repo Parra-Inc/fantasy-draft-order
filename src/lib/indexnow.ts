@@ -14,18 +14,22 @@ export const INDEXNOW_KEY = "0d280bb4c994c621118dcd0a691c7c8d";
 
 /**
  * The origin this app is actually served from, and therefore the only origin
- * that serves /<key>.txt. The Vercel project (fantasy-draft-order, team
- * parraio) has no custom domain: its only aliases are this one plus the
- * per-branch previews, and the live robots.txt / sitemap.xml both emit this
- * host. fantasydraftorder.com is a different site by a different author, so
- * submitting URLs on it would 403 (no key file) or 422 (host mismatch).
+ * that serves /<key>.txt. This is the Cloudflare Worker's custom domain
+ * (wrangler.jsonc `routes`), which OpenNext serves public/ from through the
+ * ASSETS binding.
+ *
+ * The old origin, fantasy-draft-order.vercel.app, still exists but only as a
+ * permanent redirect to this host (see the redirect in next.config.ts). Never
+ * submit it again. Note also that fantasydraftorder.com (no "football") is an
+ * unrelated site by a different author: never submit URLs on it either.
  *
  * Keep this identical to the production NEXT_PUBLIC_BASE_URL, which drives
- * canonicals, robots.ts and sitemap.ts. If a custom domain is ever attached to
- * the project, change the Vercel env var and this constant together, and make
- * sure the key file is reachable on the new origin before submitting.
+ * canonicals, robots.ts and sitemap.ts. If the domain ever changes again,
+ * update the wrangler var, this constant, and the default in
+ * scripts/indexnow-submit.mjs together, after confirming the key file is
+ * reachable on the new origin.
  */
-const PRODUCTION_SITE_URL = "https://fantasy-draft-order.vercel.app";
+const PRODUCTION_SITE_URL = "https://fantasyfootballdraftorder.com";
 
 /**
  * The app's canonical URL is NEXT_PUBLIC_BASE_URL (same source as sitemap.ts,

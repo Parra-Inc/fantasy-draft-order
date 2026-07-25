@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
+import { toImportSource } from "@/lib/db-enums";
 import { prisma } from "@/lib/prisma";
 import { submitCompletedDraft } from "@/lib/indexnow";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 
-export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
+// Polled by every viewer during a draw, and the D1 binding only exists inside
+// a request: never cache or prerender this.
+export const dynamic = "force-dynamic";
+
+export async function GET(
+  _req: Request,
+  ctx: { params: Promise<{ slug: string }> },
+) {
   const { slug } = await ctx.params;
   const draft = await prisma.draft.findUnique({
     where: { slug },
@@ -57,7 +65,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
     creatorName: draft.creatorName,
     scheduledFor: draft.scheduledFor.toISOString(),
     status,
-    importSource: draft.importSource,
+    importSource: toImportSource(draft.importSource),
     importLeagueId: draft.importLeagueId,
     seed: draft.seed,
     commitSha: draft.commitSha,

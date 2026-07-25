@@ -2,12 +2,18 @@
 #
 # fantasy-draft-order dev: one command to boot the full local stack.
 #
-#   Frees stale ports, starts Docker infra, syncs + seeds the database,
-#   optionally tunnels through ngrok, then hands off to the turbo TUI.
+#   Frees stale ports, migrates + seeds the local D1 database, optionally
+#   tunnels through ngrok, then hands off to the turbo TUI.
+#
+# There is no Docker here. The database is Cloudflare D1 (SQLite): `next dev`
+# gets the binding from initOpenNextCloudflareForDev() in next.config.ts, which
+# runs miniflare against the same .wrangler/state file that
+# `wrangler d1 migrations apply --local` writes. Wrangler is not part of the
+# daily loop beyond that one command.
 #
 # Usage:
 #   pnpm dev                normal boot
-#   pnpm dev:force          wipe volumes, resync schema, reseed
+#   pnpm dev:force          delete the local database, re-migrate, reseed
 #   pnpm dev:tunnel         boot with an ngrok tunnel + URL injection
 #   bash scripts/dev.sh --help
 set -euo pipefail
@@ -17,12 +23,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # --- Config (per project) ---------------------------------------------------
-WEB_PORT=3042                          # next dev (host-managed)
-STUDIO_PORT=5564                       # prisma studio (host-managed)
-PG_PORT=5438                           # postgres (docker-managed)
-COMPOSE="docker compose -f dev/docker-compose.yml"
-COMPOSE_PROJECT="fantasy-draft-order"  # matches the compose file's `name:` field
-DB_URL="postgresql://fdo:fdo@localhost:$PG_PORT/fantasy_draft_order"
+WEB_PORT=3042        # next dev
+STUDIO_PORT=5564     # prisma studio
+D1_NAME="fantasy-draft-order-db-production"   # database_name in wrangler.jsonc
+D1_STATE_DIR=".wrangler/state/v3/d1"
 
 # --- Colors (only when stdout is a TTY) -------------------------------------
 if [ -t 1 ]; then
@@ -35,7 +39,7 @@ usage() {
   cat <<EOF
 Usage: bash scripts/dev.sh [flags]
 
-  --force, -f     Tear down Docker volumes, resync the schema, reseed
+  --force, -f     Delete the local D1 database, re-migrate, reseed
   --tunnel, -t    Start an ngrok tunnel and inject the URL into app configs
   --studio, -s    Also run Prisma Studio
   --no-seed, -n   Skip seeding
@@ -58,14 +62,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# --- Preflight ---------------------------------------------------------------
-if ! docker info >/dev/null 2>&1; then
-  echo "Docker isn't running. Start Docker Desktop and retry." >&2
-  exit 1
-fi
-
 # --- Free ports --------------------------------------------------------------
-# Host-managed ports: kill stale dev-server / studio processes.
 kill_port() {
   local port=$1 pids
   pids=$(lsof -ti:"$port" 2>/dev/null) || true
@@ -75,50 +72,16 @@ kill_port() {
   fi
 }
 
-# Docker-managed ports: stop containers from OTHER projects squatting on the
-# port. Our own compose services are left running; `up -d --wait` reuses them.
-free_docker_port() {
-  local port=$1 containers
-  containers=$(docker ps --filter "publish=$port" \
-    --format '{{.ID}} {{.Label "com.docker.compose.project"}}' 2>/dev/null \
-    | awk -v own="$COMPOSE_PROJECT" '$2 != own {print $1}') || true
-  if [ -n "$containers" ]; then
-    echo "Stopping other projects' containers on port $port..."
-    echo "$containers" | xargs docker stop >/dev/null 2>&1 || true
-  fi
-}
-
 for port in "$WEB_PORT" "$STUDIO_PORT"; do kill_port "$port"; done
-free_docker_port "$PG_PORT"
 
 # --- Env bootstrap -----------------------------------------------------------
-# First run: create .env from the example so the app points at local services.
+# First run: create .env from the example. There is no DATABASE_URL to guard
+# against any more — the database is a binding, so `pnpm dev` physically cannot
+# reach production the way a mis-set connection string used to allow.
 if [ ! -f .env ] && [ -f .env.example ]; then
   echo "Creating .env from .env.example..."
   cp .env.example .env
 fi
-
-# Refuse to run destructive db commands against anything but localhost. This
-# script deliberately never exports DATABASE_URL, so check the URL prisma will
-# actually load for db:sync: prisma.config.ts imports dotenv/config, which
-# reads .env only (never .env.local) and does not override a value already in
-# the environment. So the effective URL is the shell's DATABASE_URL if set,
-# else .env's.
-EFFECTIVE_DB_URL="${DATABASE_URL:-}"
-if [ -z "$EFFECTIVE_DB_URL" ] && [ -f .env ]; then
-  EFFECTIVE_DB_URL=$(grep -m1 '^DATABASE_URL=' .env | cut -d= -f2- | tr -d '"' | tr -d "'") || true
-fi
-# Empty is fine: prisma.config.ts falls back to the localhost docker Postgres.
-case "$EFFECTIVE_DB_URL" in
-  ""|*@localhost*|*@127.0.0.1*|postgresql://localhost*|postgresql://127.0.0.1*) ;;
-  *)
-    echo "The DATABASE_URL prisma would load does not point at localhost:" >&2
-    echo "  $EFFECTIVE_DB_URL" >&2
-    echo "Refusing to run db:sync against a remote database." >&2
-    echo "Point DATABASE_URL in .env at the docker Postgres for local dev." >&2
-    exit 1
-    ;;
-esac
 
 # --- Tunnel (opt-in) -----------------------------------------------------------
 STARTED_NGROK=false
@@ -157,22 +120,17 @@ if $TUNNEL; then
   trap cleanup EXIT
 fi
 
-# --- Infra + database ----------------------------------------------------------
+# --- Database ------------------------------------------------------------------
 if $FORCE; then
-  echo "Force reset: tearing down containers and volumes..."
-  $COMPOSE down -v
+  echo "Force reset: deleting the local D1 database..."
+  rm -rf "$D1_STATE_DIR"
 fi
 
-echo "Starting infrastructure..."
-$COMPOSE up -d --wait
+echo "Generating Prisma client..."
+pnpm db:generate >/dev/null
 
-if $FORCE; then
-  echo "Force syncing database schema..."
-  pnpm db:sync:force
-else
-  echo "Syncing database schema..."
-  pnpm db:sync --accept-data-loss
-fi
+echo "Applying D1 migrations (local)..."
+pnpm exec wrangler d1 migrations apply "$D1_NAME" --local
 
 if $SEED; then
   if $FORCE; then
@@ -191,11 +149,11 @@ printf "${C_BOLD}  fantasy-draft-order${C_RESET}\n"
 printf "  ${C_ACCENT}Local${C_RESET}     http://localhost:%s\n" "$WEB_PORT"
 [ -n "$LAN_IP" ] && printf "  ${C_ACCENT}Network${C_RESET}   http://%s:%s\n" "$LAN_IP" "$WEB_PORT"
 $STUDIO && printf "  ${C_ACCENT}Studio${C_RESET}    http://localhost:%s\n" "$STUDIO_PORT"
-printf "  ${C_ACCENT}Postgres${C_RESET}  %s\n" "$DB_URL"
+printf "  ${C_ACCENT}D1${C_RESET}        %s (local, %s)\n" "$D1_NAME" "$D1_STATE_DIR"
 if [ -n "$NGROK_URL" ]; then
   printf "  ${C_ACCENT}Tunnel${C_RESET}    %s\n" "$NGROK_URL"
 fi
-printf "${C_DIM}  Seeded demo draft: /demo-league${C_RESET}\n"
+printf "${C_DIM}  Seeded demo draft: /d/demo-league${C_RESET}\n"
 printf "${C_DIM}  TUI: arrows switch tasks / m toggle / q quit${C_RESET}\n"
 echo ""
 
@@ -209,7 +167,7 @@ echo ""
 
 # --- Handoff ---------------------------------------------------------------------
 echo "Starting dev servers..."
-TASKS=(dev:web dev:infra)
+TASKS=(dev:web)
 $STUDIO && TASKS+=(dev:studio)
 if $TUNNEL; then
   # No exec: the EXIT trap must survive to clean up injected tunnel config.

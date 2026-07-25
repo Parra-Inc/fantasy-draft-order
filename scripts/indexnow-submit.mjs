@@ -31,7 +31,7 @@ const INDEXNOW_KEY = "0d280bb4c994c621118dcd0a691c7c8d";
 // The origin this app is actually served from (see PRODUCTION_SITE_URL in
 // src/lib/indexnow.ts). Node does not read .env files, so this default is what
 // every plain `pnpm indexnow:submit <path>` uses; it has to be the real host.
-const PRODUCTION_SITE_URL = "https://fantasy-draft-order.vercel.app";
+const PRODUCTION_SITE_URL = "https://fantasyfootballdraftorder.com";
 const MAX_URLS_PER_SUBMISSION = 10_000;
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");

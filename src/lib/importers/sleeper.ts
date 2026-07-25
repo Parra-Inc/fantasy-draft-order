@@ -37,9 +37,14 @@ export const sleeperImporter: Importer = {
       const user = roster.owner_id ? userById.get(roster.owner_id) : undefined;
       const avatar =
         user?.metadata?.avatar ||
-        (user?.avatar ? `https://sleepercdn.com/avatars/${user.avatar}` : undefined);
+        (user?.avatar
+          ? `https://sleepercdn.com/avatars/${user.avatar}`
+          : undefined);
       return {
-        name: user?.metadata?.team_name || user?.display_name || `Team ${roster.roster_id}`,
+        name:
+          user?.metadata?.team_name ||
+          user?.display_name ||
+          `Team ${roster.roster_id}`,
         ownerName: user?.display_name,
         avatarUrl: avatar,
         sourceId: String(roster.roster_id),

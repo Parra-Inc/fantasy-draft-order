@@ -30,5 +30,20 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // .open-next and custom-worker.ts are excluded because the worker entrypoint
+  // imports ./.open-next/worker.js, which only exists after a build — it can
+  // never typecheck from a clean checkout. `worker/` is excluded for the
+  // sibling reason: those modules import "cloudflare:workers", which resolves
+  // only in the workerd build and not in the Next type graph. Wrangler
+  // typechecks both at deploy.
+  // `program` is the Pulumi stack: a separate npm project with its own
+  // tsconfig and dependencies (installed only by the infra job in CI), so it
+  // must not be part of the app's type graph either.
+  "exclude": [
+    "node_modules",
+    ".open-next",
+    "custom-worker.ts",
+    "worker",
+    "program"
+  ]
 }

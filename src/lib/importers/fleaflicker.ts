@@ -38,7 +38,8 @@ export const fleaflickerImporter: Importer = {
         });
       }
     }
-    if (teams.length === 0) throw new Error("Fleaflicker: no teams in response");
+    if (teams.length === 0)
+      throw new Error("Fleaflicker: no teams in response");
     return { name: json.league?.name, teams };
   },
 };

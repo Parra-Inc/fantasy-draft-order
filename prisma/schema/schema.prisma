@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Cloudflare D1 is SQLite. At runtime the connection is a binding, not a URL:
+// src/lib/prisma.ts hands Prisma the D1 driver adapter on Workers and a
+// better-sqlite3 adapter against the local miniflare file everywhere else.
+// The `url` in prisma.config.ts exists only for the CLI (Studio, migrate diff).
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
