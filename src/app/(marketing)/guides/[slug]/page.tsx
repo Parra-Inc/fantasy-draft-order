@@ -64,14 +64,14 @@ export default async function GuidePage({ params }: Props) {
       <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
         <Link
           href="/guides"
-          className="inline-flex items-center gap-1.5 text-sm text-hashmark transition-colors hover:text-chalk"
+          className="text-hashmark hover:text-chalk inline-flex items-center gap-1.5 text-sm transition-colors"
         >
           <ArrowLeft className="size-3.5" />
           All guides
         </Link>
 
         <div className="mt-6 flex items-center gap-3 text-xs">
-          <span className="font-mono uppercase tracking-wider text-signal">
+          <span className="text-signal font-mono tracking-wider uppercase">
             {guide.category}
           </span>
           <span className="text-hashmark">·</span>
@@ -86,10 +86,10 @@ export default async function GuidePage({ params }: Props) {
           </time>
         </div>
 
-        <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-chalk sm:text-5xl">
+        <h1 className="font-display text-chalk mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
           {guide.title}
         </h1>
-        <p className="mt-5 text-lg leading-relaxed text-hashmark">
+        <p className="text-hashmark mt-5 text-lg leading-relaxed">
           {guide.excerpt}
         </p>
 
@@ -97,18 +97,18 @@ export default async function GuidePage({ params }: Props) {
           <GuideRenderer sections={guide.sections} />
         </div>
 
-        <div className="mt-16 rounded-2xl border border-signal/30 bg-signal/5 p-6 text-center">
-          <p className="font-display text-xl font-bold text-chalk">
+        <div className="border-signal/30 bg-signal/5 mt-16 rounded-2xl border p-6 text-center">
+          <p className="font-display text-chalk text-xl font-bold">
             Ready to schedule a fair draft order?
           </p>
-          <p className="mt-2 text-sm text-hashmark">
+          <p className="text-hashmark mt-2 text-sm">
             Free, open source, no accounts. Under a minute to set up.
           </p>
           <Link
             href="/new"
-            className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-signal px-6 font-semibold text-midnight transition-colors hover:bg-signal-dark"
+            className="bg-signal text-midnight hover:bg-signal-dark mt-5 inline-flex h-11 items-center gap-2 rounded-xl px-6 font-semibold transition-colors"
           >
-            Create a draft <ArrowRight className="size-4" />
+            Schedule the draw <ArrowRight className="size-4" />
           </Link>
         </div>
 
@@ -117,10 +117,10 @@ export default async function GuidePage({ params }: Props) {
             {prev ? (
               <Link
                 href={`/guides/${prev.slug}`}
-                className="group flex flex-col rounded-2xl border border-sideline/50 bg-sideline/20 p-5 transition-colors hover:border-signal/40"
+                className="group border-sideline/50 bg-sideline/20 hover:border-signal/40 flex flex-col rounded-2xl border p-5 transition-colors"
               >
-                <span className="text-xs text-hashmark">← Newer</span>
-                <span className="mt-1 font-display font-semibold text-chalk transition-colors group-hover:text-signal">
+                <span className="text-hashmark text-xs">← Newer</span>
+                <span className="font-display text-chalk group-hover:text-signal mt-1 font-semibold transition-colors">
                   {prev.title}
                 </span>
               </Link>
@@ -130,10 +130,10 @@ export default async function GuidePage({ params }: Props) {
             {next ? (
               <Link
                 href={`/guides/${next.slug}`}
-                className="group flex flex-col rounded-2xl border border-sideline/50 bg-sideline/20 p-5 text-right transition-colors hover:border-signal/40"
+                className="group border-sideline/50 bg-sideline/20 hover:border-signal/40 flex flex-col rounded-2xl border p-5 text-right transition-colors"
               >
-                <span className="text-xs text-hashmark">Older →</span>
-                <span className="mt-1 font-display font-semibold text-chalk transition-colors group-hover:text-signal">
+                <span className="text-hashmark text-xs">Older →</span>
+                <span className="font-display text-chalk group-hover:text-signal mt-1 font-semibold transition-colors">
                   {next.title}
                 </span>
               </Link>
@@ -142,11 +142,7 @@ export default async function GuidePage({ params }: Props) {
         )}
       </article>
 
-      <Faq
-        faqs={guide.faqs}
-        heading="Related questions"
-        emitJsonLd={false}
-      />
+      <Faq faqs={guide.faqs} heading="Related questions" emitJsonLd={false} />
     </main>
   );
 }

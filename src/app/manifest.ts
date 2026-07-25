@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Fantasy Draft Order",
+    name: "Fantasy Football Draft Order",
     short_name: "Draft Order",
     description:
-      "Free, open-source fantasy draft order randomizer. Schedule the draw, share one link, and watch the order drawn live.",
+      "Free, open-source fantasy football draft order randomizer. Schedule the draw, share one link, and watch the order drawn live.",
     start_url: "/",
     display: "standalone",
     background_color: "#0A1628",

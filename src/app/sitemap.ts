@@ -3,8 +3,12 @@ import { env } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 import { LANDING_PAGES } from "@/lib/seo/landing-pages";
 import { listGuides } from "@/lib/seo/guides";
+import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
 
-export const revalidate = 3600;
+// Dynamic, not ISR: the completed-draft list changes continuously, and the
+// D1 binding only exists inside a request — a prerender at build time would
+// have no database to read.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.NEXT_PUBLIC_BASE_URL;
@@ -46,6 +50,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${base}/league-id`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${base}/ask-your-commissioner`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...LEAGUE_ID_GUIDES.map((g) => ({
+      url: `${base}/league-id/${g.slug}`,
+      lastModified: new Date(g.updated),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     ...LANDING_PAGES.map((p) => ({
       url: `${base}/${p.slug}`,
       changeFrequency: "monthly" as const,

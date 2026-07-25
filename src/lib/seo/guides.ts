@@ -42,7 +42,7 @@ export const GUIDES: Guide[] = [
     sections: [
       {
         kind: "p",
-        text: "Every fantasy draft randomizer on the internet says the same thing on its homepage: \"unbiased,\" \"random,\" \"fair.\" Almost none of them give you any way to actually check. Here's the short version of what fairness in a draft randomizer means — and the four tests your tool either passes or fails.",
+        text: 'Every fantasy draft randomizer on the internet says the same thing on its homepage: "unbiased," "random," "fair." Almost none of them give you any way to actually check. Here\'s the short version of what fairness in a draft randomizer means — and the four tests your tool either passes or fails.',
       },
       { kind: "h2", text: "Test 1: Is the algorithm public?" },
       {
@@ -51,7 +51,7 @@ export const GUIDES: Guide[] = [
       },
       {
         kind: "p",
-        text: "Fantasy Draft Order's randomizer lives at src/lib/randomizer.ts on GitHub. It's a Fisher–Yates shuffle, the textbook algorithm for unbiased permutations. Every draft on the site links directly to the exact commit that produced it.",
+        text: "Fantasy Football Draft Order's randomizer lives at src/lib/randomizer.ts on GitHub. It's a Fisher–Yates shuffle, the textbook algorithm for unbiased permutations. Every draft on the site links directly to the exact commit that produced it.",
       },
       { kind: "h2", text: "Test 2: Where does the randomness come from?" },
       {
@@ -60,7 +60,7 @@ export const GUIDES: Guide[] = [
       },
       {
         kind: "p",
-        text: "Fantasy Draft Order uses Node's crypto.randomInt — a CSPRNG (cryptographically secure pseudo-random number generator). The seed is recorded with each draft so you can reproduce the result.",
+        text: "Fantasy Football Draft Order uses Node's crypto.randomInt — a CSPRNG (cryptographically secure pseudo-random number generator). The seed is recorded with each draft so you can reproduce the result.",
       },
       { kind: "h2", text: "Test 3: Can the commissioner re-roll?" },
       {
@@ -69,26 +69,29 @@ export const GUIDES: Guide[] = [
       },
       {
         kind: "p",
-        text: "A trustworthy randomizer needs to either (a) seal the result before anyone sees it, or (b) make the result impossible to discard. Fantasy Draft Order does both. Once a draft is scheduled, teams and time are immutable — there are literally no edit endpoints in the API. The draw fires server-side at the scheduled time and the result is permanent.",
+        text: "A trustworthy randomizer needs to either (a) seal the result before anyone sees it, or (b) make the result impossible to discard. Fantasy Football Draft Order does both. Once a draft is scheduled, teams and time are immutable — there are literally no edit endpoints in the API. The draw fires server-side at the scheduled time and the result is permanent.",
       },
       { kind: "h2", text: "Test 4: Is there a permanent record?" },
       {
         kind: "p",
-        text: "After the draft, can your league still verify what happened a year from now? Most randomizers produce a screenshot — at best, an emailed list. Fantasy Draft Order produces a permanent URL with the seed, the timestamps, the source-code commit, and every pick's reveal time stored server-side.",
+        text: "After the draft, can your league still verify what happened a year from now? Most randomizers produce a screenshot — at best, an emailed list. Fantasy Football Draft Order produces a permanent URL with the seed, the timestamps, the source-code commit, and every pick's reveal time stored server-side.",
       },
       {
         kind: "callout",
         tone: "trust",
         text: "If your current draft randomizer can't pass all four tests, you're trusting a person, not a process. That's a fine choice for a casual league. But for any league with money, keepers, or strong opinions, the process should be the thing you trust — not the person who runs it.",
       },
-      { kind: "h2", text: "What about RotoWire, FantasyPros, or the in-platform randomizer?" },
+      {
+        kind: "h2",
+        text: "What about RotoWire, FantasyPros, or the in-platform randomizer?",
+      },
       {
         kind: "p",
         text: "RotoWire and FantasyPros are reputable companies, but their draft order tools are closed-source and run in your browser. The result has no audit trail and the commissioner can re-run them silently. Sleeper, ESPN, Yahoo, and MFL all have built-in randomize buttons; they're convenient, but only the commissioner sees them fire and the league has no way to verify the result.",
       },
       {
         kind: "p",
-        text: "Fantasy Draft Order solves the verifiability problem specifically. It's not better than these tools at being a fantasy platform — they're better at that. It's better at being the moment of truth before the platform draft starts.",
+        text: "Fantasy Football Draft Order solves the verifiability problem specifically. It's not better than these tools at being a fantasy platform — they're better at that. It's better at being the moment of truth before the platform draft starts.",
       },
     ],
     faqs: [
@@ -102,7 +105,7 @@ export const GUIDES: Guide[] = [
       },
       {
         q: "What if I just trust my commissioner?",
-        a: "Most leagues do, and most leagues are fine. Fantasy Draft Order exists for the leagues where the commissioner doesn't want to be trusted — they want the result to be obviously fair without needing anyone to vouch for them.",
+        a: "Most leagues do, and most leagues are fine. Fantasy Football Draft Order exists for the leagues where the commissioner doesn't want to be trusted — they want the result to be obviously fair without needing anyone to vouch for them.",
       },
     ],
   },
@@ -184,13 +187,13 @@ export const GUIDES: Guide[] = [
       {
         kind: "callout",
         tone: "info",
-        text: "Schedule a Fantasy Draft Order draw for the night you do your chaos method. If the chaos produces a clean result, ignore the link. If it doesn't, the league has a tamper-proof tiebreaker waiting at the URL.",
+        text: "Schedule a Fantasy Football Draft Order draw for the night you do your chaos method. If the chaos produces a clean result, ignore the link. If it doesn't, the league has a tamper-proof tiebreaker waiting at the URL.",
       },
     ],
     faqs: [
       {
         q: "Which method is the most fair?",
-        a: "Truly fair: a public scheduled random draw with a verifiable seed and source code. The chaos methods above are about ritual, not fairness. Use them for the fun, use Fantasy Draft Order for the receipt.",
+        a: "Truly fair: a public scheduled random draw with a verifiable seed and source code. The chaos methods above are about ritual, not fairness. Use them for the fun, use Fantasy Football Draft Order for the receipt.",
       },
       {
         q: "What's the most popular draft order method?",
@@ -245,7 +248,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Auction drafts: not really an order at all" },
       {
         kind: "p",
-        text: "Worth mentioning: auction drafts don't have a draft order in the traditional sense. Every team has the same budget, and players are nominated in a rotating order. The rotating nomination order is what Fantasy Draft Order can produce for an auction league.",
+        text: "Worth mentioning: auction drafts don't have a draft order in the traditional sense. Every team has the same budget, and players are nominated in a rotating order. The rotating nomination order is what Fantasy Football Draft Order can produce for an auction league.",
       },
       { kind: "h2", text: "Which one should your league use?" },
       {
@@ -254,7 +257,7 @@ export const GUIDES: Guide[] = [
           "Redraft fantasy football: snake. It's the standard for a reason.",
           "Dynasty rookie drafts: snake or 3RR. 3RR if your league wants to flatten the value of slot 1 over time.",
           "Keeper leagues: snake, with the keeper round determined by where you drafted that player last year.",
-          "Auction leagues: rotating nomination order — Fantasy Draft Order produces the rotation.",
+          "Auction leagues: rotating nomination order — Fantasy Football Draft Order produces the rotation.",
         ],
       },
       {
@@ -269,7 +272,7 @@ export const GUIDES: Guide[] = [
         a: "No. Slot 1 gets the best round-1 pick, but waits 24 picks for round 2. Many drafters prefer slots 5–8 for the balance between elite round-1 talent and reasonable round-2 wait time.",
       },
       {
-        q: "Does Fantasy Draft Order produce a snake order or a straight order?",
+        q: "Does Fantasy Football Draft Order produce a snake order or a straight order?",
         a: "It produces a pick order — slot 1 through slot N. Your league chooses what to do with the order on whatever platform you actually draft on.",
       },
     ],
@@ -331,12 +334,12 @@ export const GUIDES: Guide[] = [
       {
         kind: "callout",
         tone: "trust",
-        text: "Fantasy Draft Order today runs uniform random draws. Weighted lotteries (NBA-style and linear) are on the roadmap.",
+        text: "Fantasy Football Draft Order today runs uniform random draws. Weighted lotteries (NBA-style and linear) are on the roadmap.",
       },
     ],
     faqs: [
       {
-        q: "Does Fantasy Draft Order support weighted lotteries?",
+        q: "Does Fantasy Football Draft Order support weighted lotteries?",
         a: "Not yet. Today, every draft is a uniform random draw. Weighted and tiered lotteries are on the roadmap — track progress on GitHub.",
       },
       {
@@ -389,7 +392,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "The better way: public scheduled draw" },
       {
         kind: "p",
-        text: "Schedule a Fantasy Draft Order draw, paste your Sleeper league ID to import your teams, and pick a draw time. Share one link. The whole league opens it; everyone sees the same animation at the same second; the result is permanent and the source code is open. After the draw, copy the order into Sleeper's draft order settings.",
+        text: "Schedule a Fantasy Football Draft Order draw, paste your Sleeper league ID to import your teams, and pick a draw time. Share one link. The whole league opens it; everyone sees the same animation at the same second; the result is permanent and the source code is open. After the draw, copy the order into Sleeper's draft order settings.",
       },
       {
         kind: "callout",
@@ -399,11 +402,11 @@ export const GUIDES: Guide[] = [
     ],
     faqs: [
       {
-        q: "Will Sleeper still let me edit the order after Fantasy Draft Order produces it?",
-        a: "Yes — Sleeper's draft order settings remain editable up until the draft starts. You'd manually copy the order Fantasy Draft Order produced into Sleeper's settings.",
+        q: "Will Sleeper still let me edit the order after Fantasy Football Draft Order produces it?",
+        a: "Yes — Sleeper's draft order settings remain editable up until the draft starts. You'd manually copy the order Fantasy Football Draft Order produced into Sleeper's settings.",
       },
       {
-        q: "Does Fantasy Draft Order need my Sleeper credentials?",
+        q: "Does Fantasy Football Draft Order need my Sleeper credentials?",
         a: "No. We use Sleeper's public read-only API with just the league ID. No login, no OAuth, no permissions on your account.",
       },
     ],
@@ -452,12 +455,12 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "How to make the order verifiable" },
       {
         kind: "p",
-        text: "Schedule a Fantasy Draft Order draw before ESPN's auto-randomization deadline. Add your teams (manually for private leagues, or by ESPN league ID for public leagues). Share the draw link with your league. After the draw, copy the order into ESPN's draft order settings before ESPN's one-hour cutoff.",
+        text: "Schedule a Fantasy Football Draft Order draw before ESPN's auto-randomization deadline. Add your teams (manually for private leagues, or by ESPN league ID for public leagues). Share the draw link with your league. After the draw, copy the order into ESPN's draft order settings before ESPN's one-hour cutoff.",
       },
       {
         kind: "callout",
         tone: "info",
-        text: "ESPN's one-hour cutoff means you should run your Fantasy Draft Order draw at least 90 minutes before your draft to leave time to copy the result into ESPN.",
+        text: "ESPN's one-hour cutoff means you should run your Fantasy Football Draft Order draw at least 90 minutes before your draft to leave time to copy the result into ESPN.",
       },
     ],
     faqs: [
@@ -467,7 +470,7 @@ export const GUIDES: Guide[] = [
       },
       {
         q: "What if I miss ESPN's one-hour cutoff?",
-        a: "ESPN will auto-randomize. The league will get whatever ESPN produces. The point of pre-running a Fantasy Draft Order draw is to control that moment yourself.",
+        a: "ESPN will auto-randomize. The league will get whatever ESPN produces. The point of pre-running a Fantasy Football Draft Order draw is to control that moment yourself.",
       },
     ],
   },
@@ -511,7 +514,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Making it verifiable" },
       {
         kind: "p",
-        text: "Yahoo doesn't expose a public league API, so Fantasy Draft Order uses manual entry for Yahoo leagues — type in the team names once. Schedule the draw, share the link, and the whole league watches the order come out of open-source code at the scheduled time. Copy the order into Yahoo's draft settings before your draft starts.",
+        text: "Yahoo doesn't expose a public league API, so Fantasy Football Draft Order uses manual entry for Yahoo leagues — type in the team names once. Schedule the draw, share the link, and the whole league watches the order come out of open-source code at the scheduled time. Copy the order into Yahoo's draft settings before your draft starts.",
       },
       {
         kind: "callout",
@@ -521,8 +524,8 @@ export const GUIDES: Guide[] = [
     ],
     faqs: [
       {
-        q: "Why doesn't Fantasy Draft Order import Yahoo leagues directly?",
-        a: "Yahoo's API requires OAuth, which means accounts. Fantasy Draft Order doesn't do accounts on principle — it's how we keep the no-tracking promise honest.",
+        q: "Why doesn't Fantasy Football Draft Order import Yahoo leagues directly?",
+        a: "Yahoo's API requires OAuth, which means accounts. Fantasy Football Draft Order doesn't do accounts on principle — it's how we keep the no-tracking promise honest.",
       },
       {
         q: "Will Yahoo support ever land?",
@@ -558,7 +561,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Step 2: Schedule the draw at least 24 hours ahead" },
       {
         kind: "p",
-        text: "Open Fantasy Draft Order, fill in your league name, your name, and the draw time. Add teams manually or by league ID. Schedule it. Copy the link. Don't share it yet.",
+        text: "Open Fantasy Football Draft Order, fill in your league name, your name, and the draw time. Add teams manually or by league ID. Schedule it. Copy the link. Don't share it yet.",
       },
       { kind: "h2", text: "Step 3: Send one message to the league chat" },
       {
@@ -610,6 +613,6 @@ export function getGuide(slug: string): Guide | undefined {
 
 export function listGuides(): Guide[] {
   return [...GUIDES].sort((a, b) =>
-    b.datePublished.localeCompare(a.datePublished)
+    b.datePublished.localeCompare(a.datePublished),
   );
 }

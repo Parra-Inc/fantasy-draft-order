@@ -8,17 +8,20 @@ const PLATFORMS = [
 
 export function Integrations({ highlight }: { highlight?: string }) {
   return (
-    <section className="border-t border-sideline/50">
+    <section className="border-sideline/50 border-t">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs font-medium uppercase tracking-wider text-signal">
+          <p className="text-signal font-mono text-xs font-medium tracking-wider uppercase">
             Integrations
           </p>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-chalk sm:text-5xl">
+          <h2 className="font-display text-chalk mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
             Bring your league as-is.
           </h2>
-          <p className="mt-4 text-hashmark">
-            Paste a league ID, we&apos;ll fetch your teams, owners, and avatars. No OAuth dance, no account required.
+          <p className="text-hashmark mt-4">
+            Paste a league ID and we pull in your teams, owners, and avatars.
+          </p>
+          <p className="text-chalk mt-3 font-medium">
+            No login, no OAuth, nothing written back to your league.
           </p>
         </div>
         <ul className="mx-auto mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -42,7 +45,7 @@ export function Integrations({ highlight }: { highlight?: string }) {
                 >
                   {p.name}
                 </p>
-                <p className="mt-1 text-xs text-hashmark">{p.note}</p>
+                <p className="text-hashmark mt-1 text-xs">{p.note}</p>
               </li>
             );
           })}

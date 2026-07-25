@@ -8,14 +8,17 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbLd, SoftwareApplicationLd } from "@/lib/seo/jsonld";
 
 export const metadata = buildMetadata({
-  title:
-    "Fantasy Draft Order — Free, Open-Source Draft Randomizer for Every League",
+  title: "Fantasy Football Draft Order: Free, Open-Source Randomizer",
   description:
-    "Free fantasy draft order randomizer. Schedule the draw, share one link, and watch the order drawn live from open-source code. Sleeper, ESPN, MyFantasyLeague, Fleaflicker — football, basketball, baseball, and hockey leagues.",
+    "Free fantasy football draft order generator. Schedule the draw, share one link, and watch the randomizer pick your order live from open-source code. Sleeper, ESPN, MyFantasyLeague, Fleaflicker — football, basketball, baseball, and hockey leagues.",
   path: "/",
   keywords: [
+    "fantasy football draft order generator",
+    "fantasy football draft order picker",
     "fantasy draft order generator",
     "fantasy draft randomizer",
+    "draft order wheel",
+    "random draft order picker",
     "fantasy football draft order",
     "open source draft randomizer",
     "fair draft order",

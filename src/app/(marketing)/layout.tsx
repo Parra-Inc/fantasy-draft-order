@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { GithubIcon } from "@/components/icons/github";
 import { BrandMark } from "@/components/brand-mark";
+import { Wordmark } from "@/components/wordmark";
 
-const GITHUB_URL = "https://github.com/fantasy-draft-order/fantasy-draft-order";
+const GITHUB_URL = "https://github.com/Parra-Inc/fantasy-draft-order";
 
 const PLATFORM_LINKS = [
   { href: "/sleeper", label: "Sleeper" },
@@ -20,11 +21,13 @@ const SPORT_LINKS = [
 ];
 
 const PRODUCT_LINKS = [
-  { href: "/new", label: "Create a draft" },
+  { href: "/new", label: "Schedule the draw" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/why-fair", label: "Why it's fair" },
+  { href: "/ask-your-commissioner", label: "Ask your commissioner" },
   { href: "/draft-lottery", label: "Draft lottery" },
   { href: "/guides", label: "Guides" },
+  { href: "/league-id", label: "Find your league ID" },
 ];
 
 export default function MarketingLayout({
@@ -34,30 +37,28 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="flex min-h-full flex-col">
-      <header className="sticky top-0 z-50 border-b border-sideline/50 bg-midnight/90 backdrop-blur-md">
+      <header className="border-sideline/50 bg-midnight/90 sticky top-0 z-50 border-b backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
             <BrandMark />
-            <span className="font-display text-base font-bold tracking-tight text-chalk sm:text-lg">
-              Fantasy Draft Order
-            </span>
+            <Wordmark />
           </Link>
-          <nav className="hidden items-center gap-7 text-sm sm:flex">
+          <nav className="hidden items-center gap-7 text-sm md:flex">
             <Link
               href="/how-it-works"
-              className="text-hashmark transition-colors hover:text-chalk"
+              className="text-hashmark hover:text-chalk transition-colors"
             >
               How it works
             </Link>
             <Link
               href="/why-fair"
-              className="text-hashmark transition-colors hover:text-chalk"
+              className="text-hashmark hover:text-chalk transition-colors"
             >
               Why it&apos;s fair
             </Link>
             <Link
               href="/guides"
-              className="text-hashmark transition-colors hover:text-chalk"
+              className="text-hashmark hover:text-chalk transition-colors"
             >
               Guides
             </Link>
@@ -65,7 +66,7 @@ export default function MarketingLayout({
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 text-hashmark transition-colors hover:text-chalk"
+              className="text-hashmark hover:text-chalk flex items-center gap-1.5 transition-colors"
             >
               <GithubIcon className="size-4" />
               GitHub
@@ -73,24 +74,22 @@ export default function MarketingLayout({
           </nav>
           <Link
             href="/new"
-            className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-signal px-4 text-sm font-semibold text-midnight transition-colors hover:bg-signal-dark"
+            className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold transition-colors"
           >
-            Start a draft
+            Schedule the draw
           </Link>
         </div>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="mt-auto border-t border-sideline/50 bg-midnight py-12">
+      <footer className="border-sideline/50 bg-midnight mt-auto border-t py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
             <div className="sm:col-span-2 lg:col-span-2">
               <Link href="/" className="flex items-center gap-2.5">
                 <BrandMark />
-                <span className="font-display text-base font-bold tracking-tight text-chalk">
-                  Fantasy Draft Order
-                </span>
+                <Wordmark />
               </Link>
-              <p className="mt-3 max-w-xs text-sm leading-relaxed text-hashmark">
+              <p className="text-hashmark mt-3 max-w-xs text-sm leading-relaxed">
                 The draft order your league can actually trust. Free, open
                 source, and trust-by-design.
               </p>
@@ -98,14 +97,14 @@ export default function MarketingLayout({
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 text-xs text-hashmark transition-colors hover:text-chalk"
+                className="text-hashmark hover:text-chalk mt-4 inline-flex items-center gap-1.5 text-xs transition-colors"
               >
                 <GithubIcon className="size-3.5" />
                 Source on GitHub
               </a>
             </div>
             <div>
-              <h4 className="font-display text-sm font-bold text-chalk">
+              <h4 className="font-display text-chalk text-sm font-bold">
                 Product
               </h4>
               <ul className="mt-4 space-y-2.5 text-sm">
@@ -113,7 +112,7 @@ export default function MarketingLayout({
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-hashmark transition-colors hover:text-chalk"
+                      className="text-hashmark hover:text-chalk transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -122,7 +121,7 @@ export default function MarketingLayout({
               </ul>
             </div>
             <div>
-              <h4 className="font-display text-sm font-bold text-chalk">
+              <h4 className="font-display text-chalk text-sm font-bold">
                 Platforms
               </h4>
               <ul className="mt-4 space-y-2.5 text-sm">
@@ -130,7 +129,7 @@ export default function MarketingLayout({
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-hashmark transition-colors hover:text-chalk"
+                      className="text-hashmark hover:text-chalk transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -139,7 +138,7 @@ export default function MarketingLayout({
               </ul>
             </div>
             <div>
-              <h4 className="font-display text-sm font-bold text-chalk">
+              <h4 className="font-display text-chalk text-sm font-bold">
                 Sports
               </h4>
               <ul className="mt-4 space-y-2.5 text-sm">
@@ -147,7 +146,7 @@ export default function MarketingLayout({
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-hashmark transition-colors hover:text-chalk"
+                      className="text-hashmark hover:text-chalk transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -156,10 +155,10 @@ export default function MarketingLayout({
               </ul>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-sideline/50 pt-6 text-xs text-hashmark sm:flex-row sm:items-center">
+          <div className="border-sideline/50 text-hashmark mt-10 flex flex-col items-start justify-between gap-3 border-t pt-6 text-xs sm:flex-row sm:items-center">
             <p>
-              © {new Date().getFullYear()} Fantasy Draft Order — no accounts,
-              no tracking.
+              © {new Date().getFullYear()} Fantasy Football Draft Order. No
+              accounts, no tracking.
             </p>
             <p className="font-mono">Built with crypto.randomInt.</p>
           </div>

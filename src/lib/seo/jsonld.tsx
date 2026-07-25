@@ -20,7 +20,7 @@ export function OrganizationLd() {
         logo: `${SITE_URL}/logo-512.png`,
         sameAs: [GITHUB_URL],
         description:
-          "Open-source, transparent fantasy draft order randomizer. Trust by design.",
+          "Open-source, transparent fantasy football draft order randomizer. Trust by design.",
       }}
     />
   );
@@ -36,7 +36,7 @@ export function WebsiteLd() {
         url: SITE_URL,
         potentialAction: {
           "@type": "Action",
-          name: "Create a fantasy draft order",
+          name: "Create a fantasy football draft order",
           target: `${SITE_URL}/new`,
         },
       }}
@@ -55,7 +55,7 @@ export function SoftwareApplicationLd() {
         operatingSystem: "Web",
         url: SITE_URL,
         description:
-          "Schedule a fantasy draft order, share one link, and watch the order drawn live from open-source code.",
+          "Schedule a fantasy football draft order, share one link, and watch the order drawn live from open-source code.",
         offers: {
           "@type": "Offer",
           price: "0",
@@ -80,6 +80,36 @@ export function FaqLd({ faqs }: { faqs: Faq[] }) {
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }}
+    />
+  );
+}
+
+type HowToLdProps = {
+  name: string;
+  description: string;
+  path: string;
+  steps: string[];
+};
+
+export function HowToLd({ name, description, path, steps }: HowToLdProps) {
+  const url = `${SITE_URL}${path}`;
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name,
+        description,
+        url,
+        totalTime: "PT1M",
+        step: steps.map((text, i) => ({
+          "@type": "HowToStep",
+          position: i + 1,
+          name: `Step ${i + 1}`,
+          text,
+          url: `${url}#step-${i + 1}`,
         })),
       }}
     />
@@ -132,8 +162,7 @@ export function EventLd({
         startDate,
         ...(endDate ? { endDate } : {}),
         eventStatus,
-        eventAttendanceMode:
-          "https://schema.org/OnlineEventAttendanceMode",
+        eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
         location: {
           "@type": "VirtualLocation",
           url,

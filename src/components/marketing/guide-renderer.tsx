@@ -14,20 +14,20 @@ function Section({ section }: { section: GuideSection }) {
       return (
         <h2
           id={section.id ?? slugifyHeading(section.text)}
-          className="mt-12 scroll-mt-20 font-display text-2xl font-bold text-chalk sm:text-3xl"
+          className="font-display text-chalk mt-12 scroll-mt-20 text-2xl font-bold sm:text-3xl"
         >
           {section.text}
         </h2>
       );
     case "h3":
       return (
-        <h3 className="mt-8 font-display text-xl font-bold text-chalk">
+        <h3 className="font-display text-chalk mt-8 text-xl font-bold">
           {section.text}
         </h3>
       );
     case "p":
       return (
-        <p className="mt-5 text-base leading-relaxed text-chalk/85 sm:text-lg">
+        <p className="text-chalk/85 mt-5 text-base leading-relaxed sm:text-lg">
           {section.text}
         </p>
       );
@@ -37,7 +37,7 @@ function Section({ section }: { section: GuideSection }) {
           {section.items.map((item, i) => (
             <li
               key={i}
-              className="list-disc text-base leading-relaxed text-chalk/85 marker:text-signal/60 sm:text-lg"
+              className="text-chalk/85 marker:text-signal/60 list-disc text-base leading-relaxed sm:text-lg"
             >
               {item}
             </li>
@@ -50,7 +50,7 @@ function Section({ section }: { section: GuideSection }) {
           {section.items.map((item, i) => (
             <li
               key={i}
-              className="list-decimal text-base leading-relaxed text-chalk/85 marker:font-mono marker:text-signal sm:text-lg"
+              className="text-chalk/85 marker:text-signal list-decimal text-base leading-relaxed marker:font-mono sm:text-lg"
             >
               {item}
             </li>
@@ -59,10 +59,10 @@ function Section({ section }: { section: GuideSection }) {
       );
     case "quote":
       return (
-        <blockquote className="mt-6 border-l-2 border-signal/50 bg-sideline/20 px-5 py-4 text-base italic text-chalk/90 sm:text-lg">
+        <blockquote className="border-signal/50 bg-sideline/20 text-chalk/90 mt-6 border-l-2 px-5 py-4 text-base italic sm:text-lg">
           {section.text}
           {section.cite ? (
-            <footer className="mt-2 text-xs not-italic text-hashmark">
+            <footer className="text-hashmark mt-2 text-xs not-italic">
               — {section.cite}
             </footer>
           ) : null}
@@ -82,7 +82,7 @@ function Section({ section }: { section: GuideSection }) {
       );
     case "code":
       return (
-        <pre className="mt-5 overflow-x-auto rounded-xl border border-sideline/50 bg-midnight/80 p-4 font-mono text-xs text-chalk/90 sm:text-sm">
+        <pre className="border-sideline/50 bg-midnight/80 text-chalk/90 mt-5 overflow-x-auto rounded-xl border p-4 font-mono text-xs sm:text-sm">
           <code>{section.text}</code>
         </pre>
       );

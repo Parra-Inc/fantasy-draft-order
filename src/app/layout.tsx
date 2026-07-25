@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, DM_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import { FeedbackButton } from "@/components/feedback-button";
 import { OrganizationLd, WebsiteLd } from "@/lib/seo/jsonld";
@@ -41,7 +40,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Free, Open-Source Fantasy Draft Randomizer`,
+    default: `${SITE_NAME}: Free, Open-Source Draft Randomizer`,
     template: `%s — ${SITE_NAME}`,
   },
   description: SITE_TAGLINE,
@@ -53,6 +52,10 @@ export const metadata: Metadata = {
     "fantasy draft order generator",
     "fantasy draft randomizer",
     "fantasy football draft order",
+    "fantasy football draft order generator",
+    "fantasy football draft order picker",
+    "draft order wheel",
+    "draft order picker",
     "draft lottery",
     "open source draft randomizer",
     "sleeper draft order",
@@ -75,20 +78,20 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "en_US",
     url: SITE_URL,
-    title: `${SITE_NAME} — Free, Open-Source Fantasy Draft Randomizer`,
+    title: `${SITE_NAME}: Free, Open-Source Draft Randomizer`,
     description: SITE_TAGLINE,
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME} — transparent fantasy draft randomizer`,
+        alt: `${SITE_NAME}: transparent, verifiable draft randomizer`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Free, Open-Source Fantasy Draft Randomizer`,
+    title: `${SITE_NAME}: Free, Open-Source Draft Randomizer`,
     description: SITE_TAGLINE,
     images: ["/opengraph-image"],
     site: SITE_TWITTER,
@@ -121,7 +124,7 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${inter.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="relative flex min-h-full flex-col bg-midnight text-chalk">
+      <body className="bg-midnight text-chalk relative flex min-h-full flex-col">
         <div className="relative z-10 flex min-h-full flex-col">{children}</div>
         <FeedbackButton />
         <Toaster
@@ -135,9 +138,14 @@ export default function RootLayout({
             },
           }}
         />
+        {/*
+          Analytics is Cloudflare Web Analytics, enabled on the zone by the
+          Pulumi program in program/. The zone is proxied, so Cloudflare
+          injects the beacon at the edge — there is deliberately no script tag
+          or npm package here. Dashboard: Analytics & Logs -> Web Analytics.
+        */}
         <OrganizationLd />
         <WebsiteLd />
-        <Analytics />
       </body>
     </html>
   );

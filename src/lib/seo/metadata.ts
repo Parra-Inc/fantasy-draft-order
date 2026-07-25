@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { env } from "@/lib/env";
 
-export const SITE_NAME = "Fantasy Draft Order";
+export const SITE_NAME = "Fantasy Football Draft Order";
 export const SITE_URL = env.NEXT_PUBLIC_BASE_URL;
 export const SITE_TAGLINE =
-  "The transparent, open-source fantasy draft order randomizer. Schedule the draw. Share the link. Watch it drawn live.";
+  "The transparent, open-source fantasy football draft order randomizer. Schedule the draw. Share the link. Watch it drawn live.";
 export const SITE_TWITTER = "@fantasydraftord";
-export const GITHUB_URL =
-  "https://github.com/fantasy-draft-order/fantasy-draft-order";
+export const GITHUB_URL = "https://github.com/Parra-Inc/fantasy-draft-order";
 
 type BuildMetadataInput = {
   title: string;

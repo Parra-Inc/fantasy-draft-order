@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Check, Sparkles, Users } from "lucide-react";
+import { Check, Copy, Loader2, Sparkles, Users } from "lucide-react";
+import { LeagueIdHelp } from "@/components/league-id-help";
+import type { EntrySource } from "@/lib/db-enums";
 
 type Mode = "manual" | "import";
 type ImportSource = "SLEEPER" | "MFL" | "FLEAFLICKER" | "ESPN";
@@ -20,47 +22,121 @@ function defaultScheduledFor() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function NewDraftForm() {
+export function NewDraftForm({
+  initialMode,
+  initialSource,
+  initialLeagueId,
+  referrerSlug,
+  entrySource,
+  cloneSlug,
+}: {
+  initialMode?: Mode;
+  initialSource?: ImportSource;
+  initialLeagueId?: string;
+  referrerSlug?: string;
+  entrySource?: EntrySource;
+  cloneSlug?: string;
+}) {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>("import");
+  // Cloning always lands in manual mode: the team list arrives as text, and
+  // re-importing would defeat the point of copying a frozen roster.
+  const [mode, setMode] = useState<Mode>(
+    cloneSlug ? "manual" : (initialMode ?? "import"),
+  );
   const [leagueName, setLeagueName] = useState("");
   const [creatorName, setCreatorName] = useState("");
   const [creatorEmail, setCreatorEmail] = useState("");
   const [scheduledFor, setScheduledFor] = useState(defaultScheduledFor);
   const [teamsText, setTeamsText] = useState("");
 
-  const [source, setSource] = useState<ImportSource>("SLEEPER");
-  const [leagueId, setLeagueId] = useState("");
-  const [importedTeams, setImportedTeams] = useState<ImportedTeam[] | null>(null);
-  const [importing, setImporting] = useState(false);
+  const [source, setSource] = useState<ImportSource>(
+    initialSource ?? "SLEEPER",
+  );
+  const [leagueId, setLeagueId] = useState(initialLeagueId ?? "");
+  const [importedTeams, setImportedTeams] = useState<ImportedTeam[] | null>(
+    null,
+  );
+  const autoImports =
+    Boolean(initialLeagueId) && initialMode !== "manual" && !cloneSlug;
+  const [importing, setImporting] = useState(autoImports);
   const [submitting, setSubmitting] = useState(false);
+  const [cloning, setCloning] = useState(Boolean(cloneSlug));
+  const [clonedFrom, setClonedFrom] = useState<string | null>(null);
 
-  async function handlePreview() {
+  const runImport = useCallback(
+    async (nextSource: ImportSource, nextLeagueId: string) => {
+      try {
+        const res = await fetch(
+          `/api/drafts/import/${nextSource.toLowerCase()}?leagueId=${encodeURIComponent(nextLeagueId)}`,
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "import failed");
+        setImportedTeams(data.teams);
+        if (data.leagueName) {
+          setLeagueName((current) => current.trim() || data.leagueName);
+        }
+        toast.success(`Found ${data.teams.length} teams`);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "import failed");
+      } finally {
+        setImporting(false);
+      }
+    },
+    [],
+  );
+
+  function handlePreview(nextSource: ImportSource, nextLeagueId: string) {
     setImporting(true);
     setImportedTeams(null);
-    try {
-      const res = await fetch(
-        `/api/drafts/import/${source.toLowerCase()}?leagueId=${encodeURIComponent(leagueId)}`,
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "import failed");
-      setImportedTeams(data.teams);
-      if (data.leagueName && !leagueName.trim()) {
-        setLeagueName(data.leagueName);
-      }
-      toast.success(`Found ${data.teams.length} teams`);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "import failed");
-    } finally {
-      setImporting(false);
-    }
+    void runImport(nextSource, nextLeagueId);
   }
+
+  // Landing on /new?source=…&leagueId=… imports straight away.
+  const autoImported = useRef(false);
+  useEffect(() => {
+    if (autoImported.current || !autoImports || !initialLeagueId) return;
+    autoImported.current = true;
+    void runImport(initialSource ?? "SLEEPER", initialLeagueId);
+  }, [runImport, autoImports, initialSource, initialLeagueId]);
+
+  // Landing on /new?clone=<slug> copies that draft's frozen roster into the
+  // manual textarea. The state endpoint already returns exactly what is needed
+  // and is public, so this needs no new route and, crucially, no database read
+  // in /new itself — that page is statically rendered and indexable, and
+  // reading D1 there would force it dynamic.
+  const cloned = useRef(false);
+  useEffect(() => {
+    if (cloned.current || !cloneSlug) return;
+    cloned.current = true;
+    (async () => {
+      try {
+        const res = await fetch(`/api/drafts/${cloneSlug}/state`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "could not load that draft");
+        const names: string[] = (data.teams ?? []).map(
+          (t: { name: string }) => t.name,
+        );
+        if (names.length === 0) throw new Error("that draft has no teams");
+        setTeamsText(names.join("\n"));
+        setLeagueName((current) => current.trim() || (data.leagueName ?? ""));
+        setClonedFrom(data.leagueName ?? null);
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "could not copy those teams",
+        );
+      } finally {
+        setCloning(false);
+      }
+    })();
+  }, [cloneSlug]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      let teams: { name: string; ownerName?: string; avatarUrl?: string }[] | undefined;
+      let teams:
+        | { name: string; ownerName?: string; avatarUrl?: string }[]
+        | undefined;
       if (mode === "manual") {
         teams = teamsText
           .split("\n")
@@ -84,6 +160,8 @@ export function NewDraftForm() {
         creatorEmail: creatorEmail || undefined,
         scheduledFor: new Date(scheduledFor).toISOString(),
         ...(mode === "manual" ? { teams } : { import: { source, leagueId } }),
+        referrerSlug,
+        entrySource,
       };
 
       const res = await fetch("/api/drafts", {
@@ -94,7 +172,9 @@ export function NewDraftForm() {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(
-          typeof data.error === "string" ? data.error : "Please check the fields and try again.",
+          typeof data.error === "string"
+            ? data.error
+            : "Please check the fields and try again.",
         );
       }
       router.push(`/d/${data.slug}`);
@@ -139,10 +219,7 @@ export function NewDraftForm() {
           </Field>
         </div>
 
-        <Field
-          label="Scheduled for"
-          hint="local time · locked once created"
-        >
+        <Field label="Scheduled for" hint="local time · locked once created">
           <input
             type="datetime-local"
             required
@@ -154,7 +231,7 @@ export function NewDraftForm() {
       </Card>
 
       <Card title="Teams">
-        <div className="grid grid-cols-2 gap-2 rounded-xl border border-sideline/60 bg-midnight/40 p-1">
+        <div className="border-sideline/60 bg-midnight/40 grid grid-cols-2 gap-2 rounded-xl border p-1">
           <TabButton
             active={mode === "import"}
             icon={Sparkles}
@@ -172,18 +249,34 @@ export function NewDraftForm() {
         </div>
 
         {mode === "manual" && (
-          <Field
-            label="Team names"
-            hint="one per line · min 2"
-          >
-            <textarea
-              value={teamsText}
-              onChange={(e) => setTeamsText(e.target.value)}
-              rows={10}
-              placeholder={"Gridiron Goons\nBlitz Brigade\nRed Zone Royals"}
-              className="input font-mono"
-            />
-          </Field>
+          <div className="space-y-4">
+            {cloning && (
+              <div className="border-sideline/60 bg-midnight/40 text-hashmark flex items-center gap-2 rounded-xl border p-4 text-sm">
+                <Loader2 className="text-signal size-4 animate-spin" />
+                Copying teams from the previous draw…
+              </div>
+            )}
+            {clonedFrom && (
+              <div className="border-signal/30 bg-signal/5 flex items-start gap-2.5 rounded-xl border p-4">
+                <Copy className="text-signal mt-0.5 size-4 shrink-0" />
+                <p className="text-hashmark text-sm">
+                  Teams copied from{" "}
+                  <span className="text-chalk font-semibold">{clonedFrom}</span>
+                  . Edit them however you like: this is a brand new draw with a
+                  new seed, and it does not touch the original.
+                </p>
+              </div>
+            )}
+            <Field label="Team names" hint="one per line · min 2">
+              <textarea
+                value={teamsText}
+                onChange={(e) => setTeamsText(e.target.value)}
+                rows={10}
+                placeholder={"Gridiron Goons\nBlitz Brigade\nRed Zone Royals"}
+                className="input font-mono"
+              />
+            </Field>
+          </div>
         )}
 
         {mode === "import" && (
@@ -192,7 +285,10 @@ export function NewDraftForm() {
               <Field label="Platform">
                 <select
                   value={source}
-                  onChange={(e) => setSource(e.target.value as ImportSource)}
+                  onChange={(e) => {
+                    setSource(e.target.value as ImportSource);
+                    setImportedTeams(null);
+                  }}
                   className="input"
                 >
                   <option value="SLEEPER">Sleeper</option>
@@ -204,7 +300,10 @@ export function NewDraftForm() {
               <Field label="League ID">
                 <input
                   value={leagueId}
-                  onChange={(e) => setLeagueId(e.target.value)}
+                  onChange={(e) => {
+                    setLeagueId(e.target.value);
+                    setImportedTeams(null);
+                  }}
                   placeholder="123456789"
                   className="input"
                 />
@@ -212,8 +311,8 @@ export function NewDraftForm() {
               <div className="flex items-end">
                 <button
                   type="button"
-                  onClick={handlePreview}
-                  disabled={importing || !leagueId}
+                  onClick={() => handlePreview(source, leagueId.trim())}
+                  disabled={importing || !leagueId.trim()}
                   className="btn btn-outline h-10 w-full sm:w-auto"
                 >
                   {importing ? "Loading…" : "Preview"}
@@ -221,27 +320,36 @@ export function NewDraftForm() {
               </div>
             </div>
 
+            <LeagueIdHelp source={source} />
+
+            {importing && (
+              <div className="border-sideline/60 bg-midnight/40 text-hashmark flex items-center gap-2 rounded-xl border p-4 text-sm">
+                <Loader2 className="text-signal size-4 animate-spin" />
+                Importing your league…
+              </div>
+            )}
+
             {importedTeams && (
-              <div className="rounded-xl border border-signal/30 bg-signal/5 p-4">
+              <div className="border-signal/30 bg-signal/5 rounded-xl border p-4">
                 <div className="mb-3 flex items-center gap-2">
-                  <div className="flex size-6 items-center justify-center rounded-full bg-signal/20">
-                    <Check className="size-3.5 text-signal" />
+                  <div className="bg-signal/20 flex size-6 items-center justify-center rounded-full">
+                    <Check className="text-signal size-3.5" />
                   </div>
-                  <p className="text-sm font-semibold text-chalk">
+                  <p className="text-chalk text-sm font-semibold">
                     {importedTeams.length} teams found
                   </p>
                 </div>
                 <ul className="grid grid-cols-1 gap-1.5 text-sm sm:grid-cols-2">
                   {importedTeams.map((t, i) => (
                     <li key={i} className="flex items-center gap-2">
-                      <span className="w-5 text-right font-mono text-xs text-hashmark">
+                      <span className="text-hashmark w-5 text-right font-mono text-xs">
                         {i + 1}
                       </span>
-                      <span className="truncate font-medium text-chalk">
+                      <span className="text-chalk truncate font-medium">
                         {t.name}
                       </span>
                       {t.ownerName && (
-                        <span className="truncate text-xs text-hashmark">
+                        <span className="text-hashmark truncate text-xs">
                           — {t.ownerName}
                         </span>
                       )}
@@ -258,7 +366,7 @@ export function NewDraftForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="btn btn-primary h-12 w-full px-8 text-base shadow-lg shadow-signal/20 sm:w-auto"
+          className="btn btn-primary shadow-signal/20 h-12 w-full px-8 text-base shadow-lg sm:w-auto"
         >
           {submitting ? "Creating…" : "Create draft →"}
         </button>
@@ -275,8 +383,8 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-sideline/50 bg-sideline/20 p-6 sm:p-7">
-      <h2 className="mb-5 font-display text-sm font-bold uppercase tracking-wider text-signal">
+    <section className="border-sideline/50 bg-sideline/20 rounded-2xl border p-6 sm:p-7">
+      <h2 className="font-display text-signal mb-5 text-sm font-bold tracking-wider uppercase">
         {title}
       </h2>
       <div className="space-y-5">{children}</div>
@@ -296,8 +404,8 @@ function Field({
   return (
     <label className="block">
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-sm font-medium text-chalk">{label}</span>
-        {hint && <span className="text-xs text-hashmark">{hint}</span>}
+        <span className="text-chalk text-sm font-medium">{label}</span>
+        {hint && <span className="text-hashmark text-xs">{hint}</span>}
       </div>
       {children}
     </label>
