@@ -16,7 +16,16 @@ import { customAlphabet } from "nanoid";
  */
 const nano = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 24);
 
-export type IdPrefix = "drf" | "tm" | "pck" | "fb";
+export type IdPrefix =
+  | "drf"
+  | "tm"
+  | "pck"
+  | "fb"
+  // Punishment wheel: the wheel, one of its options, and an entry in the
+  // public ideas database.
+  | "pun"
+  | "pop"
+  | "pid";
 
 export function newId(prefix: IdPrefix): string {
   return `${prefix}_${nano()}`;

@@ -67,6 +67,10 @@ export const ENTRY_SOURCES = [
   "CALENDAR",
   /** /ask-your-commissioner, i.e. a viewer who is not the commissioner. */
   "SKEPTIC",
+  /** The punishment ideas database, via the "spin these" tray. */
+  "PUNISHMENT_IDEAS",
+  /** The call to action on a finished punishment wheel. */
+  "PUNISHMENT_RESULT",
 ] as const;
 
 export type EntrySource = (typeof ENTRY_SOURCES)[number];
@@ -80,4 +84,54 @@ export function toEntrySource(value: string | null | undefined): EntrySource {
   return (ENTRY_SOURCES as readonly string[]).includes(upper)
     ? (upper as EntrySource)
     : "DIRECT";
+}
+
+/**
+ * Moderation state of a PunishmentIdea. Anyone can submit; only APPROVED rows
+ * are ever rendered. There is no admin route — approval is manual SQL, see the
+ * punishment-ideas section of CLAUDE.md.
+ */
+export const PUNISHMENT_IDEA_STATUSES = [
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+] as const;
+
+export type PunishmentIdeaStatus = (typeof PUNISHMENT_IDEA_STATUSES)[number];
+
+/**
+ * How punishment ideas are grouped on /fantasy-football-punishments.
+ *
+ * Order matters: this is the render order of the sections on that page, run
+ * roughly cheap-and-silly first to genuinely-grim last.
+ */
+export const PUNISHMENT_CATEGORIES = [
+  "FOOD",
+  "WARDROBE",
+  "PUBLIC",
+  "ENDURANCE",
+  "DIGITAL",
+  "CHARITY",
+  "PERMANENT",
+] as const;
+
+export type PunishmentCategory = (typeof PUNISHMENT_CATEGORIES)[number];
+
+export const PUNISHMENT_CATEGORY_LABELS: Record<PunishmentCategory, string> = {
+  FOOD: "Food and drink",
+  WARDROBE: "Wardrobe",
+  PUBLIC: "Public humiliation",
+  ENDURANCE: "Endurance",
+  DIGITAL: "Online and social",
+  CHARITY: "Charitable",
+  PERMANENT: "Permanent",
+};
+
+/** Narrow a raw column read to the union, or null if it is not a known value. */
+export function toPunishmentCategory(
+  value: string | null,
+): PunishmentCategory | null {
+  return (PUNISHMENT_CATEGORIES as readonly string[]).includes(value ?? "")
+    ? (value as PunishmentCategory)
+    : null;
 }

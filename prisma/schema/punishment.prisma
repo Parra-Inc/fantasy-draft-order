@@ -1,0 +1,78 @@
+// The punishment wheel: last place gets one randomized punishment, drawn
+// publicly at a pre-announced time.
+//
+// Same mechanic as Draft, different noun. Sealed at create time, revealed on a
+// clock, never editable — because the accusation this answers is "the
+// commissioner spun it until their buddy got the easy one", and only an
+// immutable record shared before the draw refutes that.
+//
+// Conventions as everywhere else here: app-generated prefixed ids
+// (src/lib/ids.ts), String instead of enums (src/lib/db-enums.ts), no
+// dbgenerated.
+
+model Punishment {
+  id           String   @id
+  slug         String   @unique
+  leagueName   String
+  loserName    String
+  creatorName  String
+  creatorEmail String?
+  scheduledFor DateTime
+  // Stored rather than derived from scheduledFor at read time, for the same
+  // reason Pick.revealedAt is: changing DRAFT_SPIN_DURATION_MS later must not
+  // retroactively move the reveal time of a wheel that is already public.
+  revealedAt   DateTime
+  // The result, as an index into PunishmentOption.position.
+  //
+  // Not a chosenOptionId FK: options reference the punishment, so the
+  // punishment row has to be written first and cannot yet point at an option.
+  // D1 has no interactive transactions to break that cycle with, and an
+  // integer index costs nothing.
+  chosenPosition Int
+  seed           String
+  commitSha      String?
+  entrySource    String   @default("DIRECT")
+  createdAt      DateTime @default(now())
+
+  options PunishmentOption[]
+
+  @@index([scheduledFor])
+}
+
+model PunishmentOption {
+  id           String @id
+  punishmentId String
+  label        String
+  position     Int
+
+  punishment Punishment @relation(fields: [punishmentId], references: [id], onDelete: Cascade)
+
+  @@unique([punishmentId, position])
+  @@index([punishmentId])
+}
+
+/// The ideas database behind /fantasy-football-punishments.
+///
+/// Deliberately unrelated to Punishment. A wheel copies option labels in as
+/// plain text at create time, so rejecting or rewording an idea afterwards can
+/// never change what a league was actually shown. Immutability of a completed
+/// draw beats normalisation.
+///
+/// Anyone can submit; nothing is rendered until status is APPROVED. Approval is
+/// manual SQL (see CLAUDE.md) rather than an admin route, so the app keeps
+/// having no auth and no secrets.
+model PunishmentIdea {
+  id         String    @id
+  label      String
+  category   String
+  status     String    @default("PENDING")
+  /// Submitter's optional contact, so a good idea can get a thank-you.
+  /// Never rendered on any public page.
+  email      String?
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  approvedAt DateTime?
+
+  @@index([status, category])
+  @@index([createdAt])
+}
