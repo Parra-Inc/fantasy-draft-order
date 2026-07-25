@@ -35,7 +35,7 @@ are set per-repo. The `cloudflare-env` skill fans the Cloudflare ones out.
 | Secret | Purpose |
 | --- | --- |
 | `CLOUDFLARE_API_TOKEN` | Worker deploys, D1, and the Pulumi Cloudflare provider |
-| `CLOUDFLARE_S3_ACCESS_KEY_ID` / `CLOUDFLARE_S3_SECRET_ACCESS_KEY` | R2 key used as the `AWS_*` creds for the Pulumi state backend |
+| `CLOUDFLARE_S3_ACCESS_KEY_ID` / `CLOUDFLARE_S3_SECRET_ACCESS_KEY` | R2 key used as the `AWS_*` creds for the Pulumi state backend. **Derived from `CLOUDFLARE_API_TOKEN`**, see the rotation note below |
 | `PULUMI_CONFIG_PASSPHRASE` | Encrypts Pulumi secret config/state. Losing it means losing state decryption |
 | `CLOUDFLARE_GLOBAL_API_KEY` / `CLOUDFLARE_EMAIL` | Web Analytics (RUM) only. RUM has no API-token permission group, so that one component calls the REST API directly with Global API Key auth |
 | `INFRA_INSTALL_TOKEN` | PAT with read access to Parra-Inc repos, so npm can install the private `@parra/cloudflare-pulumi` package |
@@ -51,8 +51,38 @@ needs masking belongs in the secrets table, not this one. The three above are id
 that are useless without a credential.
 
 The API token needs **Workers Scripts:Edit**, **D1:Edit**, **Workers R2 Storage:Edit**,
-and **Zone:Edit**. D1:Edit is the one the other repos' tokens may not have yet: without
-it, the provision and migrate steps fail.
+**Zone:Edit**, and **Zone Settings:Edit**. D1:Edit is the one the other repos' tokens may
+not have yet: without it, the provision and migrate steps fail. Zone Settings:Edit is
+required by the `ZoneSettingsOverride` resource in [program/index.ts](../program/index.ts)
+(Always Use HTTPS + HSTS): every `/zones/:id/settings/*` API call is gated on that
+permission group, and without it Pulumi fails with `Unauthorized to access requested
+resource (9109)`. Editing a token's permissions in the dashboard keeps the same token
+value, so adding a group does not require re-fanning the secret out to repos.
+
+**Rolling the API token also invalidates the R2 state credentials.** Cloudflare derives
+the S3-compatible pair from the token itself: `CLOUDFLARE_S3_ACCESS_KEY_ID` is the
+token's id (stable across rolls) and `CLOUDFLARE_S3_SECRET_ACCESS_KEY` is a digest of the
+token value (changes on every roll). Rotate all three together or the Pulumi job fails
+before it reaches Cloudflare at all, on the `pulumi login`/state read against R2, which
+looks nothing like a token problem. Verify a new token against the surfaces the pipeline
+actually uses rather than trusting the dashboard, because `/accounts/:id/tokens/verify`
+returns `active` for a token with no usable permissions:
+
+```bash
+A=b428f294c89acfbe189aa1556f15cc07; Z=ff48b5fdfdefac36c5b755b167e7ee22
+for u in "accounts/$A/workers/scripts" "accounts/$A/d1/database" "zones/$Z" "zones/$Z/settings"; do
+  printf '%-34s %s\n' "$u" "$(curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+    "https://api.cloudflare.com/client/v4/$u" | head -c 80)"
+done
+# and the R2 pair the state backend needs:
+curl -s -o /dev/null -w '%{http_code}\n' --aws-sigv4 "aws:amz:auto:s3" \
+  --user "$CLOUDFLARE_S3_ACCESS_KEY_ID:$CLOUDFLARE_S3_SECRET_ACCESS_KEY" \
+  "https://$A.r2.cloudflarestorage.com"
+```
+
+Note also that account-owned tokens (`cfat_` prefix) are rejected by
+`/user/tokens/verify` with "Invalid API Token" even when perfectly valid. Use the
+account-scoped verify endpoint instead.
 
 `CLOUDFLARE_GLOBAL_API_KEY` is account-wide, covers every service, and cannot be scoped
 down, so the workflow attaches it to the two `pulumi/actions` steps rather than to the

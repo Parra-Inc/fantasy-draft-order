@@ -12,7 +12,8 @@
 #
 # Auth uses the Cloudflare credentials fanned out to every repo:
 #   - secret CLOUDFLARE_API_TOKEN  (scopes: Workers Scripts:Edit, D1:Edit,
-#                                   Workers R2 Storage:Edit, Zone:Edit)
+#                                   Workers R2 Storage:Edit, Zone:Edit,
+#                                   Zone Settings:Edit)
 #   - variable CLOUDFLARE_ACCOUNT_ID
 # Pulumi state + auth secrets (CLOUDFLARE_S3_*, PULUMI_CONFIG_PASSPHRASE,
 # CLOUDFLARE_GLOBAL_API_KEY, CLOUDFLARE_EMAIL, INFRA_INSTALL_TOKEN) are repo
