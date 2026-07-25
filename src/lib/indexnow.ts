@@ -113,39 +113,51 @@ export function queueIndexNowSubmission(urls: string | string[]): void {
 }
 
 /**
- * A draft page is noindex until its last pick is revealed, and there are no
- * background jobs here (passage of time is the trigger), so the first server
- * code to observe the transition is whatever renders or serves the draft. Both
- * of those paths call this, so it dedupes per instance and ignores drafts that
- * finished long ago; only a freshly indexable URL is worth a submission.
+ * A draw page — a draft at /d/<slug>, a punishment wheel at /p/<slug> — is
+ * noindex until its result is revealed, and there are no background jobs here
+ * (passage of time is the trigger), so the first server code to observe the
+ * transition is whatever renders or serves the page. Every such path calls
+ * this, so it dedupes per instance and ignores draws that finished long ago;
+ * only a freshly indexable URL is worth a submission.
  *
- * Known tradeoff: a draft that completes with nobody polling and no visitor
+ * Known tradeoff: a draw that completes with nobody polling and no visitor
  * within RECENTLY_COMPLETED_WINDOW_MS never gets submitted at all, and reaches
- * engines only through sitemap.xml (which lists every completed draft). Closing
- * that gap needs a cron submitting drafts whose last pick was revealed since
- * the previous run; this app has no cron today, so the window is the tradeoff.
+ * engines only through sitemap.xml (which lists every completed one). Closing
+ * that gap needs a cron submitting draws that finished since the previous run;
+ * this app has no cron today, so the window is the tradeoff.
  */
 const RECENTLY_COMPLETED_WINDOW_MS = 24 * 60 * 60 * 1000;
-const MAX_TRACKED_SLUGS = 5_000;
-const submittedDraftSlugs = new Set<string>();
+const MAX_TRACKED_PATHS = 5_000;
+/** Keyed by full path, so /d/x and /p/x can never collide. */
+const submittedDrawPaths = new Set<string>();
 
-export function submitCompletedDraft(slug: string, completedAt: Date): void {
+function submitCompletedDraw(path: string, completedAt: Date): void {
   // Same guard as submitToIndexNow, repeated here so dev and test never queue
   // after() work on every poll.
   if (env.NODE_ENV !== "production") return;
   if (Date.now() - completedAt.getTime() > RECENTLY_COMPLETED_WINDOW_MS) return;
-  if (submittedDraftSlugs.has(slug)) return;
-  if (submittedDraftSlugs.size >= MAX_TRACKED_SLUGS) {
-    submittedDraftSlugs.clear();
+  if (submittedDrawPaths.has(path)) return;
+  if (submittedDrawPaths.size >= MAX_TRACKED_PATHS) {
+    submittedDrawPaths.clear();
   }
 
   // Claimed before the request goes out so 500ms polling cannot open a second
-  // submission for the same draft, then released again if the submission was
-  // not accepted, so the next observer of this draft retries it.
-  submittedDraftSlugs.add(slug);
+  // submission for the same page, then released again if the submission was
+  // not accepted, so the next observer of it retries.
+  submittedDrawPaths.add(path);
 
   runAfterResponse(async () => {
-    const submitted = await submitToIndexNow(`/d/${slug}`);
-    if (!submitted) submittedDraftSlugs.delete(slug);
+    const submitted = await submitToIndexNow(path);
+    if (!submitted) submittedDrawPaths.delete(path);
   });
+}
+
+/** Called from GET /api/drafts/[slug]/state and the /d/[slug] render. */
+export function submitCompletedDraft(slug: string, completedAt: Date): void {
+  submitCompletedDraw(`/d/${slug}`, completedAt);
+}
+
+/** Called from GET /api/punishments/[slug]/state and the /p/[slug] render. */
+export function submitCompletedWheel(slug: string, completedAt: Date): void {
+  submitCompletedDraw(`/p/${slug}`, completedAt);
 }

@@ -40,6 +40,40 @@ export function pickSpinStartAt(
 
 export type DerivedStatus = "SCHEDULED" | "DRAWING" | "COMPLETED";
 
+export type PunishmentStatus = "SCHEDULED" | "SPINNING" | "COMPLETED";
+
+/**
+ * Status of a punishment wheel, which reveals exactly once.
+ *
+ * deriveStatus() below cannot be reused for this: with a single reveal its
+ * first and last timestamps coincide, so it can only ever return SCHEDULED or
+ * COMPLETED and the spin would never animate. The spin window is the same
+ * spinDurationMs the draft reel uses, so both surfaces feel identical.
+ */
+export function derivePunishmentStatus(input: {
+  now: Date;
+  revealedAt: Date;
+  config?: RevealConfig;
+}): PunishmentStatus {
+  const { now, revealedAt } = input;
+  const config = input.config ?? getRevealConfig();
+  if (now.getTime() >= revealedAt.getTime()) return "COMPLETED";
+  if (now >= pickSpinStartAt(revealedAt, config)) return "SPINNING";
+  return "SCHEDULED";
+}
+
+/**
+ * When a wheel's single reveal lands. Reuses the draft's first-pick delay so a
+ * wheel scheduled for 8pm behaves like a draft scheduled for 8pm: a beat of
+ * "everyone is here" before anything happens.
+ */
+export function punishmentRevealedAt(
+  scheduledFor: Date,
+  config: RevealConfig = getRevealConfig(),
+): Date {
+  return new Date(scheduledFor.getTime() + config.firstPickDelayMs);
+}
+
 export function deriveStatus(input: {
   now: Date;
   picks: { revealedAt: Date }[];
