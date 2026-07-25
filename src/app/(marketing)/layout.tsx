@@ -26,6 +26,7 @@ const PRODUCT_LINKS = [
   { href: "/why-fair", label: "Why it's fair" },
   { href: "/ask-your-commissioner", label: "Ask your commissioner" },
   { href: "/draft-lottery", label: "Draft lottery" },
+  { href: "/fantasy-football-punishments", label: "Punishments" },
   { href: "/guides", label: "Guides" },
   { href: "/league-id", label: "Find your league ID" },
 ];

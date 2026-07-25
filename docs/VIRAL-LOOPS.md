@@ -66,14 +66,29 @@ chat. Commissioners currently do this with a Venmo screenshot and passive aggres
   someone paid. That is a real design question, not a blocker (append-only log, public
   edit history), but it is the only idea here that needs mutable state.
 
-## Tier 2: punishment wheel
+## Tier 2: punishment wheel — SHIPPED
 
-Last place gets a randomized punishment from a league-submitted list, drawn publicly.
-There is an entire culture around league punishments and the Reddit threads are enormous.
+Last place gets a randomized punishment, drawn publicly. There is an entire culture around
+league punishments and the Reddit threads are enormous.
 
 - Trivial to build on the existing randomizer.
 - Extremely shareable, and it generates content people post on their own.
 - Pure fun rather than pure utility, which is a different kind of durability.
+- **Seasonality is complementary**, which turned out to be the real argument for it:
+  punishment searches peak Dec-Jan, draft order peaks Jul-Sep.
+
+Lives at `/fantasy-football-punishments` (ideas database), `/punishment/new` (create) and
+`/p/<slug>` (the wheel). See the punishment wheel section of [CLAUDE.md](../CLAUDE.md).
+
+Two things the original sketch got wrong, worth remembering for the next one:
+
+- "**From a league-submitted list**" cannot mean leaguemates writing into a specific wheel
+  through its shared link. That needs mutable state and an open write endpoint, which
+  breaks bar 2 and immutability both. What shipped instead: the commissioner fixes the
+  list at create time, and the *public ideas database* takes submissions, moderated.
+- **An instant spin would have been worthless.** If the result is visible when the wheel
+  is created, nothing stops a commissioner re-creating until they like it, and bar 3 is
+  gone. Scheduling is not a nice-to-have here; it is the entire product.
 
 ## Tier 2: permanent league history page
 
@@ -119,6 +134,7 @@ Two moves, not ten:
 1. **Fold the commissioner tools into this site.** Keeper declarations, dues, punishment
    wheel, league history. Same audience, same domain authority, cross-linked from a
    product they already trust. Cheapest possible expansion.
+   *(Punishment wheel done. Keeper declarations are the highest-value one left.)*
 2. **Ship squares as its own domain for the winter.** Reuse the randomizer and reveal
    engine wholesale. Closest thing to a copy-paste of what already exists, aimed at the
    biggest single-day audience in American sports.

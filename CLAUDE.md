@@ -58,15 +58,22 @@ src/
       card/             # Shareable result PNG (portrait by default, ?t= per team)
       draft.ics/        # The draw as a calendar invite
     new/                # Create draft form (?from= / ?src= attribution, ?clone= copies a roster)
+    p/[slug]/           # Public punishment wheel (countdown + spin + sealed result)
+      card/             # Shareable result PNG
+    punishment/new/     # Create wheel form (?ideas= prefills from the ideas database)
     api/
       drafts/           # POST create (writes order + reveal timestamps), GET state, GET importers
         [slug]/presence # Heartbeat for the live viewer count (Durable Object)
+      punishments/      # POST create (draws + seals the result), GET state
+      punishment-ideas/ # POST a suggestion for the ideas database (lands PENDING)
   lib/
     prisma.ts           # Lazy per-request client over the D1 binding
     cloudflare/         # cfEnv() / cfCtx() binding accessors
     ids.ts              # newId("drf") — app-generated prefixed primary keys
     db-enums.ts         # Allowed values for the String columns that were enums
     og-logo.ts          # Loads public/ images for OG rendering via ASSETS
+    punishment-state.ts # THE gate on disclosing a wheel's result (see below)
+    punishments.ts      # Reads/filters the approved punishment ideas database
     randomizer.ts       # Fisher–Yates using node:crypto randomInt (PURE, TESTED)
     reveal.ts           # Reveal timing config + deriveStatus from picks
     slug.ts             # Memorable slug generator
@@ -133,6 +140,55 @@ Already wired:
 
 - `/d/<slug>` is `noindex` until the last pick is revealed, so nothing is submitted when a draft is created. `submitCompletedDraft(slug, completedAt)` handles the transition and is called from `GET /api/drafts/[slug]/state` (viewers polling the draw see it first) and from the `d/[slug]` page render (covers draws nobody watched live, which is why that route is `force-dynamic`). It dedupes per instance, releasing the slug again if the submission was not accepted so a later request retries, and skips drafts that completed more than 24h ago. Tradeoff of that window: a draft nobody polls or visits within 24h of finishing is never pinged and reaches engines through `sitemap.xml` instead. Closing that gap needs a cron, which this app does not have.
 - Static pages (landing pages, guides, `/`, `/new`) ship with a deploy and have no runtime publish event. After deploying a new or rewritten one, submit it manually: `pnpm indexnow:submit /guides/my-new-guide`. The same script takes `--sitemap` for a one-time backfill and `--dry-run` to print the payload.
+
+## Punishment wheel
+
+The second draw on the site (VIRAL-LOOPS Tier 2): last place gets one randomized
+punishment, sealed at create time and revealed publicly at a scheduled moment. Same
+mechanic and same trust argument as a draft order, different noun — and deliberately the
+same `fisherYatesShuffle` from `src/lib/randomizer.ts`, so the "here is the code that drew
+this, at this commit" link on the results page means something. Position 0 of the shuffle
+is the result; the rest of the permutation is discarded.
+
+- **`src/lib/punishment-state.ts` is the only place a wheel's result may be disclosed.**
+  The state endpoint, the `/p/[slug]` render, the OG image and the share card all go
+  through `serializePunishmentState()`, which returns `chosen: null` until `revealedAt` has
+  passed. Never read `chosenPosition` directly in a route — a commissioner who can see the
+  answer early can decide not to share the link, and then the whole feature is theatre.
+- The candidate options **are** public before the draw, on purpose: seeing the list up
+  front is what proves nothing was added, removed or reworded once the answer was known.
+
+### Punishment ideas database
+
+`/fantasy-football-punishments` reads `PunishmentIdea` where `status = 'APPROVED'`. Every
+idea lives in D1, including the ~40 curated ones seeded by `0003_punishment_wheel.sql`, so
+that page is **force-dynamic** — unlike every other marketing page. Do not make it static
+without first moving the ideas back into git.
+
+Anyone can submit through the modal on that page; submissions land `PENDING` and are never
+rendered. Approval is manual SQL, so this app still has no auth and no secrets:
+
+```bash
+# Pending queue
+pnpm exec wrangler d1 execute fantasy-draft-order-db-production --remote \
+  --command "SELECT id, category, label FROM PunishmentIdea WHERE status='PENDING' ORDER BY createdAt"
+
+# Approve — live immediately, the page is dynamic, nothing to redeploy
+pnpm exec wrangler d1 execute fantasy-draft-order-db-production --remote \
+  --command "UPDATE PunishmentIdea SET status='APPROVED', approvedAt=strftime('%Y-%m-%dT%H:%M:%f','now')||'+00:00' WHERE id='pid_...'"
+
+# Reject
+pnpm exec wrangler d1 execute fantasy-draft-order-db-production --remote \
+  --command "UPDATE PunishmentIdea SET status='REJECTED' WHERE id='pid_...'"
+```
+
+Drop `--remote` for the local database. **Note the timestamp expression**: Prisma stores
+SQLite DateTime as RFC3339 text with an explicit `+00:00`, so a plain `CURRENT_TIMESTAMP`
+writes a value Prisma cannot read back.
+
+Curated ids (`pid_seed_*`) are hand-written and stable because they travel in
+`/punishment/new?ideas=<id>,<id>` links. Add new curated ideas in a **new** migration;
+never edit the rows in `0003`, which is already applied.
 
 ## Database changes
 

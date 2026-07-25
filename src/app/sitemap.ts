@@ -32,6 +32,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((d) => d.picks[0] && d.picks[0].revealedAt <= now)
     .map((d) => ({ slug: d.slug, completedAt: d.picks[0]!.revealedAt }));
 
+  // Punishment wheels, same rule as drafts: a wheel is noindex (and worth
+  // nothing to a crawler) until its result exists.
+  const completedWheels = await prisma.punishment
+    .findMany({
+      where: { revealedAt: { lte: now } },
+      select: { slug: true, revealedAt: true },
+      orderBy: { revealedAt: "desc" },
+      take: 5000,
+    })
+    .catch(() => []);
+
   const guides = listGuides();
 
   return [
@@ -60,6 +71,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      // Grows as submissions are approved, hence weekly.
+      url: `${base}/fantasy-football-punishments`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${base}/punishment/new`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     ...LEAGUE_ID_GUIDES.map((g) => ({
       url: `${base}/league-id/${g.slug}`,
       lastModified: new Date(g.updated),
@@ -80,6 +102,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...completed.map((d) => ({
       url: `${base}/d/${d.slug}`,
       lastModified: d.completedAt,
+      changeFrequency: "yearly" as const,
+      priority: 0.4,
+    })),
+    ...completedWheels.map((p) => ({
+      url: `${base}/p/${p.slug}`,
+      lastModified: p.revealedAt,
       changeFrequency: "yearly" as const,
       priority: 0.4,
     })),
