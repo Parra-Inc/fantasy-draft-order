@@ -28,7 +28,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "icons:export": "bash scripts/export-icons.sh"
+    "icons:export": "bash scripts/export-icons.sh",
+    "indexnow:submit": "node scripts/indexnow-submit.mjs"
   },
   "prisma": {
     "seed": "pnpm exec tsx prisma/seed.ts"

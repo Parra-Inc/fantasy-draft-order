@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { submitCompletedDraft } from "@/lib/indexnow";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
@@ -43,6 +44,12 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
     : null;
 
   const nextPick = picksByRevealAsc.find((p) => p.revealedAt > now) ?? null;
+
+  // The page flips from noindex to indexable the moment the last pick lands,
+  // and pollers watching the draw are the first to see it. Fire-and-forget.
+  if (status === "COMPLETED" && lastByReveal) {
+    submitCompletedDraft(draft.slug, lastByReveal.revealedAt);
+  }
 
   return NextResponse.json({
     slug: draft.slug,

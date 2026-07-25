@@ -4,10 +4,19 @@ import { prisma } from "@/lib/prisma";
 import { BrandMark } from "@/components/brand-mark";
 import { buildMetadata, SITE_NAME } from "@/lib/seo/metadata";
 import { BreadcrumbLd, EventLd } from "@/lib/seo/jsonld";
+import { submitCompletedDraft } from "@/lib/indexnow";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 import { DraftLive } from "./draft-live";
 
 type Props = { params: Promise<{ slug: string }> };
+
+/**
+ * Must render per request: reveal state is derived from the current clock, and
+ * the IndexNow ping below only makes sense at request time. Without this, a
+ * future `revalidate` / static-shell change could quietly move both to build or
+ * ISR time, which would serve stale picks and submit URLs at the wrong moment.
+ */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -73,6 +82,14 @@ export default async function DraftPage({ params }: Props) {
     lastByReveal && lastByReveal.revealedAt <= now
       ? lastByReveal.revealedAt
       : null;
+
+  // Covers draws nobody watched live: the first render after completion is the
+  // only signal that this URL just became indexable. Deduped, and the actual
+  // POST runs in an after() callback, so this never delays or fails the render.
+  if (completedAt) {
+    submitCompletedDraft(draft.slug, completedAt);
+  }
+
   const spinningPick = picksByRevealAsc.find((p) => {
     const start = pickSpinStartAt(p.revealedAt, config);
     return start <= now && p.revealedAt > now;
