@@ -36,6 +36,17 @@ yarn-error.log*
 # vercel
 .vercel
 
+# cloudflare (opennext build output, miniflare local state incl. the local D1
+# database, and wrangler's local secret overrides)
+.open-next
+.wrangler
+.dev.vars
+
+# neon -> d1 data migration output (scripts/migrate-neon-to-d1.mjs).
+# Real production rows, including creator email addresses. This repo is public:
+# the export is generated on demand and imported from a laptop, never committed.
+/prisma/data/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
