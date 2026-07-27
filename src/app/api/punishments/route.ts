@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
 import { newId } from "@/lib/ids";
 import { prisma } from "@/lib/prisma";
 import { cryptoRng, fisherYatesShuffle } from "@/lib/randomizer";
-import { punishmentRevealedAt } from "@/lib/reveal";
+import { punishmentRevealedAt } from "@/lib/punishment-spin";
 import { generateSlug } from "@/lib/slug";
 
 // Reads and writes the database, so it can never be prerendered: the D1
@@ -72,7 +72,9 @@ export async function POST(req: Request) {
 
   const slug = generateSlug();
   const seed = randomBytes(16).toString("hex");
-  const revealedAt = punishmentRevealedAt(scheduledFor);
+  // Depends on the option count: the reveal is the moment the last option is
+  // struck out, so the wheel needs room to spin through all of them first.
+  const revealedAt = punishmentRevealedAt(scheduledFor, labels.length);
 
   const punishmentId = newId("pun");
   const optionRows = labels.map((label, position) => ({

@@ -1,28 +1,20 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import {
   AlertTriangle,
   Calendar,
   Check,
-  Copy,
   History,
   Loader2,
   Shield,
   Trophy,
   Users,
 } from "lucide-react";
-import { env } from "@/lib/env";
 import { ViewerCount } from "./presence";
-import {
-  AddToCalendarButton,
-  AfterDrawCta,
-  ResultShare,
-  TeamPicker,
-  useMyTeam,
-} from "./share";
+import { AnotherLeagueCta, PreDrawShare, ResultShare } from "./share";
 import { PromoShelf } from "@/components/promo-shelf";
 
 type Team = {
@@ -119,7 +111,7 @@ export function DraftLive({
   }, [pastScheduled, mutate, isDone]);
 
   const state = data ?? initial;
-  const { myTeamId, choose } = useMyTeam(slug, state.teams);
+  const isPreDraw = now < scheduledAt;
 
   const crossedRef = useRef(false);
   useEffect(() => {
@@ -144,17 +136,41 @@ export function DraftLive({
     */
     <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
       <div className="flex flex-col gap-6 lg:col-start-1 lg:row-start-1">
-        {now < scheduledAt ? (
-          <ShareCard
+        {isPreDraw ? (
+          <PreDrawShare
             slug={slug}
-            teams={state.teams}
-            myTeamId={myTeamId}
-            onChoose={choose}
+            leagueName={state.leagueName}
+            scheduledFor={state.scheduledFor}
           />
         ) : (
           <DrawStartedNotice scheduledFor={state.scheduledFor} />
         )}
         <Header state={state} now={now} scheduledAt={scheduledAt} slug={slug} />
+        {/* The last pick has landed and the whole league is still on the page.
+            This is the only moment the product has their attention, so the share
+            artifact goes directly under the result headline, above the full
+            order. Below it, a twelve-team list plus an audit trail is a screen
+            and a half of scrolling, and the share panel was losing that race. */}
+        {isDone && (
+          <ResultShare
+            slug={slug}
+            leagueName={state.leagueName}
+            teams={state.teams}
+            picks={state.picks}
+          />
+        )}
+        {/* Pre-draw the same ask goes above the roster instead of below it. The
+            person watching a countdown days out is usually the commissioner who
+            just created this, and a locked team list is not what they came back
+            to read — after the draw the order is, which is why the results
+            branch stays underneath it. */}
+        {isPreDraw && (
+          <AnotherLeagueCta
+            slug={slug}
+            leagueName={state.leagueName}
+            variant="pre-draw"
+          />
+        )}
         {!state.currentSpin &&
         state.picks.length === 0 &&
         state.status !== "COMPLETED" ? (
@@ -162,22 +178,15 @@ export function DraftLive({
         ) : (
           <DrawBoard state={state} />
         )}
-        {/* The last pick has landed and the whole league is still on the page.
-            This is the only moment the product has their attention, so the share
-            artifact and the call to action both fire here rather than living in
-            a header nobody reads during a countdown. */}
+        {/* The "run this for your other league" ask stays after the order: it
+            is the exit, not the payoff, and it should follow the thing people
+            came to read rather than interrupt it. */}
         {isDone && (
-          <>
-            <ResultShare
-              slug={slug}
-              leagueName={state.leagueName}
-              teams={state.teams}
-              picks={state.picks}
-              myTeamId={myTeamId}
-              onChoose={choose}
-            />
-            <AfterDrawCta slug={slug} leagueName={state.leagueName} />
-          </>
+          <AnotherLeagueCta
+            slug={slug}
+            leagueName={state.leagueName}
+            variant="after-draw"
+          />
         )}
       </div>
 
@@ -190,7 +199,7 @@ export function DraftLive({
       </aside>
 
       <div className="flex flex-col gap-6 lg:col-start-1 lg:row-start-2">
-        {now < scheduledAt && <PreShareWarning />}
+        {isPreDraw && <PreShareWarning />}
         <SiblingDrafts siblings={siblings} leagueName={state.leagueName} />
         <TrustPanel state={state} />
       </div>
@@ -346,105 +355,6 @@ function SiblingStatusPill({ status }: { status: Sibling["status"] }) {
     <span className="border-sideline bg-sideline/40 text-hashmark inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider uppercase">
       {label}
     </span>
-  );
-}
-
-function ShareCard({
-  slug,
-  teams,
-  myTeamId,
-  onChoose,
-}: {
-  slug: string;
-  teams: Team[];
-  myTeamId: string | null;
-  onChoose: (teamId: string | null) => void;
-}) {
-  // The canonical origin rather than window.location.origin. This is the one
-  // string in the app that has to be right: the whole promise is that the
-  // league saw THIS link before the draw, so it must not vary with whichever
-  // host the commissioner happened to open (workers.dev, www, localhost).
-  // It also means no post-hydration swap of a URL somebody may already be
-  // copying.
-  const url = `${env.NEXT_PUBLIC_BASE_URL}/d/${slug}`;
-  const [copied, setCopied] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      inputRef.current?.select();
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // ignore
-    }
-  };
-
-  return (
-    <section className="border-signal/30 bg-signal/5 rounded-2xl border p-3.5 sm:p-5">
-      <div className="flex items-center gap-2">
-        <p className="text-signal font-mono text-[11px] font-medium tracking-wider uppercase sm:text-xs">
-          Share this link with your league prior to the draft time
-        </p>
-      </div>
-      <div className="mt-2.5 flex flex-col gap-2 sm:mt-3 sm:flex-row sm:items-stretch">
-        <input
-          ref={inputRef}
-          type="text"
-          readOnly
-          value={url}
-          onFocus={(e) => e.currentTarget.select()}
-          onClick={(e) => e.currentTarget.select()}
-          className="border-sideline/60 bg-midnight/70 text-chalk focus:border-signal/60 focus:ring-signal/30 min-w-0 flex-1 rounded-xl border px-3.5 py-2.5 font-mono text-sm transition-colors outline-none focus:ring-2"
-          aria-label="Shareable draft link"
-        />
-        <button
-          type="button"
-          onClick={copy}
-          aria-label={copied ? "Link copied" : "Copy link"}
-          className={`relative inline-flex h-11 shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-5 text-sm font-semibold transition-colors sm:w-32 ${
-            copied
-              ? "bg-signal/20 text-signal ring-signal/40 ring-1"
-              : "bg-signal text-midnight hover:bg-signal-dark"
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {copied ? (
-              <motion.span
-                key="copied"
-                initial={{ opacity: 0, y: 8, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8, scale: 0.9 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-                className="inline-flex items-center gap-1.5"
-              >
-                <Check className="size-4" />
-                Copied
-              </motion.span>
-            ) : (
-              <motion.span
-                key="copy"
-                initial={{ opacity: 0, y: 8, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8, scale: 0.9 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-                className="inline-flex items-center gap-1.5"
-              >
-                <Copy className="size-4" />
-                Copy link
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
-        <AddToCalendarButton slug={slug} />
-      </div>
-      {/* Asked before the draw rather than after, so the reveal lands on a
-          named team. Purely client-side: see the header of ./share.tsx. */}
-      <div className="border-sideline/40 mt-3.5 border-t pt-3.5">
-        <TeamPicker teams={teams} myTeamId={myTeamId} onChoose={onChoose} />
-      </div>
-    </section>
   );
 }
 

@@ -78,7 +78,9 @@ export default async function PunishmentPage({ params }: Props) {
         ]}
       />
       <header className="border-sideline/50 bg-midnight/90 border-b backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+        {/* Tracks the content container below, which widens at `lg` to make
+            room for the sticky promo rail. */}
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6 lg:max-w-[70rem]">
           <Link href="/" className="flex items-center gap-2.5">
             <BrandMark />
             <Wordmark />
@@ -95,7 +97,10 @@ export default async function PunishmentPage({ params }: Props) {
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="bg-signal/5 absolute top-0 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full blur-[120px]" />
         </div>
-        <div className="relative mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+        {/* 70rem is 48rem of wheel (the old max-w-3xl) plus the 20rem promo
+            rail and its 2rem gap, so the wheel column keeps its width on the
+            widest screens rather than being squeezed by the new aside. */}
+        <div className="relative mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14 lg:max-w-[70rem]">
           <WheelLive slug={state.slug} initial={state} />
         </div>
       </main>

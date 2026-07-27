@@ -2,6 +2,12 @@ export type RevealConfig = {
   firstPickDelayMs: number;
   pickIntervalMs: number;
   spinDurationMs: number;
+  /**
+   * How long the punishment wheel's whole elimination sequence should run,
+   * before it is divided by the number of eliminations and clamped. See
+   * src/lib/punishment-spin.ts.
+   */
+  wheelSpinTargetMs: number;
 };
 
 export function getRevealConfig(): RevealConfig {
@@ -10,12 +16,18 @@ export function getRevealConfig(): RevealConfig {
   );
   const pickIntervalMs = Number(process.env.DRAFT_PICK_INTERVAL_MS ?? 7000);
   const spinDurationMs = Number(process.env.DRAFT_SPIN_DURATION_MS ?? 4000);
+  const wheelSpinTargetMs = Number(
+    process.env.PUNISHMENT_SPIN_WINDOW_MS ?? 12000,
+  );
   return {
     firstPickDelayMs: Number.isFinite(firstPickDelayMs)
       ? firstPickDelayMs
       : 5000,
     pickIntervalMs: Number.isFinite(pickIntervalMs) ? pickIntervalMs : 7000,
     spinDurationMs: Number.isFinite(spinDurationMs) ? spinDurationMs : 4000,
+    wheelSpinTargetMs: Number.isFinite(wheelSpinTargetMs)
+      ? wheelSpinTargetMs
+      : 12000,
   };
 }
 
@@ -40,39 +52,9 @@ export function pickSpinStartAt(
 
 export type DerivedStatus = "SCHEDULED" | "DRAWING" | "COMPLETED";
 
-export type PunishmentStatus = "SCHEDULED" | "SPINNING" | "COMPLETED";
-
-/**
- * Status of a punishment wheel, which reveals exactly once.
- *
- * deriveStatus() below cannot be reused for this: with a single reveal its
- * first and last timestamps coincide, so it can only ever return SCHEDULED or
- * COMPLETED and the spin would never animate. The spin window is the same
- * spinDurationMs the draft reel uses, so both surfaces feel identical.
- */
-export function derivePunishmentStatus(input: {
-  now: Date;
-  revealedAt: Date;
-  config?: RevealConfig;
-}): PunishmentStatus {
-  const { now, revealedAt } = input;
-  const config = input.config ?? getRevealConfig();
-  if (now.getTime() >= revealedAt.getTime()) return "COMPLETED";
-  if (now >= pickSpinStartAt(revealedAt, config)) return "SPINNING";
-  return "SCHEDULED";
-}
-
-/**
- * When a wheel's single reveal lands. Reuses the draft's first-pick delay so a
- * wheel scheduled for 8pm behaves like a draft scheduled for 8pm: a beat of
- * "everyone is here" before anything happens.
- */
-export function punishmentRevealedAt(
-  scheduledFor: Date,
-  config: RevealConfig = getRevealConfig(),
-): Date {
-  return new Date(scheduledFor.getTime() + config.firstPickDelayMs);
-}
+// Punishment wheel timing (status, reveal time, elimination running order)
+// lives in src/lib/punishment-spin.ts. It cannot live here: it needs the option
+// count and the seeded running order, and this module is the draft's.
 
 export function deriveStatus(input: {
   now: Date;

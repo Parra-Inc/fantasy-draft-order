@@ -59,6 +59,8 @@ export const ENTRY_SOURCES = [
   "DIRECT",
   /** The persistent header button on a draft page. */
   "DRAFT_HEADER",
+  /** The same call to action, shown on a draft that has not drawn yet. */
+  "PRE_DRAW",
   /** The call to action shown once the last pick lands. */
   "AFTER_DRAW",
   /** Same call to action, but the "re-run for this league" branch. */

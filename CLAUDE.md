@@ -59,7 +59,7 @@ src/
       draft.ics/        # The draw as a calendar invite
     new/                # Create draft form (?from= / ?src= attribution, ?clone= copies a roster)
     p/[slug]/           # Public punishment wheel (countdown + spin + sealed result)
-      card/             # Shareable result PNG
+      card/             # Shareable result PNG (square by default, ?format=story|wide)
     punishment/new/     # Create wheel form (?ideas= prefills from the ideas database)
     api/
       drafts/           # POST create (writes order + reveal timestamps), GET state, GET importers
@@ -73,6 +73,7 @@ src/
     db-enums.ts         # Allowed values for the String columns that were enums
     og-logo.ts          # Loads public/ images for OG rendering via ASSETS
     punishment-state.ts # THE gate on disclosing a wheel's result (see below)
+    punishment-spin.ts  # Wheel timing + seeded elimination order (PURE, TESTED)
     punishments.ts      # Reads/filters the approved punishment ideas database
     randomizer.ts       # Fisher–Yates using node:crypto randomInt (PURE, TESTED)
     reveal.ts           # Reveal timing config + deriveStatus from picks
@@ -110,10 +111,14 @@ open-next.config.ts     # OpenNext config (static-assets incremental cache)
 The draw is the distribution channel: it puts a whole league on one page at one
 second. Four surfaces convert that attention, all on `/d/[slug]`:
 
-- **Post-draw CTA** (`share.tsx`) fires on `isDone`, not in the header. Two branches: a new league, or a re-draw of this one via `/new?clone=<slug>`.
-- **Result artifacts** — the OG image becomes the podium once complete, so a re-paste carries the result; `card/` is the portrait PNG people post, with `?t=<teamId>` for one team's pick. "Which team are you" is localStorage only, never a server write: a claim that touched the database would undercut the no-auth, immutable promise.
+- **`AnotherLeagueCta`** (`share.tsx`) runs in two variants. After the draw it fires on `isDone`, below the order, with a re-draw branch via `/new?clone=<slug>`. Before it, the same ask sits above the roster (`src=PRE_DRAW`) with no re-draw branch: offering to re-run a league whose first draw has not happened is an invitation to shop for a result. Never in the header.
+- **Share panels** — `PreDrawShare` before the draw and `ResultShare` after it, both wrapping one `ShareMenu` (image with the link in the message text / share link / copy / download). The OG image becomes the podium once complete, so a re-paste carries the result, and `card/` is the portrait PNG people post: entrants before the draw, the order after.
 - **Calendar invite** (`draft.ics/`) puts the link in a dozen calendars and raises live attendance, which is the input to everything above.
 - **Live viewer count** (`presence.tsx` + the Durable Object in `worker/`).
+
+There is no "which team are you" claim and no per-team card: it was localStorage
+personalization that earned nothing, and `card/?t=<teamId>` existed only to serve
+it. An old `?t=` URL now renders the full order.
 
 `Draft.referrerSlug` and `Draft.entrySource` record where each creator came
 from. Every link into `/new` carries its own `?src=` from `ENTRY_SOURCES` in
@@ -148,7 +153,8 @@ punishment, sealed at create time and revealed publicly at a scheduled moment. S
 mechanic and same trust argument as a draft order, different noun — and deliberately the
 same `fisherYatesShuffle` from `src/lib/randomizer.ts`, so the "here is the code that drew
 this, at this commit" link on the results page means something. Position 0 of the shuffle
-is the result; the rest of the permutation is discarded.
+is the result; the rest of the permutation is discarded. The league watches that result
+arrive as an elimination round, not as an announcement (see below).
 
 - **`src/lib/punishment-state.ts` is the only place a wheel's result may be disclosed.**
   The state endpoint, the `/p/[slug]` render, the OG image and the share card all go
@@ -157,6 +163,40 @@ is the result; the rest of the permutation is discarded.
   answer early can decide not to share the link, and then the whole feature is theatre.
 - The candidate options **are** public before the draw, on purpose: seeing the list up
   front is what proves nothing was added, removed or reworded once the answer was known.
+- **The wheel eliminates; it never announces.** `src/lib/punishment-spin.ts` owns the
+  running order and every timestamp. The wheel physically spins, lands on an option, that
+  option is struck out, and it goes again until one is left standing. The survivor is the
+  result and the **last elimination lands exactly on `revealedAt`**, so the animation
+  finishing and the disclosure rule opening are the same event rather than two things kept
+  in sync. Consequences worth knowing before touching any of it:
+  - `punishmentRevealedAt(scheduledFor, optionCount)` now needs the option count, because
+    `revealedAt = scheduledFor + firstPickDelayMs + spinWindow`. The reveal is the end of
+    the spin, not the start. Changing the spin window changes stored reveal times for new
+    wheels only, which is the point of storing it.
+  - Per-spin duration is `wheelSpinTargetMs` (12s, `PUNISHMENT_SPIN_WINDOW_MS`) split
+    across `optionCount - 1` eliminations and clamped to 420..1500ms, so a 3-option wheel
+    is unhurried and a 24-option one rattles.
+  - Wheels created before this existed have `revealedAt = scheduledFor + 5s`, so
+    `wheelSpinPlan` clamps the window to the gap actually available. They spin fast rather
+    than starting before the announced time. Never remove that clamp.
+  - The running order is **derived, not stored**: a mulberry32 seeded off the public
+    `Punishment.seed` shuffles the losing positions. It decides nothing (the result came
+    from `crypto.randomInt` at create time) and exists so every viewer sees the same wheel
+    land on the same segments, and so the order is checkable afterwards from the seed.
+  - Eliminations are filtered by `discloseAt`, so an option the wheel has not reached is
+    not in the payload at all. The one deliberate leak is `DISCLOSURE_LEAD_MS` (1.2s) plus
+    one spin, which the wheel needs to decelerate into its target. The draft reel already
+    makes the same trade with `currentSpin`.
+  - The client re-derives the survivor locally once every elimination has landed, gated on
+    the same `revealedAt`. That only covers the gap to the next poll; the server is still
+    the authority and still the only thing that can say `chosen`.
+- The share card (`p/[slug]/card`) is **square** by default, unlike the draft card's
+  portrait. A wheel carries one fact, and the destination is a message thread where the
+  image is scaled to the bubble width: a tall canvas spent its height on background and
+  shrank the punishment to nothing at that size. The punishment is sized off the room
+  actually left inside the card, so a two-word result renders as a poster instead of a
+  caption floating in a frame. `?format=story` and `?format=wide` are still there for a
+  story post and for landscape.
 
 ### Punishment ideas database
 
