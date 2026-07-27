@@ -232,10 +232,47 @@ If a local build fails Zod validation on `NEXT_PUBLIC_BASE_URL`, check `.env.pro
 
 ## The Vercel deployment
 
-`fantasy-draft-order.vercel.app` still exists and still builds this repo, but only as a
-permanent redirect to the canonical host (see the `redirects()` block in
-[next.config.ts](../next.config.ts)). It must keep building, which is why nothing in the
-app throws at import time when there is no D1 binding and no `DATABASE_URL`.
+`fantasy-draft-order.vercel.app` still exists, but only as a permanent redirect to the
+canonical host (see the `redirects()` block in [next.config.ts](../next.config.ts)). Links
+to it are already out in the wild, so it has to keep answering. Only the stable alias is
+matched, so per-deployment and per-branch preview URLs keep serving themselves, and the
+IndexNow key file is excluded from the rule because redirects are checked before `public/`
+and IndexNow verifies ownership on the exact host a submission names.
+
+Verify both halves against the live origin, not against a preview:
+
+```bash
+curl -sI https://fantasy-draft-order.vercel.app/d/some-slug | grep -i '^location'
+# location: https://fantasyfootballdraftorder.com/d/some-slug   (308)
+curl -s https://fantasy-draft-order.vercel.app/0d280bb4c994c621118dcd0a691c7c8d.txt
+# the key itself, 200, not a redirect
+```
+
+### Turning off the rebuilds
+
+App code no longer changes what that origin does, so rebuilding it on every push to `main`
+just burns build minutes. [scripts/vercel-ignore-build.sh](../scripts/vercel-ignore-build.sh)
+is the Ignored Build Step (wired up by [vercel.json](../vercel.json)) and skips any build
+whose diff does not touch the handful of paths that decide what the redirect serves. It is
+deliberately inert until you set it live:
+
+**Vercel -> the `fantasy-draft-order` project -> Settings -> Environment Variables ->
+`LEGACY_REDIRECT_ONLY` = `1`, Production only.**
+
+Without that variable the script exits 1 and Vercel builds the whole app, which is the
+safe default while Vercel is still serving something real. With it, the alias stays
+pinned to the last deployment that was actually built, and a push only rebuilds when
+`next.config.ts`, `vercel.json`, `package.json`, `pnpm-lock.yaml`, the IndexNow key file,
+or the script itself changed. Anything else you add that affects what this origin serves
+has to go into that `PATHS` list, or the change ships to the canonical host and silently
+never reaches the redirect.
+
+The exit codes are Vercel's and they are inverted from the intuition: `0` skips the build,
+`1` runs it. That is exactly `git diff --quiet`, which is why the diff's own exit code is
+the answer.
+
+Until the variable is set, the app must keep building on Vercel, which is why nothing in
+it throws at import time when there is no D1 binding and no `DATABASE_URL`.
 
 Its Neon Postgres database is read-only history once the cutover above is done. Leave it
 up until a full draft cycle has run on D1, then delete the Neon project and drop
