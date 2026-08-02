@@ -5,6 +5,18 @@ import { LANDING_PAGES } from "@/lib/seo/landing-pages";
 import { listGuides } from "@/lib/seo/guides";
 import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
 
+/**
+ * Fallback date for pages that have no real modification date of their own.
+ *
+ * A CONSTANT, not `new Date()`. Generating it at request time made every such
+ * page report as modified on every fetch, which tells crawlers the whole site
+ * changes constantly and devalues the signal. It also made IndexNow submissions
+ * look like a full-site change every day. Bump it by hand when the static page
+ * content meaningfully changes: a stale-but-honest date beats a fresh lie.
+ */
+const SITE_LAST_MODIFIED = new Date('2026-08-02')
+
+
 // Dynamic, not ISR: the completed-draft list changes continuously, and the
 // D1 binding only exists inside a request — a prerender at build time would
 // have no database to read.
@@ -13,7 +25,7 @@ export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.NEXT_PUBLIC_BASE_URL;
 
-  const now = new Date();
+  const now = SITE_LAST_MODIFIED;
   const completedRows = await prisma.draft
     .findMany({
       where: { picks: { some: { revealedAt: { lte: now } } } },
