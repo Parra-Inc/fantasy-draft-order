@@ -16,7 +16,6 @@ import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
  */
 const SITE_LAST_MODIFIED = new Date('2026-08-02')
 
-
 // Dynamic, not ISR: the completed-draft list changes continuously, and the
 // D1 binding only exists inside a request — a prerender at build time would
 // have no database to read.
