@@ -45,14 +45,62 @@ const siteUrl = (
 const MAX_URLS_PER_SUBMISSION = 10_000;
 
 /**
+ * Cooldown after a 429, widening with each consecutive strike: 5m, 15m, 45m,
+ * 2h, 4h.
+ *
+ * IndexNow rate-limits the SUBMITTER, not the host, and it limits the shared
+ * Cloudflare Workers egress addresses that every request from this app leaves
+ * through. Retrying a throttled endpoint therefore does nothing except deepen
+ * the throttle for us and for every other worker sharing that egress, which is
+ * how 490 "IndexNow submission failed: 429" errors were logged in a week, and
+ * how the indexnow-sync worker started seeing 429s on the same host. Any
+ * rejection has to buy silence, not another attempt.
+ */
+const BACKOFF_MS = [5, 15, 45, 120, 240].map((minutes) => minutes * 60_000);
+const MAX_COOLDOWN_MS = BACKOFF_MS[BACKOFF_MS.length - 1];
+
+let cooldownUntil = 0;
+let strikes = 0;
+
+/** Milliseconds still to wait, or 0 when clear to submit. */
+function cooldownRemainingMs(): number {
+  const remaining = cooldownUntil - Date.now();
+  return remaining > 0 ? remaining : 0;
+}
+
+/**
+ * Records a rejection and opens the cooldown. A `Retry-After` wins over the
+ * backoff schedule when the endpoint sends one: a server saying when to come
+ * back beats any guess.
+ */
+function startCooldown(retryAfterHeader: string | null): number {
+  strikes = Math.min(strikes + 1, BACKOFF_MS.length);
+  const retryAfterSeconds = Number(retryAfterHeader);
+  const backoff =
+    Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+      ? Math.min(retryAfterSeconds * 1_000, MAX_COOLDOWN_MS)
+      : BACKOFF_MS[strikes - 1];
+  cooldownUntil = Date.now() + backoff;
+  return backoff;
+}
+
+/**
  * Notify IndexNow-participating search engines (Bing, Yandex, Naver, Seznam,
  * Yep) that URLs were added, updated, or deleted. Accepts absolute URLs or
- * site-relative paths. No-ops outside production so dev and test never ping
+ * site-relative paths, and sends the whole list as ONE request: the protocol
+ * takes up to 10,000 URLs per submission and one request per URL is what gets
+ * a submitter throttled. No-ops outside production so dev and test never ping
  * live engines, and never throws: indexing is best-effort.
  *
  * Returns true only when the engines accepted the submission, so callers can
  * tell a delivered ping from a dropped one. Prefer queueIndexNowSubmission()
- * inside request handlers: it keeps the serverless invocation alive.
+ * inside request handlers: it keeps the serverless invocation alive and
+ * coalesces everything queued in the same invocation into a single request.
+ *
+ * Call this ONLY from a code path that publishes a genuine content change.
+ * Never from a page render or a polled API route: those fire on every visitor
+ * and every poll, which is orders of magnitude more often than the content
+ * actually changes.
  */
 export async function submitToIndexNow(
   urls: string | string[],
@@ -63,6 +111,14 @@ export async function submitToIndexNow(
     .map((u) => (u.startsWith("http") ? u : `${siteUrl}${u}`))
     .slice(0, MAX_URLS_PER_SUBMISSION);
   if (urlList.length === 0) return false;
+
+  const waitMs = cooldownRemainingMs();
+  if (waitMs > 0) {
+    console.warn(
+      `IndexNow: holding ${urlList.length} URL(s), rate limited for another ${Math.ceil(waitMs / 1_000)}s`,
+    );
+    return false;
+  }
 
   try {
     const res = await fetch(INDEXNOW_ENDPOINT, {
@@ -75,13 +131,30 @@ export async function submitToIndexNow(
       }),
     });
 
+    // A throttle is a "come back later", not a fault: warn, back off, and let
+    // the caller (and sitemap.xml, which every engine still reads) carry it.
+    if (res.status === 429) {
+      const backoff = startCooldown(res.headers.get("retry-after"));
+      console.warn(
+        `IndexNow: rate limited (429) submitting ${urlList.length} URL(s); pausing submissions for ${Math.round(backoff / 1_000)}s`,
+      );
+      return false;
+    }
+
     if (!res.ok && res.status !== 202) {
+      // 403/422 are configuration faults (key file, host mismatch) and stay at
+      // error level, but they must not be retried in a loop either.
+      startCooldown(null);
       console.error(`IndexNow submission failed: ${res.status}`);
       return false;
     }
+
+    strikes = 0;
+    cooldownUntil = 0;
     return true;
   } catch (error) {
     // Never let an indexing ping break the request that triggered it
+    startCooldown(null);
     console.error("IndexNow submission error:", error);
     return false;
   }
@@ -103,61 +176,44 @@ function runAfterResponse(work: () => Promise<void>): void {
 }
 
 /**
- * Fire-and-forget submission for request handlers and server components: safe
- * to call without awaiting, never blocks, never throws.
+ * URLs queued but not yet sent, so several publishes in one invocation (or
+ * while a cooldown is open) leave as one request instead of one each.
  */
-export function queueIndexNowSubmission(urls: string | string[]): void {
-  runAfterResponse(async () => {
-    await submitToIndexNow(urls);
-  });
-}
+const pendingUrls = new Set<string>();
+let flushScheduled = false;
 
 /**
- * A draw page — a draft at /d/<slug>, a punishment wheel at /p/<slug> — is
- * noindex until its result is revealed, and there are no background jobs here
- * (passage of time is the trigger), so the first server code to observe the
- * transition is whatever renders or serves the page. Every such path calls
- * this, so it dedupes per instance and ignores draws that finished long ago;
- * only a freshly indexable URL is worth a submission.
+ * Fire-and-forget submission for request handlers and server components: safe
+ * to call without awaiting, never blocks, never throws.
  *
- * Known tradeoff: a draw that completes with nobody polling and no visitor
- * within RECENTLY_COMPLETED_WINDOW_MS never gets submitted at all, and reaches
- * engines only through sitemap.xml (which lists every completed one). Closing
- * that gap needs a cron submitting draws that finished since the previous run;
- * this app has no cron today, so the window is the tradeoff.
+ * Batches: every URL queued before the flush runs goes out in a single POST,
+ * and a batch held back by the cooldown stays queued for the next publish
+ * rather than being retried immediately.
  */
-const RECENTLY_COMPLETED_WINDOW_MS = 24 * 60 * 60 * 1000;
-const MAX_TRACKED_PATHS = 5_000;
-/** Keyed by full path, so /d/x and /p/x can never collide. */
-const submittedDrawPaths = new Set<string>();
-
-function submitCompletedDraw(path: string, completedAt: Date): void {
-  // Same guard as submitToIndexNow, repeated here so dev and test never queue
-  // after() work on every poll.
-  if (env.NODE_ENV !== "production") return;
-  if (Date.now() - completedAt.getTime() > RECENTLY_COMPLETED_WINDOW_MS) return;
-  if (submittedDrawPaths.has(path)) return;
-  if (submittedDrawPaths.size >= MAX_TRACKED_PATHS) {
-    submittedDrawPaths.clear();
+export function queueIndexNowSubmission(urls: string | string[]): void {
+  for (const url of Array.isArray(urls) ? urls : [urls]) {
+    if (pendingUrls.size >= MAX_URLS_PER_SUBMISSION) break;
+    pendingUrls.add(url);
   }
+  if (flushScheduled || pendingUrls.size === 0) return;
 
-  // Claimed before the request goes out so 500ms polling cannot open a second
-  // submission for the same page, then released again if the submission was
-  // not accepted, so the next observer of it retries.
-  submittedDrawPaths.add(path);
-
+  flushScheduled = true;
   runAfterResponse(async () => {
-    const submitted = await submitToIndexNow(path);
-    if (!submitted) submittedDrawPaths.delete(path);
+    flushScheduled = false;
+    // Still throttled: keep the URLs queued so the next publish sends them
+    // together, instead of spending a request to be rejected again.
+    if (cooldownRemainingMs() > 0 || pendingUrls.size === 0) return;
+
+    const batch = [...pendingUrls];
+    pendingUrls.clear();
+    const submitted = await submitToIndexNow(batch);
+    // Best-effort: a dropped batch is picked up by sitemap.xml, which the
+    // indexnow-sync worker sweeps daily for this host.
+    if (!submitted) {
+      for (const url of batch) {
+        if (pendingUrls.size >= MAX_URLS_PER_SUBMISSION) break;
+        pendingUrls.add(url);
+      }
+    }
   });
-}
-
-/** Called from GET /api/drafts/[slug]/state and the /d/[slug] render. */
-export function submitCompletedDraft(slug: string, completedAt: Date): void {
-  submitCompletedDraw(`/d/${slug}`, completedAt);
-}
-
-/** Called from GET /api/punishments/[slug]/state and the /p/[slug] render. */
-export function submitCompletedWheel(slug: string, completedAt: Date): void {
-  submitCompletedDraw(`/p/${slug}`, completedAt);
 }

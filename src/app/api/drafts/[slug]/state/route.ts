@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { toImportSource } from "@/lib/db-enums";
 import { prisma } from "@/lib/prisma";
-import { submitCompletedDraft } from "@/lib/indexnow";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 
 // Polled by every viewer during a draw, and the D1 binding only exists inside
@@ -53,11 +52,11 @@ export async function GET(
 
   const nextPick = picksByRevealAsc.find((p) => p.revealedAt > now) ?? null;
 
-  // The page flips from noindex to indexable the moment the last pick lands,
-  // and pollers watching the draw are the first to see it. Fire-and-forget.
-  if (status === "COMPLETED" && lastByReveal) {
-    submitCompletedDraft(draft.slug, lastByReveal.revealedAt);
-  }
+  // No IndexNow ping here. This endpoint is polled twice a second by every
+  // viewer of every draw, and pinging from it submitted the same URL hundreds
+  // of times, which is what got the submitter rate limited (429) rather than
+  // indexed. A completed draw reaches engines through sitemap.xml instead; see
+  // src/lib/indexnow.ts.
 
   return NextResponse.json({
     slug: draft.slug,

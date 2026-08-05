@@ -5,8 +5,15 @@
  * The marketing pages, guides and landing pages in this repo are static: they
  * ship with a deploy and there is no runtime publish event to hook, so when you
  * add or meaningfully rewrite one, ping it from here after the deploy is live.
- * Draft pages (/d/<slug>) need nothing manual: src/lib/indexnow.ts submits
- * those automatically when a draw completes.
+ * Draft and punishment pages (/d/<slug>, /p/<slug>) need nothing manual and are
+ * deliberately NOT pinged from the app: they become indexable through the
+ * passage of time rather than a publish request, so they reach engines through
+ * sitemap.xml and the indexnow-sync worker that sweeps it. See the IndexNow
+ * section of CLAUDE.md.
+ *
+ * This runs on Node from a laptop or CI, not inside the Cloudflare Worker,
+ * which matters: IndexNow rate limits the submitter, and the shared Workers
+ * egress addresses are throttled by api.indexnow.org.
  *
  * Usage:
  *   node scripts/indexnow-submit.mjs /guides/my-new-guide /fantasy-football

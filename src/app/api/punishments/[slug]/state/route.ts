@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { submitCompletedWheel } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { serializePunishmentState } from "@/lib/punishment-state";
 
@@ -24,11 +23,10 @@ export async function GET(
   // not read punishment.chosenPosition here.
   const state = serializePunishmentState(punishment);
 
-  // The page flips from noindex to indexable the moment the wheel lands, and
-  // pollers watching it are usually the first to see that. Fire-and-forget.
-  if (state.status === "COMPLETED") {
-    submitCompletedWheel(punishment.slug, punishment.revealedAt);
-  }
+  // No IndexNow ping here, for the same reason as the draft state endpoint:
+  // this is polled by every viewer while the wheel spins, and submitting from
+  // a read path rate limits the submitter instead of indexing anything. A
+  // revealed wheel reaches engines through sitemap.xml.
 
   return NextResponse.json(state);
 }

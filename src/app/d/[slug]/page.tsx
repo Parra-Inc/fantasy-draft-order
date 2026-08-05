@@ -6,7 +6,6 @@ import { BrandMark } from "@/components/brand-mark";
 import { Wordmark } from "@/components/wordmark";
 import { buildMetadata, SITE_NAME } from "@/lib/seo/metadata";
 import { BreadcrumbLd, EventLd } from "@/lib/seo/jsonld";
-import { submitCompletedDraft } from "@/lib/indexnow";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 import { DraftLive } from "./draft-live";
 
@@ -14,9 +13,9 @@ type Props = { params: Promise<{ slug: string }> };
 
 /**
  * Must render per request: reveal state is derived from the current clock, and
- * the IndexNow ping below only makes sense at request time. Without this, a
- * future `revalidate` / static-shell change could quietly move both to build or
- * ISR time, which would serve stale picks and submit URLs at the wrong moment.
+ * the D1 binding only exists inside a request. Without this, a future
+ * `revalidate` / static-shell change could quietly move the render to build or
+ * ISR time, which would serve stale picks.
  */
 export const dynamic = "force-dynamic";
 
@@ -85,12 +84,10 @@ export default async function DraftPage({ params }: Props) {
       ? lastByReveal.revealedAt
       : null;
 
-  // Covers draws nobody watched live: the first render after completion is the
-  // only signal that this URL just became indexable. Deduped, and the actual
-  // POST runs in an after() callback, so this never delays or fails the render.
-  if (completedAt) {
-    submitCompletedDraft(draft.slug, completedAt);
-  }
+  // No IndexNow ping here. A page view is not a publish event, and firing one
+  // per render submitted the same completed draw over and over until IndexNow
+  // rate limited us. sitemap.xml already lists every completed draw with its
+  // real lastModified, which is the channel engines actually read.
 
   const spinningPick = picksByRevealAsc.find((p) => {
     const start = pickSpinStartAt(p.revealedAt, config);

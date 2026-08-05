@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BrandMark } from "@/components/brand-mark";
 import { Wordmark } from "@/components/wordmark";
-import { submitCompletedWheel } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { serializePunishmentState } from "@/lib/punishment-state";
 import { BreadcrumbLd } from "@/lib/seo/jsonld";
@@ -12,9 +11,9 @@ import { WheelLive } from "./wheel-live";
 type Props = { params: Promise<{ slug: string }> };
 
 /**
- * Must render per request: the status is derived from the current clock and the
- * IndexNow ping below only makes sense at request time. Also the D1 binding
- * only exists inside a request, so this could not be prerendered regardless.
+ * Must render per request: the status is derived from the current clock, and
+ * the D1 binding only exists inside a request, so this could not be prerendered
+ * regardless.
  */
 export const dynamic = "force-dynamic";
 
@@ -61,12 +60,8 @@ export default async function PunishmentPage({ params }: Props) {
   // the two can never disagree about when that is.
   const state = serializePunishmentState(punishment);
 
-  // Covers wheels nobody watched live: the first render after the reveal is the
-  // only signal that this URL just became indexable. Deduped, and the POST runs
-  // in an after() callback, so it never delays or fails the render.
-  if (state.status === "COMPLETED") {
-    submitCompletedWheel(punishment.slug, punishment.revealedAt);
-  }
+  // No IndexNow ping here: a page view is not a publish event. Revealed wheels
+  // reach engines through sitemap.xml, same as completed drafts.
 
   return (
     <div className="flex min-h-full flex-col">
