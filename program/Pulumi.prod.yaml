@@ -1,8 +1,9 @@
 config:
-  # Zone ID for fantasyfootballdraftorder.com (registered with Cloudflare
-  # Registrar, so the zone is Active and proxied out of the box).
+  # An input, not an output: registered with Cloudflare Registrar, so the zone is
+  # Active and proxied out of the box.
   fantasy-draft-order:zoneId: ff48b5fdfdefac36c5b755b167e7ee22
   # Cloudflare account ID (same account the cloudflare-account stack manages).
   fantasy-draft-order:accountId: b428f294c89acfbe189aa1556f15cc07
   # Must be an address verified by the cloudflare-account stack.
   fantasy-draft-order:destination: ian@parra.io
+encryptionsalt: v1:ZVyWTX6wS9w=:v1:htoQKiUAqLWCIDYQ:bRrljUvym5bs5PlMumn5wHPkn/unag==
