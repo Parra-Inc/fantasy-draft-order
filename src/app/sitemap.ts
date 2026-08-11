@@ -14,7 +14,7 @@ import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
  * look like a full-site change every day. Bump it by hand when the static page
  * content meaningfully changes: a stale-but-honest date beats a fresh lie.
  */
-const SITE_LAST_MODIFIED = new Date('2026-08-02')
+const SITE_LAST_MODIFIED = new Date('2026-08-11')
 
 // Dynamic, not ISR: the completed-draft list changes continuously, and the
 // D1 binding only exists inside a request — a prerender at build time would

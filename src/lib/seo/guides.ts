@@ -10,7 +10,17 @@ export type GuideSection =
 
 export type Guide = {
   slug: string;
+  /** Editorial headline. Rendered as the page H1 and in every guide card. */
   title: string;
+  /**
+   * SERP title, when it should differ from the H1.
+   *
+   * The Sleeper cluster ranks on page 1 and earns nothing, so these pages need
+   * a title that promises something a featured snippet cannot: the specific
+   * menu path, the season it is current for, the outcome. That is a worse
+   * headline than the editorial one, so it lives here instead of replacing it.
+   */
+  metaTitle?: string;
   description: string;
   excerpt: string;
   datePublished: string;
@@ -87,7 +97,7 @@ export const GUIDES: Guide[] = [
       },
       {
         kind: "p",
-        text: "RotoWire and FantasyPros are reputable companies, but their draft order tools are closed-source and run in your browser. The result has no audit trail and the commissioner can re-run them silently. Sleeper, ESPN, Yahoo, and MFL all have built-in randomize buttons; they're convenient, but only the commissioner sees them fire and the league has no way to verify the result.",
+        text: "RotoWire and FantasyPros are reputable companies, but their draft order tools are closed-source and run in your browser. The result has no audit trail and the commissioner can re-run them silently. Sleeper, ESPN, Yahoo, and MFL all have built-in randomize buttons; they're convenient, but only the commissioner sees them fire and the league has no way to verify the result. Each of those buttons is documented here, with what it does and does not show your league: [Sleeper](/guides/how-to-randomize-draft-order-on-sleeper), [ESPN](/guides/how-to-randomize-draft-order-on-espn), [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
       },
       {
         kind: "p",
@@ -182,7 +192,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "What if the chaos method doesn't decide it?" },
       {
         kind: "p",
-        text: "Three pizzas show up at the same time. Two paper airplanes tie. Your driver gets DNF'd. The fallback for any of these is the same: a public, scheduled, open-source draw that nobody can dispute.",
+        text: "Three pizzas show up at the same time. Two paper airplanes tie. Your driver gets DNF'd. The fallback for any of these is the same: a public, scheduled, open-source draw that nobody can dispute. If you would rather just use your platform's own button, the menu path is written down for [Sleeper](/guides/how-to-randomize-draft-order-on-sleeper), [ESPN](/guides/how-to-randomize-draft-order-on-espn) and [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo) — along with what each one hides from the rest of your league.",
       },
       {
         kind: "callout",
@@ -263,7 +273,7 @@ export const GUIDES: Guide[] = [
       {
         kind: "callout",
         tone: "info",
-        text: "Whichever format your league uses, the order itself is the thing you want to be unimpeachably fair. Schedule a public draw, share the link, let everyone watch.",
+        text: "Whichever format your league uses, the order itself is the thing you want to be unimpeachably fair. Schedule a public draw, share the link, let everyone watch. Setting it inside your platform instead? The exact menu path is here for [Sleeper](/guides/how-to-randomize-draft-order-on-sleeper), [ESPN](/guides/how-to-randomize-draft-order-on-espn) and [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
       },
     ],
     faqs: [
@@ -296,7 +306,7 @@ export const GUIDES: Guide[] = [
     sections: [
       {
         kind: "p",
-        text: "Two ways to run a fantasy draft lottery: every team has equal odds (uniform random) or worse teams get better odds (weighted, NBA-style). Each is fair under a different definition of fair. Here's which one fits your league.",
+        text: "Two ways to run a fantasy draft lottery: every team has equal odds (uniform random) or worse teams get better odds (weighted, NBA-style). Each is fair under a different definition of fair. Here's which one fits your league — and once you have picked, [running the reveal](/guides/commissioner-guide-running-a-fair-draft-order-reveal) is the part your league will actually remember.",
       },
       { kind: "h2", text: "Uniform random: simplest, most defensible" },
       {
@@ -351,8 +361,9 @@ export const GUIDES: Guide[] = [
   {
     slug: "how-to-randomize-draft-order-on-sleeper",
     title: "How to randomize draft order on Sleeper (and how to do it better)",
+    metaTitle: "How to Randomize or Set Draft Order on Sleeper (2026)",
     description:
-      "Sleeper has a built-in randomize button for draft order. Here's exactly where to find it, and a verifiable alternative your whole league can watch.",
+      "Gear icon, Draft, Draft Order, Randomize, Save: the exact six taps in Sleeper, what the rest of your league cannot see when you use them, and how to run a draw they can check.",
     excerpt:
       "Sleeper's randomize button is one click. Here's where it is — plus when you should use a public, scheduled draw instead.",
     datePublished: "2026-03-18",
@@ -366,7 +377,7 @@ export const GUIDES: Guide[] = [
     sections: [
       {
         kind: "p",
-        text: "Sleeper has a built-in draft order randomizer that the commissioner can trigger from the league dashboard. It's fast — one click — but only the commissioner sees it fire and the result is unverifiable. Here's the exact path, plus when to skip it.",
+        text: "Sleeper has a built-in draft order randomizer that the commissioner can trigger from the league dashboard. It's fast — one click — but only the commissioner sees it fire and the result is unverifiable. Here's the exact path, plus when to skip it. On another platform? The same walkthrough exists for [ESPN](/guides/how-to-randomize-draft-order-on-espn) and for [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
       },
       { kind: "h2", text: "The exact steps in the Sleeper app" },
       {
@@ -392,7 +403,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "The better way: public scheduled draw" },
       {
         kind: "p",
-        text: "Schedule a Fantasy Football Draft Order draw, paste your Sleeper league ID to import your teams, and pick a draw time. Share one link. The whole league opens it; everyone sees the same animation at the same second; the result is permanent and the source code is open. After the draw, copy the order into Sleeper's draft order settings.",
+        text: "Schedule a Fantasy Football Draft Order draw, paste your [Sleeper league ID](/league-id/sleeper) to import your teams, and pick a draw time. Share one link. The whole league opens it; everyone sees the same animation at the same second; the result is permanent and the source code is open. After the draw, copy the order into Sleeper's draft order settings. The [Sleeper draft order randomizer](/sleeper) page is the shortcut if you already have the ID, and the [commissioner's guide](/guides/commissioner-guide-running-a-fair-draft-order-reveal) covers how to announce the draw so the whole league turns up.",
       },
       {
         kind: "callout",
@@ -414,8 +425,9 @@ export const GUIDES: Guide[] = [
   {
     slug: "how-to-randomize-draft-order-on-espn",
     title: "How to randomize draft order on ESPN Fantasy",
+    metaTitle: "How to Randomize or Set Draft Order on ESPN (2026)",
     description:
-      "ESPN auto-randomizes the draft order an hour before your draft starts. Here's how to set it manually, and how to make the result verifiable.",
+      "ESPN randomizes your draft order automatically one hour before the draft if nobody sets it first. The six clicks to set it yourself, the cutoff that decides it, and how to make the result checkable.",
     excerpt:
       "ESPN's draft order behavior is one of the more confusing parts of the platform. Here's exactly what happens and when.",
     datePublished: "2026-03-11",
@@ -429,7 +441,7 @@ export const GUIDES: Guide[] = [
     sections: [
       {
         kind: "p",
-        text: "ESPN's draft order works two ways: the commissioner sets it manually, or ESPN automatically randomizes it one hour before the draft starts. Here's exactly how each one happens.",
+        text: "ESPN's draft order works two ways: the commissioner sets it manually, or ESPN automatically randomizes it one hour before the draft starts. Here's exactly how each one happens. If your league is elsewhere, the same walkthrough exists for [Sleeper](/guides/how-to-randomize-draft-order-on-sleeper) and for [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
       },
       { kind: "h2", text: "Setting the order manually as commissioner" },
       {
@@ -455,7 +467,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "How to make the order verifiable" },
       {
         kind: "p",
-        text: "Schedule a Fantasy Football Draft Order draw before ESPN's auto-randomization deadline. Add your teams (manually for private leagues, or by ESPN league ID for public leagues). Share the draw link with your league. After the draw, copy the order into ESPN's draft order settings before ESPN's one-hour cutoff.",
+        text: "Schedule a Fantasy Football Draft Order draw before ESPN's auto-randomization deadline. Add your teams manually for private leagues, or by [ESPN league ID](/league-id/espn) for public ones. Share the draw link with your league. After the draw, copy the order into ESPN's draft order settings before ESPN's one-hour cutoff. The [ESPN draft order randomizer](/espn) page starts that flow, and the [commissioner's guide](/guides/commissioner-guide-running-a-fair-draft-order-reveal) has the message to send with the link.",
       },
       {
         kind: "callout",
@@ -476,23 +488,28 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-to-randomize-draft-order-on-yahoo",
-    title: "How to randomize draft order on Yahoo Fantasy",
+    title: "How to set, change, or randomize draft order on Yahoo Fantasy",
+    metaTitle: "How to Set or Change Draft Order in Yahoo Fantasy (2026)",
     description:
-      "Yahoo's draft order randomization is buried under a few menus. Here's the exact path — plus a way to make it auditable.",
+      "Yahoo hides the draft order behind Edit next to Draft Type and Time. The exact path to set it, drag it into a new order, or randomize it, and the deadline that closes it.",
     excerpt:
-      "Yahoo doesn't have a public API, so it doesn't get integrations love. Here's the manual playbook.",
+      "Setting the order, changing it later, and randomizing it are all the same Yahoo screen. Here is where it is and when it locks.",
     datePublished: "2026-03-04",
-    readingMinutes: 4,
+    dateModified: "2026-08-11",
+    readingMinutes: 5,
     category: "Platform guides",
     keywords: [
       "how to randomize draft order on yahoo",
+      "how to set draft order in yahoo fantasy football",
+      "how to change draft order in yahoo fantasy football",
+      "edit draft order yahoo fantasy football",
       "yahoo fantasy draft order",
       "yahoo randomize draft",
     ],
     sections: [
       {
         kind: "p",
-        text: "Yahoo's randomize button is harder to find than Sleeper's or ESPN's, but it works the same way: the commissioner clicks it, the order shuffles, and only the commissioner sees the result before it's saved.",
+        text: "Yahoo's randomize button is harder to find than [Sleeper's](/guides/how-to-randomize-draft-order-on-sleeper) or [ESPN's](/guides/how-to-randomize-draft-order-on-espn), but it works the same way: the commissioner clicks it, the order shuffles, and only the commissioner sees the result before it's saved.",
       },
       { kind: "h2", text: "The exact steps" },
       {
@@ -506,6 +523,18 @@ export const GUIDES: Guide[] = [
           "Click Save Settings at the bottom.",
         ],
       },
+      {
+        kind: "h2",
+        text: "Setting or changing the order by hand",
+      },
+      {
+        kind: "p",
+        text: "Set, change, edit, reorder: on Yahoo they are all the same screen. The list under Draft Order is draggable, so instead of clicking Randomize Order you can drag a team to the slot you want and the rest shift around it. Save Settings at the bottom commits whatever the list currently shows, and reopening the same screen later lets you change it again.",
+      },
+      {
+        kind: "p",
+        text: "That is the part worth knowing if you are changing an order that already exists: nothing about the first save is final, and nothing tells your league that the order moved. There is one order and one Save button, and the version they see is whichever one was saved most recently.",
+      },
       { kind: "h2", text: "What Yahoo doesn't show your league" },
       {
         kind: "p",
@@ -514,15 +543,19 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Making it verifiable" },
       {
         kind: "p",
-        text: "Yahoo doesn't expose a public league API, so Fantasy Football Draft Order uses manual entry for Yahoo leagues — type in the team names once. Schedule the draw, share the link, and the whole league watches the order come out of open-source code at the scheduled time. Copy the order into Yahoo's draft settings before your draft starts.",
+        text: "Yahoo doesn't expose a public league API, so Fantasy Football Draft Order uses manual entry for Yahoo leagues — type in the team names once. Schedule the draw, share the link, and the whole league watches the order come out of open-source code at the scheduled time. Copy the order into Yahoo's draft settings before your draft starts. Start from the [Yahoo draft order randomizer](/yahoo) page, or read the [commissioner's guide](/guides/commissioner-guide-running-a-fair-draft-order-reveal) first if you are the one running it.",
       },
       {
         kind: "callout",
         tone: "info",
-        text: "Yahoo's draft order can be edited up until the draft begins — not until an hour before like ESPN. You have more time to copy the order in.",
+        text: "Yahoo's draft order can be edited up until the draft begins — not until an hour before like ESPN. You have more time to copy an order in, and equally, so does everyone who wants to argue about it. Deciding the order in public first is what closes that window.",
       },
     ],
     faqs: [
+      {
+        q: "How do I change the draft order in Yahoo after I have already set it?",
+        a: "The same screen you set it on: League, Settings, Edit next to Draft Type and Time, Draft Order. Drag the teams into the new order, or click Randomize Order, then Save Settings. Yahoo keeps the order editable until the draft begins.",
+      },
       {
         q: "Why doesn't Fantasy Football Draft Order import Yahoo leagues directly?",
         a: "Yahoo's API requires OAuth, which means accounts. Fantasy Football Draft Order doesn't do accounts on principle — it's how we keep the no-tracking promise honest.",
@@ -561,7 +594,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Step 2: Schedule the draw at least 24 hours ahead" },
       {
         kind: "p",
-        text: "Open Fantasy Football Draft Order, fill in your league name, your name, and the draw time. Add teams manually or by league ID. Schedule it. Copy the link. Don't share it yet.",
+        text: "Open Fantasy Football Draft Order, fill in your league name, your name, and the draw time. Add teams manually or by league ID — [where to find yours](/league-id), platform by platform. Schedule it. Copy the link. Don't share it yet.",
       },
       { kind: "h2", text: "Step 3: Send one message to the league chat" },
       {
@@ -586,7 +619,7 @@ export const GUIDES: Guide[] = [
       { kind: "h2", text: "Step 6: Copy the order into your platform" },
       {
         kind: "p",
-        text: "After the draw, copy the order into your fantasy platform's draft settings. Sleeper, ESPN, Yahoo, MFL, Fleaflicker — all of them let the commissioner enter the draft order manually.",
+        text: "After the draw, copy the order into your fantasy platform's draft settings. All of them let the commissioner enter the draft order manually, and the exact menu path is written down for [Sleeper](/guides/how-to-randomize-draft-order-on-sleeper), [ESPN](/guides/how-to-randomize-draft-order-on-espn) and [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo). [MyFantasyLeague](/mfl) and [Fleaflicker](/fleaflicker) work the same way.",
       },
       {
         kind: "callout",

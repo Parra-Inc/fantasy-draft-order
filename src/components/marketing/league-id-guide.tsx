@@ -8,6 +8,7 @@ import {
   LEAGUE_ID_GUIDES,
   type LeagueIdGuide,
 } from "@/lib/seo/league-id-guides";
+import { getGuide } from "@/lib/seo/guides";
 
 function UrlAnatomy({ guide }: { guide: LeagueIdGuide }) {
   const [before, after = ""] = guide.exampleUrl.split(guide.exampleId);
@@ -80,6 +81,11 @@ function Steps({
 export function LeagueIdGuideView({ guide }: { guide: LeagueIdGuide }) {
   const others = LEAGUE_ID_GUIDES.filter((g) => g.slug !== guide.slug);
   const path = `/league-id/${guide.slug}`;
+  // These league ID pages get crawled; the platform walkthroughs largely do
+  // not. This is the in-body link between the two, not a footer entry.
+  const draftOrderGuide = guide.draftOrderGuide
+    ? getGuide(guide.draftOrderGuide)
+    : undefined;
 
   return (
     <main>
@@ -216,6 +222,34 @@ export function LeagueIdGuideView({ guide }: { guide: LeagueIdGuide }) {
             ))}
           </ul>
         </div>
+
+        {draftOrderGuide ? (
+          <div className="border-sideline/60 bg-sideline/20 mt-14 rounded-2xl border p-6 sm:p-7">
+            <h2 className="font-display text-chalk text-lg font-bold">
+              Got the ID. Now the draft order.
+            </h2>
+            <p className="text-chalk/85 mt-3 max-w-2xl text-sm leading-relaxed">
+              The league ID is the first half. The second is the order itself:{" "}
+              <Link
+                href={`/guides/${draftOrderGuide.slug}`}
+                className="text-signal decoration-signal/40 hover:decoration-signal font-medium underline underline-offset-4"
+              >
+                {draftOrderGuide.title}
+              </Link>{" "}
+              walks through where {guide.platform}&apos;s own randomize button
+              lives, what it does not show the rest of your league, and how to
+              run a draw everyone can check afterwards. If you are the one
+              running it, the{" "}
+              <Link
+                href="/guides/commissioner-guide-running-a-fair-draft-order-reveal"
+                className="text-signal decoration-signal/40 hover:decoration-signal font-medium underline underline-offset-4"
+              >
+                commissioner&apos;s guide to a fair draft order reveal
+              </Link>{" "}
+              is the step-by-step version.
+            </p>
+          </div>
+        ) : null}
 
         <div className="mt-14">
           <h2 className="font-display text-chalk text-xl font-bold">

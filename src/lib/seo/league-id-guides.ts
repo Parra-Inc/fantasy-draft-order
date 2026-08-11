@@ -10,6 +10,12 @@ export type LeagueIdGuide = {
   source: ImportSource | null;
   /** Existing platform landing page. */
   platformPage: string;
+  /**
+   * Slug in GUIDES for this platform's draft-order walkthrough, when one
+   * exists. These league ID pages are the most-crawled part of the site, and
+   * the walkthroughs are the least; this is the in-body link between them.
+   */
+  draftOrderGuide?: string;
   title: string;
   description: string;
   keywords: string[];
@@ -43,9 +49,10 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     short: "Sleeper",
     source: "SLEEPER",
     platformPage: "/sleeper",
-    title: "Sleeper League ID Finder: Where to Find Your League ID",
+    draftOrderGuide: "how-to-randomize-draft-order-on-sleeper",
+    title: "Find Your Sleeper League ID: 18 Digits, Web or App (2026)",
     description:
-      "Your Sleeper league ID is the 18-digit number in your league URL, or a Copy League ID button at the bottom of General league settings in the app. Here is the exact path for both.",
+      "Two ten-second paths: the 18-digit number after /leagues/ in your Sleeper URL, or Copy League ID in the app's General settings. Plus why last season's ID fails.",
     keywords: [
       "sleeper league id finder",
       "sleeper league id",
@@ -134,6 +141,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     short: "ESPN",
     source: "ESPN",
     platformPage: "/espn",
+    draftOrderGuide: "how-to-randomize-draft-order-on-espn",
     title: "ESPN League ID Finder: Where to Find Your League ID",
     description:
       "Your ESPN league ID is the number after leagueId= in your league URL, and it is listed under the League tab in the ESPN Fantasy app. Here is exactly where to look.",
@@ -224,6 +232,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     short: "Yahoo",
     source: null,
     platformPage: "/yahoo",
+    draftOrderGuide: "how-to-randomize-draft-order-on-yahoo",
     title: "Yahoo League ID Finder: Where to Find Your League ID",
     description:
       "Your Yahoo league ID is the number after /f1/ in your league URL, and the first row of your league settings page. Here is where to find it and what to do with it.",
