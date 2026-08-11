@@ -445,9 +445,18 @@ if [ "$DO_INSTALL" -eq 1 ]; then
   esac
 fi
 
-WRANGLER="$APP/node_modules/.bin/wrangler"
-[ -x "$WRANGLER" ] || WRANGLER="$ROOT/node_modules/.bin/wrangler"
-[ -x "$WRANGLER" ] || die "wrangler is not installed. Re-run with --install."
+if [ ! -x "$APP/node_modules/.bin/wrangler" ] && [ ! -x "$ROOT/node_modules/.bin/wrangler" ]; then
+  die "wrangler is not installed. Re-run with --install."
+fi
+
+# ALWAYS invoke wrangler through the package manager, never by absolute path.
+# On an OpenNext project `wrangler deploy` shells out to `opennextjs-cloudflare`
+# via npm, and npm cannot resolve pnpm's symlinked node_modules: the deploy dies
+# with "npm error could not determine executable to run" even though the package
+# is installed and on PATH. `pnpm exec` sets up the resolution npm then needs.
+# Putting node_modules/.bin on PATH is NOT sufficient; this was tested.
+# CI never hit it because it runs `pnpm exec wrangler deploy`.
+wrangler_run() { ( cd "$APP" && "$PM" exec wrangler "$@" ); }
 
 # ── Migrate ───────────────────────────────────────────────────────────────────
 if [ "$DO_MIGRATE" -eq 1 ]; then
@@ -470,9 +479,9 @@ if [ "$DO_MIGRATE" -eq 1 ]; then
     d1)
       DB_NAME=$(grep -oE '"database_name"[[:space:]]*:[[:space:]]*"[^"]+"' "$WRANGLER_CFG" 2>/dev/null | head -1 | sed 's/.*"\([^"]*\)"$/\1/' || true)
       [ -n "$DB_NAME" ] || die "Could not read database_name from $WRANGLER_CFG."
-      ( cd "$APP" && "$WRANGLER" d1 migrations list "$DB_NAME" --remote ) || true
+      wrangler_run d1 migrations list "$DB_NAME" --remote || true
       confirm "IRREVERSIBLE: apply the pending D1 migration(s) to $DB_NAME?"
-      ( cd "$APP" && "$WRANGLER" d1 migrations apply "$DB_NAME" --remote )
+      wrangler_run d1 migrations apply "$DB_NAME" --remote
       ;;
   esac
 fi
@@ -488,7 +497,7 @@ fi
 # ── Deploy ────────────────────────────────────────────────────────────────────
 step "Deploy worker"
 confirm "Ship ${WORKER:-this worker} ($SHA) to production now?"
-( cd "$APP" && "$WRANGLER" deploy )
+wrangler_run deploy
 
 # Written only after a successful deploy, so a failed run does not advance the
 # baseline the next IndexNow range is diffed from.
@@ -502,7 +511,7 @@ printf '%s\n' "$FULL_SHA" > "$LAST_DEPLOY"
 if [ "$SKIP_SECRETS" -eq 0 ] && [ $((${#REQUIRED_SECRETS[@]} + ${#OPTIONAL_SECRETS[@]})) -gt 0 ]; then
   step "Reconcile runtime secrets"
 
-  LIVE=$( (cd "$APP" && "$WRANGLER" secret list --format json 2>/dev/null) | jq -r '.[].name' 2>/dev/null || true)
+  LIVE=$(wrangler_run secret list --format json 2>/dev/null | jq -r '.[].name' 2>/dev/null || true)
   has_secret() { printf '%s\n' "$LIVE" | grep -qx "$1"; }
 
   SECRETS_FILE=$(mktemp)
@@ -562,7 +571,7 @@ if [ "$SKIP_SECRETS" -eq 0 ] && [ $((${#REQUIRED_SECRETS[@]} + ${#OPTIONAL_SECRE
     else
       confirm "Upload the $QUEUED missing secret(s)?"
     fi
-    ( cd "$APP" && "$WRANGLER" secret bulk "$SECRETS_FILE" )
+    wrangler_run secret bulk "$SECRETS_FILE"
     if [ -n "$PROMPTED" ]; then
       warn "$PROMPTED came from a prompt and was NOT saved locally."
       warn "Add it to the repo's .env.prod and to the GitHub production environment."
