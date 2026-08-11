@@ -73,6 +73,8 @@ export const ENTRY_SOURCES = [
   "PUNISHMENT_IDEAS",
   /** The call to action on a finished punishment wheel. */
   "PUNISHMENT_RESULT",
+  /** /fantasy-football-facebook-groups, i.e. someone who found a league first. */
+  "FACEBOOK_GROUPS",
 ] as const;
 
 export type EntrySource = (typeof ENTRY_SOURCES)[number];

@@ -135,6 +135,42 @@ export function BreadcrumbLd({ items }: { items: Crumb[] }) {
   );
 }
 
+/**
+ * A ranked list of things a page recommends, for listicles and roundups.
+ *
+ * `url` is absolute on purpose: the items in a roundup are usually off-site,
+ * which is the whole reason the page exists. Callers pass full URLs and we do
+ * not prefix them, unlike the site-relative `path` every other helper here
+ * takes.
+ */
+export function ItemListLd({
+  name,
+  path,
+  items,
+}: {
+  name: string;
+  path: string;
+  items: { name: string; url: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name,
+        url: `${SITE_URL}${path}`,
+        numberOfItems: items.length,
+        itemListElement: items.map((item, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: item.name,
+          url: item.url,
+        })),
+      }}
+    />
+  );
+}
+
 type EventLdProps = {
   name: string;
   startDate: string;
