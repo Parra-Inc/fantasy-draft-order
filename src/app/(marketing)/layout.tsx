@@ -27,6 +27,7 @@ const PRODUCT_LINKS = [
   { href: "/ask-your-commissioner", label: "Ask your commissioner" },
   { href: "/draft-lottery", label: "Draft lottery" },
   { href: "/fantasy-football-punishments", label: "Punishments" },
+  { href: "/fantasy-football-facebook-groups", label: "Facebook groups" },
   { href: "/guides", label: "Guides" },
   { href: "/league-id", label: "Find your league ID" },
 ];

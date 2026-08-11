@@ -83,6 +83,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${base}/fantasy-football-facebook-groups`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       // Grows as submissions are approved, hence weekly.
       url: `${base}/fantasy-football-punishments`,
       changeFrequency: "weekly",
