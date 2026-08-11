@@ -25,7 +25,8 @@ export async function generateMetadata({ params }: Props) {
     });
   }
   return buildMetadata({
-    title: guide.title,
+    // metaTitle when the SERP wants something more specific than the H1.
+    title: guide.metaTitle ?? guide.title,
     description: guide.description,
     path: `/guides/${slug}`,
     keywords: guide.keywords,

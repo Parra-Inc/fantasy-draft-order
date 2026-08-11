@@ -1,4 +1,5 @@
 import type { GuideSection } from "@/lib/seo/guides";
+import { renderInline } from "@/components/marketing/rich-text";
 
 function slugifyHeading(text: string) {
   return text
@@ -28,7 +29,7 @@ function Section({ section }: { section: GuideSection }) {
     case "p":
       return (
         <p className="text-chalk/85 mt-5 text-base leading-relaxed sm:text-lg">
-          {section.text}
+          {renderInline(section.text)}
         </p>
       );
     case "ul":
@@ -39,7 +40,7 @@ function Section({ section }: { section: GuideSection }) {
               key={i}
               className="text-chalk/85 marker:text-signal/60 list-disc text-base leading-relaxed sm:text-lg"
             >
-              {item}
+              {renderInline(item)}
             </li>
           ))}
         </ul>
@@ -52,7 +53,7 @@ function Section({ section }: { section: GuideSection }) {
               key={i}
               className="text-chalk/85 marker:text-signal list-decimal text-base leading-relaxed marker:font-mono sm:text-lg"
             >
-              {item}
+              {renderInline(item)}
             </li>
           ))}
         </ol>
@@ -60,7 +61,7 @@ function Section({ section }: { section: GuideSection }) {
     case "quote":
       return (
         <blockquote className="border-signal/50 bg-sideline/20 text-chalk/90 mt-6 border-l-2 px-5 py-4 text-base italic sm:text-lg">
-          {section.text}
+          {renderInline(section.text)}
           {section.cite ? (
             <footer className="text-hashmark mt-2 text-xs not-italic">
               — {section.cite}
@@ -77,7 +78,7 @@ function Section({ section }: { section: GuideSection }) {
               : "border-sideline/60 bg-sideline/30 text-chalk/85"
           }`}
         >
-          {section.text}
+          {renderInline(section.text)}
         </div>
       );
     case "code":

@@ -10,6 +10,15 @@ export type LandingPage = {
   highlightPlatform?: string;
   /** Slug in LEAGUE_ID_GUIDES, when this page is about a platform. */
   leagueIdSlug?: string;
+  /**
+   * Slugs in GUIDES, rendered as an in-body "Read next" block.
+   *
+   * These landing pages are the site's indexed surface; the guides mostly are
+   * not. Linking to a guide only from the footer and the sitemap is what got
+   * live, correctly-defined guides crawled and then dropped, so every landing
+   * page points at the guides that continue its own topic.
+   */
+  relatedGuides?: string[];
   faqs: { q: string; a: string }[];
   breadcrumbName: string;
 };
@@ -38,9 +47,9 @@ export const LANDING_PAGES: LandingPage[] = [
   // Platform pages
   {
     slug: "sleeper",
-    title: "Sleeper Draft Order Randomizer — Free & Transparent",
+    title: "Sleeper Draft Order Randomizer: Drawn Live, Free (2026)",
     description:
-      "Free Sleeper draft order generator. Randomize your Sleeper fantasy league's draft order the fair way: paste your Sleeper league ID, we pull your teams and owners, and the whole league watches the order drawn live from open-source code.",
+      "Sleeper's randomize button fires where only the commissioner can see it. Paste your league ID, pick a time, and the whole league watches the same draw. Free, no login.",
     eyebrow: "Sleeper",
     h1: "Sleeper draft order randomizer.",
     h1Accent: "Drawn live. Auditable forever.",
@@ -56,6 +65,11 @@ export const LANDING_PAGES: LandingPage[] = [
     ],
     highlightPlatform: "Sleeper",
     leagueIdSlug: "sleeper",
+    relatedGuides: [
+      "how-to-randomize-draft-order-on-sleeper",
+      "is-your-draft-order-actually-random",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+    ],
     breadcrumbName: "Sleeper",
     faqs: [
       {
@@ -96,6 +110,11 @@ export const LANDING_PAGES: LandingPage[] = [
     ],
     highlightPlatform: "ESPN",
     leagueIdSlug: "espn",
+    relatedGuides: [
+      "how-to-randomize-draft-order-on-espn",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+      "is-your-draft-order-actually-random",
+    ],
     breadcrumbName: "ESPN",
     faqs: [
       {
@@ -132,6 +151,11 @@ export const LANDING_PAGES: LandingPage[] = [
       "yahoo fantasy league draft randomizer",
     ],
     leagueIdSlug: "yahoo",
+    relatedGuides: [
+      "how-to-randomize-draft-order-on-yahoo",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+      "is-your-draft-order-actually-random",
+    ],
     breadcrumbName: "Yahoo",
     faqs: [
       {
@@ -165,6 +189,11 @@ export const LANDING_PAGES: LandingPage[] = [
     ],
     highlightPlatform: "MyFantasyLeague",
     leagueIdSlug: "mfl",
+    relatedGuides: [
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+      "snake-vs-straight-draft-order",
+      "is-your-draft-order-actually-random",
+    ],
     breadcrumbName: "MyFantasyLeague",
     faqs: [
       {
@@ -198,6 +227,11 @@ export const LANDING_PAGES: LandingPage[] = [
     ],
     highlightPlatform: "Fleaflicker",
     leagueIdSlug: "fleaflicker",
+    relatedGuides: [
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+      "weighted-vs-random-draft-lottery",
+      "is-your-draft-order-actually-random",
+    ],
     breadcrumbName: "Fleaflicker",
     faqs: [
       {
@@ -232,6 +266,14 @@ export const LANDING_PAGES: LandingPage[] = [
       "10 team fantasy football draft order",
       "12 team fantasy football draft order",
     ],
+    relatedGuides: [
+      "fun-ways-to-determine-fantasy-draft-order",
+      "snake-vs-straight-draft-order",
+      "how-to-randomize-draft-order-on-sleeper",
+      "how-to-randomize-draft-order-on-espn",
+      "how-to-randomize-draft-order-on-yahoo",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+    ],
     breadcrumbName: "Fantasy football",
     faqs: [
       {
@@ -263,6 +305,10 @@ export const LANDING_PAGES: LandingPage[] = [
       "nba fantasy draft order",
       "fantasy basketball randomizer",
     ],
+    relatedGuides: [
+      "weighted-vs-random-draft-lottery",
+      "snake-vs-straight-draft-order",
+    ],
     breadcrumbName: "Fantasy basketball",
     faqs: [
       {
@@ -289,6 +335,10 @@ export const LANDING_PAGES: LandingPage[] = [
       "fantasy baseball draft order generator",
       "mlb fantasy draft order",
       "fantasy baseball randomizer",
+    ],
+    relatedGuides: [
+      "snake-vs-straight-draft-order",
+      "fun-ways-to-determine-fantasy-draft-order",
     ],
     breadcrumbName: "Fantasy baseball",
     faqs: [
@@ -317,6 +367,10 @@ export const LANDING_PAGES: LandingPage[] = [
       "nhl fantasy draft order",
       "fantasy hockey randomizer",
     ],
+    relatedGuides: [
+      "snake-vs-straight-draft-order",
+      "fun-ways-to-determine-fantasy-draft-order",
+    ],
     breadcrumbName: "Fantasy hockey",
     faqs: [NAMES_FAQ, TRUST_FAQ, COMMISSIONER_FAQ, FREE_FAQ],
   },
@@ -340,6 +394,11 @@ export const LANDING_PAGES: LandingPage[] = [
       "fantasy draft order wheel",
       "draft order picker",
       "fair fantasy draft lottery",
+    ],
+    relatedGuides: [
+      "weighted-vs-random-draft-lottery",
+      "is-your-draft-order-actually-random",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
     ],
     breadcrumbName: "Draft lottery",
     faqs: [
@@ -371,6 +430,11 @@ export const LANDING_PAGES: LandingPage[] = [
       "how fantasy draft order works",
       "fantasy draft randomizer explained",
       "fisher-yates draft order",
+    ],
+    relatedGuides: [
+      "is-your-draft-order-actually-random",
+      "commissioner-guide-running-a-fair-draft-order-reveal",
+      "how-to-randomize-draft-order-on-sleeper",
     ],
     breadcrumbName: "How it works",
     faqs: [
@@ -406,6 +470,11 @@ export const LANDING_PAGES: LandingPage[] = [
       "trustworthy fantasy draft randomizer",
       "open source draft randomizer",
       "is my draft order random",
+    ],
+    relatedGuides: [
+      "is-your-draft-order-actually-random",
+      "weighted-vs-random-draft-lottery",
+      "how-to-randomize-draft-order-on-espn",
     ],
     breadcrumbName: "Why it's fair",
     faqs: [
