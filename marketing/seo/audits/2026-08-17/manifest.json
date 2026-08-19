@@ -1,0 +1,29 @@
+{
+  "schema": "seo-audit/v1",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "project": "Fantasy Draft Order",
+  "rank": 5,
+  "repo": "/Users/ianmaccallum/Developer/Repos/fantasy-draft-order",
+  "auditDate": "2026-08-17",
+  "capturedAt": "2026-08-18T13:15:00Z",
+  "coverage": {
+    "pagesAtScopeTime": 34,
+    "auditedAtScopeTime": 33,
+    "note": "list_sites at run time reported 34/34 audited, 0 errors, 16 warnings, 60 notices; recheck queued all 34 pages, capped=false"
+  },
+  "searchData": {
+    "googleProperty": "sc-domain:fantasyfootballdraftorder.com",
+    "bingProperty": "https://fantasyfootballdraftorder.com/",
+    "window": "2026-07-19 to 2026-08-15 (28 days ending 3 days back, GSC lag)"
+  },
+  "pagespeed": {
+    "ranByAnotherAgent": true,
+    "runner": "local lighthouse.mjs --sample=1 sweep (21 URLs) plus --runs=3 medians on 4 representatives",
+    "strategy": "mobile",
+    "artifact": "pagespeed.json, pagespeed.raw.json, pagespeed.rerun.json"
+  },
+  "phasesRun": ["0", "1", "2", "3 (imported)", "4"],
+  "phasesSkipped": ["5 (fix/deploy/verify) - out of scope for this run by instruction"],
+  "seasonalNote": "Fantasy football draft season is live in August; current-month demand data is the signal that matters most."
+}

@@ -1,0 +1,244 @@
+{
+  "schema": "seo-audit/v1",
+  "layer": "search-console",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-08-18T13:20:00Z",
+  "googleProperty": "sc-domain:fantasyfootballdraftorder.com",
+  "bingProperty": "https://fantasyfootballdraftorder.com/",
+  "window": { "startDate": "2026-07-19", "endDate": "2026-08-15", "days": 28, "rationale": "28 days ending 3 days back to clear the GSC 2-to-3-day lag" },
+  "calls": [
+    {
+      "tool": "analytics_query",
+      "params": { "siteUrl": "sc-domain:fantasyfootballdraftorder.com", "startDate": "2026-07-19", "endDate": "2026-08-15", "dimensions": [], "engine": "google" },
+      "ok": true,
+      "result": { "google": [{ "clicks": 82, "impressions": 6872, "ctr": 0.011932479627473807, "position": 11.533178114086146 }] }
+    },
+    {
+      "tool": "site_health_check",
+      "params": { "siteUrl": "sc-domain:fantasyfootballdraftorder.com", "level": "full", "engine": "google" },
+      "ok": true,
+      "note": "This tool ignores any window passed and returns its own trailing 7-day comparison. Numbers below are 7-DAY, do not mix with the 28-day totals.",
+      "result": {
+        "status": "healthy",
+        "permissionLevel": "siteOwner",
+        "performance": {
+          "current": { "clicks": 44, "impressions": 3726, "ctr": 0.011808910359634998, "position": 10.393719806763285, "startDate": "2026-08-08", "endDate": "2026-08-15" },
+          "previous": { "clicks": 30, "impressions": 2389, "ctr": 0.012557555462536627, "position": 11.166596902469653, "startDate": "2026-07-31", "endDate": "2026-08-07" },
+          "changes": { "clicks": 14, "clicksPercent": 46.67, "impressions": 1337, "impressionsPercent": 55.96, "ctrPercent": -5.96, "position": -0.77, "positionPercent": -6.92 }
+        },
+        "sitemaps": { "total": 1, "withErrors": 0, "withWarnings": 0 },
+        "anomalies": [],
+        "issues": []
+      }
+    },
+    {
+      "tool": "sitemaps_list",
+      "params": { "siteUrl": "sc-domain:fantasyfootballdraftorder.com", "engine": "google" },
+      "ok": true,
+      "result": {
+        "path": "https://fantasyfootballdraftorder.com/sitemap.xml",
+        "lastSubmitted": "2026-08-12T03:01:15.109Z",
+        "lastDownloaded": "2026-08-16T03:06:49.006Z",
+        "isPending": false,
+        "warnings": "0",
+        "errors": "0",
+        "contents": [{ "type": "web", "submitted": "34", "indexed": "0" }]
+      },
+      "note": "The 'indexed: 0' field is a known dead field in the GSC sitemaps API (Google stopped populating it). It is NOT evidence of a deindexing problem: the same property returned 6,872 impressions across 34 distinct URLs in the same window, which is only possible if the pages are indexed. Not reported as a finding."
+    },
+    {
+      "tool": "site_health_check",
+      "params": { "siteUrl": "https://fantasyfootballdraftorder.com/", "level": "crawl_issues", "engine": "bing" },
+      "ok": true,
+      "result": {
+        "bingCrawlIssues": [],
+        "bingCrawlStatsSummary": {
+          "weeks": 21,
+          "latestWeek": { "Code2xx": 8, "Code301": 1, "Code4xx": 0, "Code5xx": 0, "CrawlErrors": 0, "CrawledPages": 12, "InIndex": 8, "InLinks": 3, "BlockedByRobotsTxt": 0, "DnsFailures": 0 },
+          "oneCrawlErrorSpike": { "week": "2026-08-14 bucket", "Code4xx": 1, "CrawlErrors": 1, "resolvedNextWeek": true }
+        }
+      },
+      "note": "Bing crawl issue list is EMPTY. Bing has only 8 of 34 pages in its index and reports InLinks 3, so Bing coverage of this site is thin. That is a Bing discovery gap, not a site defect."
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "recommendations", "engine": "google" },
+      "ok": true,
+      "result": [{ "type": "opportunity", "category": "Rankings", "title": "2 keywords with ranking potential", "description": "Keywords at positions 5-20 with high impressions. Moving to top 3 could bring ~34 additional clicks.", "priority": "high", "data": { "topKeywords": ["how to find sleeper league id", "how to randomize draft order sleeper"] } }]
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "striking_distance", "engine": "google" },
+      "ok": true,
+      "rowCount": 25,
+      "result": [
+        { "query": "how to randomize draft order sleeper", "page": "/sleeper", "position": 8.22, "impressions": 104, "clicks": 0 },
+        { "query": "how to find league id on sleeper", "page": "/league-id/sleeper", "position": 8.75, "impressions": 61, "clicks": 0 },
+        { "query": "sleeper id", "page": "/league-id/sleeper", "position": 8.77, "impressions": 39, "clicks": 0 },
+        { "query": "how to find espn league id", "page": "/league-id", "position": 10.55, "impressions": 20, "clicks": 0 },
+        { "query": "find sleeper league id", "page": "/league-id/sleeper", "position": 8.27, "impressions": 15, "clicks": 0 },
+        { "query": "how to make custom draft order in sleeper, like taking out certain picks due to keepers", "page": "/guides/how-to-randomize-draft-order-on-sleeper", "position": 9.7, "impressions": 10, "clicks": 0 },
+        { "query": "how to find espn fantasy league id", "page": "/league-id", "position": 8.88, "impressions": 8, "clicks": 0 },
+        { "query": "where to find espn fantasy league id", "page": "/league-id", "position": 8.38, "impressions": 8, "clicks": 0 },
+        { "query": "where to find espn league id", "page": "/league-id", "position": 8.5, "impressions": 8, "clicks": 0 },
+        { "query": "espn league id", "page": "/league-id", "position": 9.5, "impressions": 6, "clicks": 0 },
+        { "query": "how to find espn fantasy football league id", "page": "/league-id", "position": 8.5, "impressions": 6, "clicks": 0 },
+        { "query": "how to set draft order in sleeper", "page": "/guides/how-to-randomize-draft-order-on-sleeper", "position": 8.5, "impressions": 4, "clicks": 0 },
+        { "query": "league id sleeper", "page": "/league-id/sleeper", "position": 10, "impressions": 4, "clicks": 0 },
+        { "query": "how to see sleeper league id", "page": "/league-id/sleeper", "position": 10.67, "impressions": 3, "clicks": 0 },
+        { "query": "mfl platinum login", "page": "/league-id/mfl", "position": 9.67, "impressions": 3, "clicks": 0 },
+        { "query": "how to find league id", "page": "/league-id", "position": 8, "impressions": 2, "clicks": 0 },
+        { "query": "how to find league id espn fantasy football", "page": "/league-id", "position": 9, "impressions": 2, "clicks": 0 },
+        { "query": "how to find league id on espn", "page": "/league-id", "position": 9, "impressions": 2, "clicks": 0 },
+        { "query": "how to find sleeper league id on app", "page": "/league-id/sleeper", "position": 11, "impressions": 2, "clicks": 0 },
+        { "query": "how to find your espn league id", "page": "/league-id", "position": 9, "impressions": 2, "clicks": 0 },
+        { "query": "espn fantasy football league id", "page": "/league-id", "position": 10, "impressions": 1, "clicks": 0 },
+        { "query": "espn fantasy league id", "page": "/league-id/espn", "position": 10, "impressions": 1, "clicks": 0 },
+        { "query": "fantasy football punishment wheel", "page": "/punishment/new", "position": 11, "impressions": 1, "clicks": 0 },
+        { "query": "reverse snake draft order", "page": "/guides/snake-vs-straight-draft-order", "position": 15, "impressions": 1, "clicks": 0 },
+        { "query": "where is sleeper league id", "page": "/league-id/sleeper", "position": 8, "impressions": 1, "clicks": 0 }
+      ],
+      "note": "Every one of the 25 striking-distance rows has 0 clicks. 19 of 25 belong to the /league-id family."
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "quick_wins", "engine": "google" },
+      "ok": true,
+      "result": [],
+      "note": "EMPTY. Positions 11-20 with material impressions: nothing. The site's demand is concentrated at positions 7-10, above the quick-wins band."
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "low_hanging_fruit", "engine": "google", "minImpressions": 50 },
+      "ok": true,
+      "result": [
+        { "query": "how to find sleeper league id", "impressions": 115, "clicks": 0, "ctr": 0, "position": 7.69, "potentialClicks": 17 },
+        { "query": "how to randomize draft order sleeper", "impressions": 112, "clicks": 0, "ctr": 0, "position": 8.05, "potentialClicks": 17 },
+        { "query": "where to find sleeper league id", "impressions": 80, "clicks": 0, "ctr": 0, "position": 7.8, "potentialClicks": 12 },
+        { "query": "how to find league id on sleeper", "impressions": 62, "clicks": 0, "ctr": 0, "position": 9.23, "potentialClicks": 9 }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "lost_queries", "engine": "google" },
+      "ok": true,
+      "result": [],
+      "note": "EMPTY. No content decay or deindexing. Recorded so the next audit has a baseline."
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "low_ctr", "engine": "google", "minImpressions": 50 },
+      "ok": true,
+      "result": [
+        { "query": "how to find sleeper league id", "page": "/league-id/sleeper", "position": 7.69, "impressions": 115, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.015 },
+        { "query": "how to randomize draft order sleeper", "page": "/sleeper", "position": 8.22, "impressions": 104, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.015 },
+        { "query": "where to find sleeper league id", "page": "/league-id/sleeper", "position": 7.8, "impressions": 80, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.015 },
+        { "query": "how to find league id on sleeper", "page": "/league-id/sleeper", "position": 8.75, "impressions": 61, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "cannibalization", "engine": "google" },
+      "ok": true,
+      "result": [],
+      "note": "EMPTY, despite two programmatic families (/league-id/[platform] and the platform tool pages /sleeper /espn /yahoo /mfl /fleaflicker). The split between 'find my league id' and 'randomize my draft order' intent is holding cleanly. This is a positive finding."
+    },
+    {
+      "tool": "seo_audit",
+      "params": { "type": "brand_vs_nonbrand", "engine": "google", "brandKeywords": ["fantasy football draft order", "fantasyfootballdraftorder", "draft order generator"] },
+      "ok": true,
+      "result": [
+        { "segment": "Brand", "clicks": 2, "impressions": 52, "ctr": 0.0385, "position": 66.81, "queryCount": 19 },
+        { "segment": "Non-Brand", "clicks": 9, "impressions": 1072, "ctr": 0.0084, "position": 19.73, "queryCount": 179 }
+      ],
+      "note": "Segment totals (11 clicks) do not reconcile to the 82-click 28-day total, so this tool is querying a narrower slice than the analytics_query window. Treat the ratio as directional, not the absolute counts."
+    },
+    {
+      "tool": "analytics_query",
+      "params": { "dimensions": ["page"], "engine": "google", "rowLimit": 40 },
+      "ok": true,
+      "rowCount": 34,
+      "result": [
+        { "page": "/sleeper", "clicks": 19, "impressions": 1351, "ctr": 0.01406, "position": 7.64 },
+        { "page": "/guides/how-to-randomize-draft-order-on-sleeper", "clicks": 18, "impressions": 1257, "ctr": 0.01432, "position": 7.20 },
+        { "page": "/league-id/sleeper", "clicks": 8, "impressions": 1657, "ctr": 0.00483, "position": 7.56 },
+        { "page": "/fantasy-football-punishments", "clicks": 5, "impressions": 222, "ctr": 0.02252, "position": 49.86 },
+        { "page": "/league-id", "clicks": 5, "impressions": 408, "ctr": 0.01225, "position": 10.17 },
+        { "page": "/", "clicks": 4, "impressions": 110, "ctr": 0.03636, "position": 34.25 },
+        { "page": "/espn", "clicks": 3, "impressions": 174, "ctr": 0.01724, "position": 9.86 },
+        { "page": "/guides/how-to-randomize-draft-order-on-yahoo", "clicks": 3, "impressions": 371, "ctr": 0.00809, "position": 13.93 },
+        { "page": "/fleaflicker", "clicks": 2, "impressions": 75, "ctr": 0.02667, "position": 24.32 },
+        { "page": "/league-id/espn", "clicks": 2, "impressions": 407, "ctr": 0.00491, "position": 8.04 },
+        { "page": "/league-id/mfl", "clicks": 2, "impressions": 107, "ctr": 0.01869, "position": 8.19 },
+        { "page": "/yahoo", "clicks": 2, "impressions": 130, "ctr": 0.01538, "position": 12.45 },
+        { "page": "http://fantasyfootballdraftorder.com/", "clicks": 1, "impressions": 20, "ctr": 0.05, "position": 35.35 },
+        { "page": "http://fantasyfootballdraftorder.com/fantasy-football", "clicks": 1, "impressions": 4, "ctr": 0.25, "position": 28 },
+        { "page": "/ask-your-commissioner", "clicks": 1, "impressions": 35, "ctr": 0.02857, "position": 11.23 },
+        { "page": "/draft-lottery", "clicks": 1, "impressions": 40, "ctr": 0.025, "position": 31.53 },
+        { "page": "/fantasy-basketball", "clicks": 1, "impressions": 19, "ctr": 0.05263, "position": 26.16 },
+        { "page": "/fantasy-football", "clicks": 1, "impressions": 49, "ctr": 0.02041, "position": 64.43 },
+        { "page": "/fantasy-hockey", "clicks": 1, "impressions": 16, "ctr": 0.0625, "position": 18.31 },
+        { "page": "/guides/snake-vs-straight-draft-order", "clicks": 1, "impressions": 339, "ctr": 0.00295, "position": 15.70 },
+        { "page": "/guides/weighted-vs-random-draft-lottery", "clicks": 1, "impressions": 16, "ctr": 0.0625, "position": 14.75 },
+        { "page": "/league-id/yahoo", "clicks": 1, "impressions": 184, "ctr": 0.00543, "position": 7.67 },
+        { "page": "/guides", "clicks": 0, "impressions": 46, "ctr": 0, "position": 45.30 },
+        { "page": "/guides/commissioner-guide-running-a-fair-draft-order-reveal", "clicks": 0, "impressions": 15, "ctr": 0, "position": 10.93 },
+        { "page": "/guides/fun-ways-to-determine-fantasy-draft-order", "clicks": 0, "impressions": 34, "ctr": 0, "position": 45.82 },
+        { "page": "/guides/is-your-draft-order-actually-random", "clicks": 0, "impressions": 54, "ctr": 0, "position": 14.37 },
+        { "page": "/how-it-works", "clicks": 0, "impressions": 14, "ctr": 0, "position": 9.79 },
+        { "page": "/league-id/fleaflicker", "clicks": 0, "impressions": 21, "ctr": 0, "position": 5.86 },
+        { "page": "/mfl", "clicks": 0, "impressions": 27, "ctr": 0, "position": 22.04 },
+        { "page": "/new", "clicks": 0, "impressions": 26, "ctr": 0, "position": 71.58 },
+        { "page": "/new?tab=manual", "clicks": 0, "impressions": 2, "ctr": 0, "position": 48 },
+        { "page": "/punishment/new", "clicks": 0, "impressions": 3, "ctr": 0, "position": 10.67 },
+        { "page": "/why-fair", "clicks": 0, "impressions": 7, "ctr": 0, "position": 7.57 },
+        { "page": "https://www.fantasyfootballdraftorder.com/", "clicks": 0, "impressions": 1, "ctr": 0, "position": 1 }
+      ]
+    },
+    {
+      "tool": "analytics_query",
+      "params": { "siteUrl": "https://fantasyfootballdraftorder.com/", "dimensions": [], "engine": "bing" },
+      "ok": true,
+      "rowCount": 46,
+      "note": "Bing returns per-query rows in Friday-dated WEEKLY buckets, not a totals row. Only 2 of the 4 weeks in the window returned data. Bing totals across returned rows: 13 clicks, 94 impressions. Top Bing queries are generic tool intent ('fantasy football draft order randomizer' 3 clicks / 13 impressions, 'fantasy football draft order generator' 0 clicks / 13 impressions), NOT the league-id intent that dominates Google.",
+      "resultSummary": {
+        "totalClicks": 13,
+        "totalImpressions": 94,
+        "topQueries": [
+          { "query": "fantasy football draft order randomizer", "clicks": 3, "impressions": 13 },
+          { "query": "fantasyfootballdraftorder", "clicks": 2, "impressions": 3 },
+          { "query": "fantasy football draft order generator", "clicks": 0, "impressions": 13 },
+          { "query": "fantasy football draft randomizer", "clicks": 1, "impressions": 7 },
+          { "query": "draft order randomizer", "clicks": 0, "impressions": 5 },
+          { "query": "fantasy football randomizer", "clicks": 0, "impressions": 5 }
+        ]
+      }
+    }
+  ],
+  "derived": {
+    "leagueIdFamilyCtrGap": {
+      "family": ["/league-id/sleeper", "/league-id/espn", "/league-id/yahoo", "/league-id/mfl", "/league-id/fleaflicker"],
+      "impressions28d": 2376,
+      "clicks28d": 11,
+      "ctr": 0.00463,
+      "avgPositionRange": "5.9 to 8.2",
+      "controlPages": [
+        { "page": "/sleeper", "position": 7.64, "ctr": 0.01406 },
+        { "page": "/guides/how-to-randomize-draft-order-on-sleeper", "position": 7.20, "ctr": 0.01432 }
+      ],
+      "note": "The /league-id/[platform] family sits at the SAME positions as the two best-converting pages on the site but converts at roughly one third the rate. 2,376 impressions in 28 days for 11 clicks. This, not any crawl finding, is the largest single gap in the data."
+    }
+  },
+  "notes": [
+    "28-day window: 2026-07-19 to 2026-08-15 (ends 3 days back for the GSC lag). All 28-day figures in summary.md use this window.",
+    "site_health_check numbers are a trailing 7-DAY comparison (2026-08-08 to 2026-08-15 vs 2026-07-31 to 2026-08-07) and are labelled as such. They are NOT comparable to the 28-day totals.",
+    "GSC status: healthy. issues[] empty, anomalies[] empty, sitemap 0 errors / 0 warnings.",
+    "The 7-day +47% clicks / +56% impressions is seasonal draft-season ramp, not a change attributable to any site work. August is peak for this niche.",
+    "GSC's public API does not expose the UI's Page Indexing, Enhancements, Experience, Manual Actions, or Security Issues reports. Those were NOT pulled and are not claimed.",
+    "inspection_inspect was not run: no call named a broken, not-indexed, or contradictory URL, and Phase 1 found zero indexability contradictions. Nothing to inspect.",
+    "analytics_anomalies and analytics_compare were not run: site_health_check returned anomalies[] empty and status healthy, so the conditional trigger in the skill did not fire.",
+    "http:// and www. variants appear as separate low-volume rows in the page report. Both are normal GSC domain-property artifacts, not a canonical problem: total 25 impressions across all three variant rows.",
+    "These are low-volume niche numbers. Any single-digit click movement in a future audit is noise, not a trend."
+  ]
+}

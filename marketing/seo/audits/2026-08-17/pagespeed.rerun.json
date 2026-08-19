@@ -1,0 +1,102 @@
+[
+  {
+    "url": "https://fantasyfootballdraftorder.com/draft-lottery",
+    "strategy": "mobile",
+    "score": 83,
+    "lcp": 4242.450000000001,
+    "tbt": 25,
+    "cls": 0,
+    "fcp": 2040.5209999999997,
+    "ttfb": 60,
+    "si": 4160.051702875785,
+    "verdicts": {
+      "lcp": "POOR",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 550
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/",
+    "strategy": "mobile",
+    "score": 88,
+    "lcp": 3368.888,
+    "tbt": 7,
+    "cls": 0,
+    "fcp": 2054.888,
+    "ttfb": 54,
+    "si": 4115.42561143752,
+    "verdicts": {
+      "lcp": "needs-work",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 300
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/espn",
+    "strategy": "mobile",
+    "score": 91,
+    "lcp": 3233.399,
+    "tbt": 11,
+    "cls": 0,
+    "fcp": 1825.1769999999997,
+    "ttfb": 45,
+    "si": 2467.2001101563446,
+    "verdicts": {
+      "lcp": "needs-work",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 150
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/why-fair",
+    "strategy": "mobile",
+    "score": 92,
+    "lcp": 3206.765,
+    "tbt": 4.5,
+    "cls": 0,
+    "fcp": 1805.072,
+    "ttfb": 57,
+    "si": 2421.402125826645,
+    "verdicts": {
+      "lcp": "needs-work",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 150
+      }
+    ],
+    "failedDiagnostics": []
+  }
+]
