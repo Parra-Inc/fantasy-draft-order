@@ -1,0 +1,137 @@
+{
+  "schema": "seo-audit/v1",
+  "layer": "crawl",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-08-18T13:25:00Z",
+  "calls": [
+    {
+      "tool": "recheck",
+      "params": { "site_id": "fantasyfootballdraftorder-com" },
+      "ok": true,
+      "result": { "queued": 34, "site_id": "fantasyfootballdraftorder-com", "capped": false }
+    },
+    {
+      "tool": "list_sites",
+      "params": {},
+      "ok": true,
+      "result": {
+        "row": {
+          "siteId": "fantasyfootballdraftorder-com",
+          "project": "Fantasy Draft Order",
+          "url": "https://fantasyfootballdraftorder.com",
+          "rank": 5,
+          "pages": 34,
+          "audited": 34,
+          "errors": 0,
+          "warnings": 16,
+          "notices": 60,
+          "lastAuditAt": "2026-08-18T13:10:54.920Z"
+        },
+        "note": "Read twice, before and after firing recheck. Counts identical both times: 0 errors, 16 warnings, 60 notices, 34/34 audited."
+      }
+    },
+    {
+      "tool": "audit_report",
+      "params": { "site_id": "fantasyfootballdraftorder-com", "min_severity": "warning" },
+      "ok": true,
+      "callCount": 2,
+      "note": "Called before and after recheck. Both returns byte-identical. No stale-finding delta on this site.",
+      "result": [
+        {
+          "siteId": "fantasyfootballdraftorder-com",
+          "checkId": "title.too.long",
+          "severity": "warning",
+          "what": "Title is longer than 60 characters.",
+          "why": "It gets truncated in results, so the end of the title never reaches a reader.",
+          "fix": "Shorten to under 60 characters, keeping the distinguishing words first.",
+          "count": 12,
+          "pages": 12,
+          "firstSeen": "2026-08-08T20:41:22.184Z",
+          "examples": [
+            { "url": "https://fantasyfootballdraftorder.com/draft-lottery", "instanceKey": "", "detail": { "length": 68, "title": "Fantasy Draft Lottery - Free, Sealed, Open-Source Random Draft Order" } },
+            { "url": "https://fantasyfootballdraftorder.com/fantasy-baseball", "instanceKey": "", "detail": { "length": 64, "title": "Fantasy Baseball Draft Order Generator - Free, Fair, Open Source" } },
+            { "url": "https://fantasyfootballdraftorder.com/fantasy-basketball", "instanceKey": "", "detail": { "length": 65, "title": "Fantasy Basketball Draft Order Generator - Free & Transparent" } }
+          ]
+        },
+        {
+          "siteId": "fantasyfootballdraftorder-com",
+          "checkId": "link.broken.external",
+          "severity": "warning",
+          "what": "An external link points at a URL that does not resolve.",
+          "why": "Dead outbound links are a quality signal and a bad reader experience, though less costly than internal ones.",
+          "fix": "Update the link, point it at an archived copy, or remove it.",
+          "count": 2,
+          "pages": 1,
+          "firstSeen": "2026-08-17T21:54:44.633Z",
+          "examples": [
+            { "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs", "instanceKey": "https://apps.apple.com/us/app/only-recipes-recipe-keeper/id1553858589?...", "detail": { "status": 429 } },
+            { "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs", "instanceKey": "https://apps.apple.com/us/app/skimmer-pool-care-log/id6775022955?...", "detail": { "status": 429 } }
+          ]
+        },
+        {
+          "siteId": "fantasyfootballdraftorder-com",
+          "checkId": "page.orphan",
+          "severity": "warning",
+          "what": "Page is in the sitemap but no other page on the site links to it.",
+          "why": "Engines weight internal links heavily. An orphan is discoverable only via the sitemap and usually ranks accordingly.",
+          "fix": "Link to it from a relevant page, a hub, or the nav.",
+          "count": 2,
+          "pages": 2,
+          "firstSeen": "2026-08-08T20:41:44.073Z",
+          "examples": [
+            { "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs", "instanceKey": "", "detail": null },
+            { "url": "https://fantasyfootballdraftorder.com/punishment/new", "instanceKey": "", "detail": null }
+          ]
+        }
+      ]
+    }
+  ],
+  "liveVerification": {
+    "method": "curl over all 34 sitemap URLs plus targeted checks; no sampling",
+    "title.too.long": {
+      "verdict": "PARTIALLY CONFIRMED",
+      "crawlerCount": 12,
+      "measuredCount": 11,
+      "method": "Fetched all 34 sitemap URLs, extracted <title>, HTML-entity-decoded, measured length. Whole set, not a sample.",
+      "overSixtyDecoded": [
+        { "len": 68, "url": "/draft-lottery" },
+        { "len": 66, "url": "/guides/snake-vs-straight-draft-order" },
+        { "len": 66, "url": "/fantasy-football-punishments" },
+        { "len": 65, "url": "/mfl" },
+        { "len": 64, "url": "/guides/weighted-vs-random-draft-lottery" },
+        { "len": 64, "url": "/fantasy-football" },
+        { "len": 64, "url": "/fantasy-baseball" },
+        { "len": 63, "url": "/punishment/new" },
+        { "len": 63, "url": "/guides/commissioner-guide-running-a-fair-draft-order-reveal" },
+        { "len": 61, "url": "/league-id" },
+        { "len": 61, "url": "/fantasy-basketball" }
+      ],
+      "note": "Exactly 60 (/yahoo, /how-it-works) is not over. The 12th page in the crawler count is most likely one of those boundary cases or a raw-entity length count on /mfl or /fantasy-basketball, both of which contain &amp;."
+    },
+    "link.broken.external": {
+      "verdict": "FALSE POSITIVE",
+      "sourceHrefStillPresent": true,
+      "targetStatusWithRealUserAgent": 200,
+      "detail": "Both apps.apple.com targets return HTTP 200 when fetched with a browser User-Agent. The crawler's 429 is Apple rate-limiting the crawler, not a dead link. Whole condition tested: href is still on /p/violet-otter-v5cs AND target resolves, so the finding does not hold."
+    },
+    "page.orphan": {
+      "verdict": "CONFIRMED BUT LOW VALUE",
+      "detail": "/punishment/new: no page contains href=\"/punishment/new\" exactly. It IS linked from /fantasy-football-punishments and /p/[slug] as \"/punishment/new?src=PUNISHMENT_IDEAS\" and \"?src=PUNISHMENT_RESULT\", so the crawler treats the query-string form as a different URL. Real internal-link equity exists; the finding is a query-string artifact. /p/violet-otter-v5cs is a user-generated draw-result page and is orphan by design.",
+      "grepEvidence": [
+        "src/app/(marketing)/fantasy-football-punishments/page.tsx:71 href=\"/punishment/new?src=PUNISHMENT_IDEAS\"",
+        "src/app/p/[slug]/wheel-live.tsx:868 href=\"/punishment/new?src=PUNISHMENT_RESULT\"",
+        "src/components/marketing/punishment-picker.tsx:40 builds /punishment/new?src=PUNISHMENT_IDEAS&ideas=..."
+      ]
+    }
+  },
+  "notes": [
+    "Coverage 34/34 pages audited, 100 percent. No coverage gap at the crawl layer.",
+    "Recheck delta: 0. Errors 0 before and after; warnings 16 before and after. Unlike the larger fleet repos, none of this site's findings were archaeology, and none were cleared by the fresh crawl.",
+    "Scope brief stated 33/34 audited and 15 warnings; live list_sites at run time reported 34/34 and 16 warnings. The extra warning is link.broken.external, firstSeen 2026-08-17T21:54Z, which live verification then disproved.",
+    "Zero indexability contradictions: no noindex.in.sitemap, canonical.elsewhere, sitemap.not.200, robots.disallowed, soft.404, or redirects findings.",
+    "Zero errors. Zero broken internal links. Zero missing metadata, og, or JSON-LD findings at warning severity.",
+    "60 notices were not pulled. Deliberate: min_severity warning per the skill.",
+    "Title lengths were measured against the LIVE deployed HTML, so they reflect the current production build."
+  ]
+}
