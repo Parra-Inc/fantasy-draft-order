@@ -99,6 +99,9 @@
   // time, so the deploy workflow sets the same values in its build env; these
   // entries keep them readable at runtime too. Keep both in sync.
   "vars": {
+    // GA4 measurement id. PUBLIC (it ships in the page HTML), so a var and
+    // not a secret. Injected into <head> by worker-analytics.ts.
+    "GA_MEASUREMENT_ID": "G-0T390QPZ9M",
     "NEXT_PUBLIC_BASE_URL": "https://fantasyfootballdraftorder.com"
   }
 }
