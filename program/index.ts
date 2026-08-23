@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import {
   EmailForward,
+  GoogleAnalytics,
   WafScannerBlock,
   WebAnalytics,
   ZoneSecurity,
@@ -17,6 +18,12 @@ const destination = cfg.get("destination") ?? "ian@parra.io";
 const domain = "fantasyfootballdraftorder.com";
 
 new WebAnalytics(domain, { accountId, zoneId });
+
+// GA4, injected at the edge by a Snippet. Creates nothing until the GA4
+// property exists and its id is set:
+//   pulumi config set gaMeasurementId G-XXXXXXXXXX
+// See cloudflare-infra/docs/GOOGLE-ANALYTICS.md.
+new GoogleAnalytics(domain, { zoneId, measurementId: cfg.get("gaMeasurementId") });
 new ZoneSecurity({ zoneId, domain });
 
 // custom-worker.ts short-circuits the same scanner paths as a second line of
