@@ -21,7 +21,7 @@ export async function GET() {
   lines.push(`> ${SITE_TAGLINE}`);
   lines.push("");
   lines.push(
-    `${SITE_NAME} is a free, open-source, no-account website for drawing a fantasy draft order in public. A commissioner schedules a draw, shares one link, and the whole league watches the order revealed live at the announced second. Once a draft is scheduled it is immutable: there are no edit endpoints and no re-roll. The order is drawn server-side by a Fisher-Yates shuffle over Node's crypto.randomInt, and every results page links the exact source commit that produced it. Source code: ${GITHUB_URL}.`,
+    `${SITE_NAME} is a free, open-source, no-account website for drawing a fantasy draft order in public. A commissioner schedules a draw, shares one link, and the whole league watches the order revealed live at the announced second. Once a draft is scheduled it is immutable: there are no edit endpoints and no re-roll. The order is drawn server-side by a Fisher-Yates shuffle over Node's crypto.randomInt, and every results page links the randomizer source, pinned to the exact commit that produced the draw whenever that commit was recorded. Source code: ${GITHUB_URL}.`,
   );
   lines.push("");
 
