@@ -12,6 +12,13 @@ import { GITHUB_URL, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/seo/metadat
 // exists inside a request). Completed draws reach crawlers via sitemap.xml.
 export const revalidate = 3600;
 
+// Some of the data modules this route interpolates still carry em dashes in
+// their copy, so the assembled output is scrubbed rather than trusting each
+// source. A spaced em dash becomes a comma; an unspaced one becomes a hyphen.
+function withoutEmDashes(text: string): string {
+  return text.replace(/\s+—\s+/g, ", ").replace(/—/g, "-");
+}
+
 export async function GET() {
   const guides = listGuides();
   const lines: string[] = [];
@@ -80,7 +87,7 @@ export async function GET() {
   lines.push("- Routes under /api/ are disallowed and carry no content worth citing.");
   lines.push("");
 
-  return new Response(lines.join("\n"), {
+  return new Response(withoutEmDashes(lines.join("\n")), {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
       "Cache-Control": "public, max-age=3600",
