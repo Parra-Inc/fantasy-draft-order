@@ -187,6 +187,20 @@ for f in wrangler.jsonc wrangler.json wrangler.toml; do
   [ -f "$APP/$f" ] && { WRANGLER_CFG="$APP/$f"; break; }
 done
 
+# Refuse to deploy an unsubstituted resource id. The wrangler config ships
+# placeholders (REPLACE_WITH_HYPERDRIVE_ID, REPLACE_WITH_KV_ID, REPLACE_WITH_D1_ID)
+# that CI resolves at deploy time; see .github/workflows/deploy.yml. Deploying one
+# binds the literal string as a real resource id, and the worker builds and ships
+# perfectly well with a dead binding, so nothing catches it until production
+# reaches for the database.
+#
+# Matches a JSON/TOML VALUE (`: "REPLACE_WITH_` / `= "REPLACE_WITH_`) rather than
+# the bare token, so the comments explaining this mechanism do not block every
+# deploy.
+if [ -n "$WRANGLER_CFG" ] && grep -nE '[:=][[:space:]]*"REPLACE_WITH_' "$WRANGLER_CFG" >&2; then
+  die "$(basename "$WRANGLER_CFG") has an unsubstituted placeholder (above). CI resolves these at deploy time; this script will not guess. Resolve the id (npx wrangler hyperdrive list / kv namespace list / d1 list) and commit it, or deploy via CI."
+fi
+
 if   [ -f "$ROOT/pnpm-lock.yaml" ];   then PM=pnpm
 elif [ -f "$ROOT/bun.lockb" ];        then PM=bun
 elif [ -f "$ROOT/package-lock.json" ];then PM=npm
