@@ -72,7 +72,14 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   formatDetection: { email: false, address: false, telephone: false },
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    // Points AI crawlers at the curated Markdown site map served by
+    // app/llms.txt/route.ts.
+    types: {
+      "text/plain": [{ url: "/llms.txt", title: `${SITE_NAME} llms.txt` }],
+    },
+  },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
