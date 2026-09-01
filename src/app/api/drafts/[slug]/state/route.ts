@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { toImportSource } from "@/lib/db-enums";
+import { withD1Retry } from "@/lib/d1-retry";
 import { prisma } from "@/lib/prisma";
 import { deriveStatus, getRevealConfig, pickSpinStartAt } from "@/lib/reveal";
 
@@ -12,13 +13,15 @@ export async function GET(
   ctx: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await ctx.params;
-  const draft = await prisma.draft.findUnique({
-    where: { slug },
-    include: {
-      teams: { orderBy: { position: "asc" } },
-      picks: { orderBy: { pickNumber: "asc" } },
-    },
-  });
+  const draft = await withD1Retry(() =>
+    prisma.draft.findUnique({
+      where: { slug },
+      include: {
+        teams: { orderBy: { position: "asc" } },
+        picks: { orderBy: { pickNumber: "asc" } },
+      },
+    }),
+  );
   if (!draft) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   const now = new Date();

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { toImportSource } from "@/lib/db-enums";
+import { withD1Retry } from "@/lib/d1-retry";
 import { prisma } from "@/lib/prisma";
 import { BrandMark } from "@/components/brand-mark";
 import { Wordmark } from "@/components/wordmark";
@@ -21,15 +22,17 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const draft = await prisma.draft.findUnique({
-    where: { slug },
-    select: {
-      leagueName: true,
-      scheduledFor: true,
-      teams: { select: { id: true } },
-      picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
-    },
-  });
+  const draft = await withD1Retry(() =>
+    prisma.draft.findUnique({
+      where: { slug },
+      select: {
+        leagueName: true,
+        scheduledFor: true,
+        teams: { select: { id: true } },
+        picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
+      },
+    }),
+  );
   if (!draft) {
     return buildMetadata({
       title: "Draft not found",
@@ -58,13 +61,15 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function DraftPage({ params }: Props) {
   const { slug } = await params;
-  const draft = await prisma.draft.findUnique({
-    where: { slug },
-    include: {
-      teams: { orderBy: { position: "asc" } },
-      picks: { orderBy: { pickNumber: "asc" } },
-    },
-  });
+  const draft = await withD1Retry(() =>
+    prisma.draft.findUnique({
+      where: { slug },
+      include: {
+        teams: { orderBy: { position: "asc" } },
+        picks: { orderBy: { pickNumber: "asc" } },
+      },
+    }),
+  );
   if (!draft) notFound();
 
   const now = new Date();
@@ -116,23 +121,25 @@ export default async function DraftPage({ params }: Props) {
   // over-match a name containing % or _). The exact comparison below narrows
   // it back down, so the visible behavior matches what Postgres did.
   const SIBLING_LIMIT = 25;
-  const siblingCandidates = await prisma.draft.findMany({
-    where: {
-      leagueName: { contains: draft.leagueName },
-      slug: { not: draft.slug },
-    },
-    select: {
-      slug: true,
-      leagueName: true,
-      scheduledFor: true,
-      createdAt: true,
-      picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
-    },
-    orderBy: { createdAt: "desc" },
-    // Over-fetch a little so the exact filter below rarely truncates a real
-    // match in favor of a substring one.
-    take: SIBLING_LIMIT * 4,
-  });
+  const siblingCandidates = await withD1Retry(() =>
+    prisma.draft.findMany({
+      where: {
+        leagueName: { contains: draft.leagueName },
+        slug: { not: draft.slug },
+      },
+      select: {
+        slug: true,
+        leagueName: true,
+        scheduledFor: true,
+        createdAt: true,
+        picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
+      },
+      orderBy: { createdAt: "desc" },
+      // Over-fetch a little so the exact filter below rarely truncates a real
+      // match in favor of a substring one.
+      take: SIBLING_LIMIT * 4,
+    }),
+  );
   const targetName = draft.leagueName.toLowerCase();
   const siblings = siblingCandidates
     .filter((s) => s.leagueName.toLowerCase() === targetName)

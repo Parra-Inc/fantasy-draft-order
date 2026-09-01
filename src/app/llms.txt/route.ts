@@ -10,7 +10,14 @@ import { GITHUB_URL, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/seo/metadat
 // Deliberately no database reads: /d/[slug] and /p/[slug] are noindex until
 // their result lands, and this route must stay static (the D1 binding only
 // exists inside a request). Completed draws reach crawlers via sitemap.xml.
-export const revalidate = 3600;
+//
+// No `revalidate`: the output is assembled from static route registries and
+// only changes on deploy, so there is nothing to revalidate. Setting it made
+// OpenNext try to write the hourly-regenerated body into the incremental cache,
+// which is the read-only static-assets cache here (see open-next.config.ts), so
+// every revalidation logged "StaticAssetsIncrementalCache: Failed to set ...
+// /llms.txt". Freshness at the edge still comes from the Cache-Control header
+// below.
 
 // Some of the data modules this route interpolates still carry em dashes in
 // their copy, so the assembled output is scrubbed rather than trusting each
