@@ -114,43 +114,77 @@ export default async function DraftPage({ params }: Props) {
 
   // Other draws for the same league, matched case-insensitively.
   //
-  // Prisma's `mode: "insensitive"` is Postgres-only, and on SQLite `equals`
-  // compiles to a case-sensitive `=`. `contains` compiles to LIKE, which IS
-  // case-insensitive for ASCII in SQLite, so it does the filtering in the
-  // database — but as a substring match it returns a superset (and would
-  // over-match a name containing % or _). The exact comparison below narrows
-  // it back down, so the visible behavior matches what Postgres did.
+  // This has to be D1-safe. The old approach used `leagueName: { contains }`
+  // (a LIKE) to get case-insensitive matching, over-fetched 100 candidates and
+  // filtered down to an exact match in JS. On Cloudflare D1 that produced two
+  // deterministic 500s on completed draws:
+  //   1. Some league names make a pattern D1 rejects outright, e.g. a name with
+  //      unbalanced parentheses triggered "LIKE or GLOB pattern too complex".
+  //   2. Loading the `picks` relation for ~100 candidates bound their ids in a
+  //      single `IN (...)`, which for a common league name blew past D1's
+  //      100-bound-variable limit ("too many SQL variables").
+  // Prisma still can't do a case-insensitive `equals` on SQLite, so the match
+  // is a raw `lower()` compare (one bound value, no LIKE). SIBLING_LIMIT caps
+  // the follow-up picks load far under the variable limit, and the whole block
+  // is best-effort: the sibling list is a convenience and must never take the
+  // draw itself down with it.
   const SIBLING_LIMIT = 25;
-  const siblingCandidates = await withD1Retry(() =>
-    prisma.draft.findMany({
-      where: {
-        leagueName: { contains: draft.leagueName },
-        slug: { not: draft.slug },
-      },
-      select: {
-        slug: true,
-        leagueName: true,
-        scheduledFor: true,
-        createdAt: true,
-        picks: { select: { revealedAt: true }, orderBy: { pickNumber: "asc" } },
-      },
-      orderBy: { createdAt: "desc" },
-      // Over-fetch a little so the exact filter below rarely truncates a real
-      // match in favor of a substring one.
-      take: SIBLING_LIMIT * 4,
-    }),
-  );
-  const targetName = draft.leagueName.toLowerCase();
-  const siblings = siblingCandidates
-    .filter((s) => s.leagueName.toLowerCase() === targetName)
-    .slice(0, SIBLING_LIMIT)
-    .map((s) => ({
-      slug: s.slug,
-      leagueName: s.leagueName,
-      scheduledFor: s.scheduledFor.toISOString(),
-      createdAt: s.createdAt.toISOString(),
-      status: deriveStatus({ now, picks: s.picks }),
-    }));
+  type Sibling = {
+    slug: string;
+    leagueName: string;
+    scheduledFor: string;
+    createdAt: string;
+    status: ReturnType<typeof deriveStatus>;
+  };
+  let siblings: Sibling[] = [];
+  try {
+    const siblingSlugRows = await withD1Retry(() =>
+      prisma.$queryRaw<{ slug: string }[]>`
+        SELECT slug FROM Draft
+        WHERE lower(leagueName) = lower(${draft.leagueName})
+          AND slug <> ${draft.slug}
+        ORDER BY createdAt DESC
+        LIMIT ${SIBLING_LIMIT}
+      `,
+    );
+    const siblingSlugs = siblingSlugRows.map((row) => row.slug);
+    if (siblingSlugs.length > 0) {
+      const siblingDrafts = await withD1Retry(() =>
+        prisma.draft.findMany({
+          where: { slug: { in: siblingSlugs } },
+          select: {
+            slug: true,
+            leagueName: true,
+            scheduledFor: true,
+            createdAt: true,
+            picks: {
+              select: { revealedAt: true },
+              orderBy: { pickNumber: "asc" },
+            },
+          },
+        }),
+      );
+      // findMany does not preserve the createdAt DESC order of the id list, so
+      // re-apply it from siblingSlugs.
+      const bySlug = new Map(siblingDrafts.map((s) => [s.slug, s]));
+      siblings = siblingSlugs
+        .map((s) => bySlug.get(s))
+        .filter((s): s is (typeof siblingDrafts)[number] => Boolean(s))
+        .map((s) => ({
+          slug: s.slug,
+          leagueName: s.leagueName,
+          scheduledFor: s.scheduledFor.toISOString(),
+          createdAt: s.createdAt.toISOString(),
+          status: deriveStatus({ now, picks: s.picks }),
+        }));
+    }
+  } catch (err) {
+    // Never 500 the draw over the sibling list. Log and render without it.
+    console.warn(
+      `sibling lookup failed for /d/${slug}, rendering without it`,
+      err,
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-col">
