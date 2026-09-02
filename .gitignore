@@ -62,3 +62,6 @@ next-env.d.ts
 # Written by scripts/deploy.sh after a successful local deploy; the
 # IndexNow diff base for the next one. Machine-local.
 .last-deploy-sha
+
+# Generated error-audit reports (docs/errors skill output). Local diagnostics only.
+/docs/errors/reports/
