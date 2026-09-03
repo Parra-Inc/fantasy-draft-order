@@ -5,6 +5,13 @@ import { ENTRY_SOURCES } from "@/lib/db-enums";
 import { env } from "@/lib/env";
 import { newId } from "@/lib/ids";
 import { prisma } from "@/lib/prisma";
+import { withD1Retry } from "@/lib/d1-retry";
+import {
+  d1,
+  insertStatements,
+  runAtomicWrite,
+  sqliteDateTime,
+} from "@/lib/d1-batch";
 import { cryptoRng, fisherYatesShuffle } from "@/lib/randomizer";
 import { punishmentRevealedAt } from "@/lib/punishment-spin";
 import { generateSlug } from "@/lib/slug";
@@ -91,28 +98,65 @@ export async function POST(req: Request) {
   // is the result; the rest of the permutation is discarded.
   const chosenPosition = fisherYatesShuffle(optionRows, cryptoRng)[0].position;
 
-  // D1 has no interactive transactions, so everything is computed before the
-  // first write and handed over as one atomic batch. Parent before children:
-  // D1 enforces foreign keys.
-  await prisma.$transaction([
-    prisma.punishment.create({
-      data: {
-        id: punishmentId,
-        slug,
-        leagueName: body.leagueName,
-        loserName: body.loserName,
-        creatorName: body.creatorName,
-        creatorEmail: body.creatorEmail,
-        scheduledFor,
-        revealedAt,
-        chosenPosition,
-        seed,
-        commitSha: env.NEXT_PUBLIC_COMMIT_SHA ?? null,
-        entrySource: body.entrySource ?? "DIRECT",
-      },
-    }),
-    prisma.punishmentOption.createMany({ data: optionRows }),
-  ]);
+  // Everything is computed before the first write and handed to D1 as one
+  // atomic batch, not prisma.$transaction: on D1 that runs as separate
+  // round-trips with no rollback (src/lib/d1-batch.ts). Parent before children
+  // inside the batch, since D1 enforces foreign keys.
+  const db = d1();
+  const statements = [
+    ...insertStatements(
+      db,
+      "Punishment",
+      [
+        "id",
+        "slug",
+        "leagueName",
+        "loserName",
+        "creatorName",
+        "creatorEmail",
+        "scheduledFor",
+        "revealedAt",
+        "chosenPosition",
+        "seed",
+        "commitSha",
+        "entrySource",
+        "createdAt",
+      ],
+      [
+        {
+          id: punishmentId,
+          slug,
+          leagueName: body.leagueName,
+          loserName: body.loserName,
+          creatorName: body.creatorName,
+          creatorEmail: body.creatorEmail ?? null,
+          scheduledFor: sqliteDateTime(scheduledFor),
+          revealedAt: sqliteDateTime(revealedAt),
+          chosenPosition,
+          seed,
+          commitSha: env.NEXT_PUBLIC_COMMIT_SHA ?? null,
+          entrySource: body.entrySource ?? "DIRECT",
+          createdAt: sqliteDateTime(new Date()),
+        },
+      ],
+    ),
+    ...insertStatements(
+      db,
+      "PunishmentOption",
+      ["id", "punishmentId", "label", "position"],
+      optionRows,
+    ),
+  ];
+
+  await runAtomicWrite(() => db.batch(statements), {
+    confirmCommitted: () =>
+      withD1Retry(() =>
+        prisma.punishment.findUnique({
+          where: { id: punishmentId },
+          select: { id: true },
+        }),
+      ).then((row) => row !== null),
+  });
 
   return NextResponse.json({ slug });
 }

@@ -9,6 +9,13 @@ import {
 import { env } from "@/lib/env";
 import { newId } from "@/lib/ids";
 import { prisma } from "@/lib/prisma";
+import { withD1Retry } from "@/lib/d1-retry";
+import {
+  d1,
+  insertStatements,
+  runAtomicWrite,
+  sqliteDateTime,
+} from "@/lib/d1-batch";
 import { generateSlug } from "@/lib/slug";
 import { generateDraftOrder } from "@/lib/randomizer";
 import { getRevealConfig, pickRevealedAt } from "@/lib/reveal";
@@ -17,7 +24,8 @@ import { getImporter } from "@/lib/importers";
 // The database is D1 (SQLite), which has no enum type and no interactive
 // transactions. This route is where both of those show up: importSource is
 // validated here rather than by the column, and the whole draft is written as
-// one pre-computed $transaction([...]) batch.
+// one pre-computed D1 batch (src/lib/d1-batch.ts explains why not Prisma's
+// $transaction).
 export const dynamic = "force-dynamic";
 
 const teamInput = z.object({
@@ -126,15 +134,18 @@ export async function POST(req: Request) {
     referrerSlug = referrer?.slug ?? null;
   }
 
-  // D1 has no interactive transactions, so the entire draft is computed before
-  // anything is written and handed to $transaction() as an array, which the D1
-  // adapter sends as a single atomic batch. Generating the ids up front (rather
-  // than letting the database mint them, as Postgres used to) is what makes
-  // that possible: the picks already know their teamId before the teams exist.
+  // Every row is computed before anything is written and the whole draft goes
+  // to D1 as one atomic batch. Generating the ids up front (rather than letting
+  // the database mint them, as Postgres used to) is what makes that possible:
+  // the picks already know their teamId before the teams exist.
   //
-  // Statement order matters — D1 enforces foreign keys, so teams must land
-  // before the picks that reference them.
+  // Not prisma.$transaction([...]): on D1 that is three separate round-trips
+  // with no rollback, and a hang on the second one left orphaned drafts with a
+  // row but no teams (src/lib/d1-batch.ts has the full story). Statement order
+  // still matters inside the batch, since D1 enforces foreign keys: draft, then
+  // teams, then the picks that reference them.
   const draftId = newId("drf");
+  const createdAt = new Date();
 
   const teamRows = teams.map((t, i) => ({
     id: newId("tm"),
@@ -153,33 +164,69 @@ export async function POST(req: Request) {
     draftId,
     teamId: p.teamId,
     pickNumber: p.pickNumber,
-    revealedAt: pickRevealedAt(
-      scheduledFor,
-      order.length - p.pickNumber,
-      revealConfig,
+    revealedAt: sqliteDateTime(
+      pickRevealedAt(scheduledFor, order.length - p.pickNumber, revealConfig),
     ),
   }));
 
-  await prisma.$transaction([
-    prisma.draft.create({
-      data: {
-        id: draftId,
-        slug,
-        leagueName: body.leagueName,
-        creatorName: body.creatorName,
-        creatorEmail: body.creatorEmail,
-        scheduledFor,
-        importSource,
-        importLeagueId,
-        seed,
-        commitSha: env.NEXT_PUBLIC_COMMIT_SHA ?? null,
-        referrerSlug,
-        entrySource: body.entrySource ?? "DIRECT",
-      },
-    }),
-    prisma.team.createMany({ data: teamRows }),
-    prisma.pick.createMany({ data: pickRows }),
-  ]);
+  const db = d1();
+  const statements = [
+    ...insertStatements(
+      db,
+      "Draft",
+      [
+        "id",
+        "slug",
+        "leagueName",
+        "creatorName",
+        "creatorEmail",
+        "scheduledFor",
+        "importSource",
+        "importLeagueId",
+        "seed",
+        "commitSha",
+        "referrerSlug",
+        "entrySource",
+        "createdAt",
+      ],
+      [
+        {
+          id: draftId,
+          slug,
+          leagueName: body.leagueName,
+          creatorName: body.creatorName,
+          creatorEmail: body.creatorEmail ?? null,
+          scheduledFor: sqliteDateTime(scheduledFor),
+          importSource,
+          importLeagueId: importLeagueId ?? null,
+          seed,
+          commitSha: env.NEXT_PUBLIC_COMMIT_SHA ?? null,
+          referrerSlug,
+          entrySource: body.entrySource ?? "DIRECT",
+          createdAt: sqliteDateTime(createdAt),
+        },
+      ],
+    ),
+    ...insertStatements(
+      db,
+      "Team",
+      ["id", "draftId", "name", "ownerName", "avatarUrl", "sourceId", "position"],
+      teamRows,
+    ),
+    ...insertStatements(
+      db,
+      "Pick",
+      ["id", "draftId", "teamId", "pickNumber", "revealedAt"],
+      pickRows,
+    ),
+  ];
+
+  await runAtomicWrite(() => db.batch(statements), {
+    confirmCommitted: () =>
+      withD1Retry(() =>
+        prisma.draft.findUnique({ where: { id: draftId }, select: { id: true } }),
+      ).then((row) => row !== null),
+  });
 
   return NextResponse.json({ slug });
 }
