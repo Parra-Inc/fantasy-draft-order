@@ -142,13 +142,38 @@ if $SEED; then
   fi
 fi
 
+# --- Named *.localhost URLs via portless (https://github.com/vercel-labs/portless) -----
+# Optional: everything above works on plain ports with no portless installed.
+HAVE_PORTLESS=0
+PORTLESS_SUFFIX=""
+STUDIO_PORTLESS_SUFFIX=""
+if command -v portless >/dev/null 2>&1; then
+  HAVE_PORTLESS=1
+  echo "→ syncing portless routes"
+  portless proxy start --port 443 --https || true
+  portless alias fantasy-draft-order "$WEB_PORT" --force >/dev/null 2>&1 || true
+  found_port=$(portless list 2>/dev/null | grep -o 'fantasy-draft-order\.localhost:[0-9]*' | head -1 | cut -d: -f2 || true)
+  if [ -n "$found_port" ] && [ "$found_port" != "443" ]; then
+    PORTLESS_SUFFIX=":$found_port"
+  fi
+  if $STUDIO; then
+    portless alias studio.fantasy-draft-order "$STUDIO_PORT" --force >/dev/null 2>&1 || true
+    studio_found_port=$(portless list 2>/dev/null | grep -o 'studio\.fantasy-draft-order\.localhost:[0-9]*' | head -1 | cut -d: -f2 || true)
+    if [ -n "$studio_found_port" ] && [ "$studio_found_port" != "443" ]; then
+      STUDIO_PORTLESS_SUFFIX=":$studio_found_port"
+    fi
+  fi
+fi
+
 # --- Banner --------------------------------------------------------------------
 LAN_IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo "")
 echo ""
 printf "${C_BOLD}  fantasy-draft-order${C_RESET}\n"
 printf "  ${C_ACCENT}Local${C_RESET}     http://localhost:%s\n" "$WEB_PORT"
+[ "$HAVE_PORTLESS" = "1" ] && printf "  ${C_ACCENT}Named${C_RESET}     https://fantasy-draft-order.localhost%s\n" "$PORTLESS_SUFFIX"
 [ -n "$LAN_IP" ] && printf "  ${C_ACCENT}Network${C_RESET}   http://%s:%s\n" "$LAN_IP" "$WEB_PORT"
 $STUDIO && printf "  ${C_ACCENT}Studio${C_RESET}    http://localhost:%s\n" "$STUDIO_PORT"
+$STUDIO && [ "$HAVE_PORTLESS" = "1" ] && printf "  ${C_ACCENT}Studio${C_RESET}    https://studio.fantasy-draft-order.localhost%s\n" "$STUDIO_PORTLESS_SUFFIX"
 printf "  ${C_ACCENT}D1${C_RESET}        %s (local, %s)\n" "$D1_NAME" "$D1_STATE_DIR"
 if [ -n "$NGROK_URL" ]; then
   printf "  ${C_ACCENT}Tunnel${C_RESET}    %s\n" "$NGROK_URL"
