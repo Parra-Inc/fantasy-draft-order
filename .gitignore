@@ -65,3 +65,6 @@ next-env.d.ts
 
 # Generated error-audit reports (docs/errors skill output). Local diagnostics only.
 /docs/errors/reports/
+# Git worktrees (Claude Code)
+.worktrees/
+.claude/worktrees/
