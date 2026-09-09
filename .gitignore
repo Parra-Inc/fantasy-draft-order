@@ -68,3 +68,6 @@ next-env.d.ts
 # Git worktrees (Claude Code)
 .worktrees/
 .claude/worktrees/
+
+# storybook build output
+/storybook-static
