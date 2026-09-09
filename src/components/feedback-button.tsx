@@ -124,7 +124,7 @@ function FeedbackModal({
         }),
       });
       if (!res.ok) throw new Error("request failed");
-      toast.success("Thanks — we got it.");
+      toast.success("Thanks, we got it.");
       reset();
       onClose();
     } catch {

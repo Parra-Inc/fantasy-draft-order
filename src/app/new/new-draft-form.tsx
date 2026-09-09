@@ -103,7 +103,7 @@ export function NewDraftForm({
   // Landing on /new?clone=<slug> copies that draft's frozen roster into the
   // manual textarea. The state endpoint already returns exactly what is needed
   // and is public, so this needs no new route and, crucially, no database read
-  // in /new itself — that page is statically rendered and indexable, and
+  // in /new itself: that page is statically rendered and indexable, and
   // reading D1 there would force it dynamic.
   const cloned = useRef(false);
   useEffect(() => {
@@ -350,7 +350,7 @@ export function NewDraftForm({
                       </span>
                       {t.ownerName && (
                         <span className="text-hashmark truncate text-xs">
-                          — {t.ownerName}
+                          ({t.ownerName})
                         </span>
                       )}
                     </li>

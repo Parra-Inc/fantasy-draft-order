@@ -15,8 +15,8 @@ import {
 /**
  * Submit a punishment idea for review.
  *
- * Structurally the same modal as components/feedback-button.tsx — same portal,
- * same hydration guard, same select-plus-input shape — because there is no
+ * Structurally the same modal as components/feedback-button.tsx: same portal,
+ * same hydration guard, same select-plus-input shape, because there is no
  * reason for this site to have two different modal idioms.
  *
  * The copy is careful never to imply the idea is live. Everything lands as

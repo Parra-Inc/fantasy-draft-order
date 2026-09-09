@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand colors — the-playbook palette */
+  /* Brand colors: the-playbook palette */
   --color-midnight: #0A1628;
   --color-chalk: #F5F5F0;
   --color-signal: #00E676;
