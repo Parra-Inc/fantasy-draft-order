@@ -1,0 +1,24 @@
+/* The Storybook stylesheet.
+ *
+ * It imports the app's own `globals.css` rather than restating any of it: the
+ * brand tokens (midnight, chalk, signal, sideline, hashmark…), the `.input`
+ * and `.btn` base classes and the shadcn-compatible aliases are one file with
+ * one owner, and a Storybook that drifted from it would be reviewing the
+ * wrong thing.
+ *
+ * One thing has to be added on top, a consequence of rendering outside Next
+ * rather than a difference of design: sources. Tailwind v4's automatic class
+ * detection is relative to the CSS file it starts from, and `globals.css`
+ * lives in `src/app/`, so `src/components/` sits outside its base and would
+ * come out unstyled, silently and with no error.
+ *
+ * The app has no `next/font` variables to restate: `--font-display`,
+ * `--font-body` and `--font-mono` are plain Google Fonts family names set
+ * directly in `@theme`, so loading the faces here is enough.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500..700&family=Inter:wght@400..700&family=DM+Mono:wght@400;500&display=swap");
+
+@import "../src/app/globals.css";
+
+@source "../src/components";

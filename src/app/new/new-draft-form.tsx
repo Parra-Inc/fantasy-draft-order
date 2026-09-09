@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Check, Copy, Loader2, Sparkles, Users } from "lucide-react";
 import { LeagueIdHelp } from "@/components/league-id-help";
+import { Select } from "@/components/ui/field";
 import type { EntrySource } from "@/lib/db-enums";
 
 type Mode = "manual" | "import";
@@ -102,7 +103,7 @@ export function NewDraftForm({
   // Landing on /new?clone=<slug> copies that draft's frozen roster into the
   // manual textarea. The state endpoint already returns exactly what is needed
   // and is public, so this needs no new route and, crucially, no database read
-  // in /new itself — that page is statically rendered and indexable, and
+  // in /new itself: that page is statically rendered and indexable, and
   // reading D1 there would force it dynamic.
   const cloned = useRef(false);
   useEffect(() => {
@@ -283,19 +284,18 @@ export function NewDraftForm({
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-[180px_1fr_auto]">
               <Field label="Platform">
-                <select
+                <Select
                   value={source}
                   onChange={(e) => {
                     setSource(e.target.value as ImportSource);
                     setImportedTeams(null);
                   }}
-                  className="input"
                 >
                   <option value="SLEEPER">Sleeper</option>
                   <option value="MFL">MyFantasyLeague</option>
                   <option value="FLEAFLICKER">Fleaflicker</option>
                   <option value="ESPN">ESPN (public)</option>
-                </select>
+                </Select>
               </Field>
               <Field label="League ID">
                 <input
@@ -350,7 +350,7 @@ export function NewDraftForm({
                       </span>
                       {t.ownerName && (
                         <span className="text-hashmark truncate text-xs">
-                          — {t.ownerName}
+                          ({t.ownerName})
                         </span>
                       )}
                     </li>

@@ -12,6 +12,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { Select } from "@/components/ui/field";
 
 type FeedbackType = "BUG" | "FEATURE" | "PRAISE" | "OTHER";
 
@@ -123,7 +124,7 @@ function FeedbackModal({
         }),
       });
       if (!res.ok) throw new Error("request failed");
-      toast.success("Thanks — we got it.");
+      toast.success("Thanks, we got it.");
       reset();
       onClose();
     } catch {
@@ -192,11 +193,10 @@ function FeedbackModal({
                 >
                   Type
                 </label>
-                <select
+                <Select
                   id={typeId}
                   value={type}
                   onChange={(e) => setType(e.target.value as FeedbackType)}
-                  className="input"
                   disabled={submitting}
                 >
                   {TYPE_OPTIONS.map((o) => (
@@ -204,7 +204,7 @@ function FeedbackModal({
                       {o.label}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div>
