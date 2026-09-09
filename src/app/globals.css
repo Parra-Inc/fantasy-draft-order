@@ -103,11 +103,21 @@ body::before {
   outline: none;
 }
 
-/* Field inputs */
+/* Field inputs.
+ *
+ * min-height is 2.75rem (44px, h-11) to match Button's md size (see
+ * src/components/ui/button.tsx): a select or a text input sitting next to a
+ * primary button on the same row now lines up exactly. It was 2.625rem
+ * (42px), two pixels short, which the Storybook form-controls story made
+ * visible next to a real Button for the first time (see
+ * components/stories/form-controls.stories.tsx). min-height, not height: a
+ * multi-row <textarea> using this same class (new-draft-form.tsx,
+ * feedback-button.tsx, suggest-punishment.tsx) is sized by its `rows`
+ * attribute and sits well above this floor either way. */
 .input {
   display: block;
   width: 100%;
-  min-height: 2.625rem;
+  min-height: 2.75rem;
   border-radius: 0.75rem;
   border: 1px solid var(--color-sideline);
   background: rgba(30, 41, 59, 0.4);

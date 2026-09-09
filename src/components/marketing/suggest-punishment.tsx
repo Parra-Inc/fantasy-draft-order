@@ -5,6 +5,7 @@ import { Lightbulb, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { Select } from "@/components/ui/field";
 import {
   PUNISHMENT_CATEGORIES,
   PUNISHMENT_CATEGORY_LABELS,
@@ -205,13 +206,12 @@ function SuggestModal({
                 >
                   Category
                 </label>
-                <select
+                <Select
                   id={categoryId}
                   value={category}
                   onChange={(e) =>
                     setCategory(e.target.value as PunishmentCategory)
                   }
-                  className="input"
                   disabled={submitting}
                 >
                   {PUNISHMENT_CATEGORIES.map((c) => (
@@ -219,7 +219,7 @@ function SuggestModal({
                       {PUNISHMENT_CATEGORY_LABELS[c]}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div>

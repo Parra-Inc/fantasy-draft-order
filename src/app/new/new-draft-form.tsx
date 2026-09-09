@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Check, Copy, Loader2, Sparkles, Users } from "lucide-react";
 import { LeagueIdHelp } from "@/components/league-id-help";
+import { Select } from "@/components/ui/field";
 import type { EntrySource } from "@/lib/db-enums";
 
 type Mode = "manual" | "import";
@@ -283,19 +284,18 @@ export function NewDraftForm({
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-[180px_1fr_auto]">
               <Field label="Platform">
-                <select
+                <Select
                   value={source}
                   onChange={(e) => {
                     setSource(e.target.value as ImportSource);
                     setImportedTeams(null);
                   }}
-                  className="input"
                 >
                   <option value="SLEEPER">Sleeper</option>
                   <option value="MFL">MyFantasyLeague</option>
                   <option value="FLEAFLICKER">Fleaflicker</option>
                   <option value="ESPN">ESPN (public)</option>
-                </select>
+                </Select>
               </Field>
               <Field label="League ID">
                 <input
