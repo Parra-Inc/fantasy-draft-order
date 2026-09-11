@@ -321,3 +321,44 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: pnpm exec wrangler deploy
+
+  # --------------------------------------------------------- deploy-storybook --
+  # The Storybook, served static behind Cloudflare Access at
+  # storybook.fantasyfootballdraftorder.com. Independent of the app deploy: no
+  # database, no D1 migrations, just a static build published to an assets-only
+  # Worker. Gated on infra (not deploy), so the AccessProtectedHost Access
+  # application exists in Pulumi BEFORE the Custom Domain route can resolve;
+  # deploying the route first would open an unauthenticated window. The Access
+  # policy itself lives in program/index.ts (AccessProtectedHost), applied by the
+  # infra job, not this one; this job only creates the Worker and its route.
+  deploy-storybook:
+    name: Deploy Storybook
+    needs: [infra]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec wrangler deploy -c storybook.wrangler.jsonc

@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // The app's Storybook, served static at storybook.fantasyfootballdraftorder.com
+  // and put behind Cloudflare Access (Parra Team only) by the AccessProtectedHost
+  // resource in program/index.ts. This is an assets-only Worker: no `main`,
+  // nothing runs, it just serves the build in storybook-static.
+  "name": "fantasy-draft-order-web-storybook-production",
+  "compatibility_date": "2025-12-01",
+
+  "assets": {
+    // Output of `pnpm build-storybook` (repo root -> storybook-static).
+    // Relative to this config file, which lives at the repo root too.
+    "directory": "storybook-static"
+  },
+
+  // The ONLY entrypoint is the Access-protected custom hostname. workers_dev and
+  // preview URLs are off on purpose: a live *.workers.dev URL would serve the
+  // same assets with no Access in front of it, an auth bypass.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "routes": [
+    { "pattern": "storybook.fantasyfootballdraftorder.com", "custom_domain": true }
+  ],
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
