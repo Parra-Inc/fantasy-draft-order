@@ -1,7 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import {
   AccessProtectedHost,
-  EmailForward,
+  ProjectEmail,
   GoogleAnalytics,
   WafScannerBlock,
   WebAnalytics,
@@ -34,7 +34,7 @@ new WafScannerBlock(domain, { zoneId });
 
 // Inbound only: drafts are shared by URL and creatorEmail is only stored, so
 // the app sends no mail.
-new EmailForward(domain, { zoneId, domain, destination, forwards: ["hello"] });
+new ProjectEmail(domain, { zoneId, domain, destination, forwards: ["hello"] });
 
 // ---------------------------------------------------------------------------
 // Storybook, gated by Cloudflare Access.
