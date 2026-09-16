@@ -34,7 +34,7 @@ new WafScannerBlock(domain, { zoneId });
 
 // Inbound only: drafts are shared by URL and creatorEmail is only stored, so
 // the app sends no mail.
-new ProjectEmail(domain, { zoneId, domain, destination, forwards: ["hello"] });
+new ProjectEmail(domain, { zoneId, domain, destination });
 
 // ---------------------------------------------------------------------------
 // Storybook, gated by Cloudflare Access.
