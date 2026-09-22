@@ -31,8 +31,9 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
+  # Auto-deploy on push to main disabled; run manually via workflow_dispatch.
+#   push:
+#     branches: [main]
   pull_request:
     paths:
       - "program/**"
