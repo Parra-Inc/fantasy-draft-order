@@ -64,7 +64,12 @@ export default async function PunishmentsPage() {
           {total} ideas your league might actually go through with, sorted by
           how much they hurt. Tap the plus on the ones you like, then draw one
           publicly at a time everybody agrees on — so the loser cannot claim the
-          commissioner went easy on their friend.
+          commissioner went easy on their friend. Already know what you want? You
+          can{" "}
+          <Link href="/punishment/new" className="text-signal hover:underline">
+            create your own punishment wheel
+          </Link>{" "}
+          from scratch.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <Link
