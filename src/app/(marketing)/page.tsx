@@ -6,12 +6,12 @@ import { GuidesTeaser } from "@/components/marketing/guides-teaser";
 import { Faq } from "@/components/marketing/faq";
 import { FinalCta } from "@/components/marketing/cta";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { BreadcrumbLd, SoftwareApplicationLd } from "@/lib/seo/jsonld";
+import { SoftwareApplicationLd } from "@/lib/seo/jsonld";
 
 export const metadata = buildMetadata({
   title: "Fantasy Football Draft Order: Free, Open-Source Randomizer",
   description:
-    "Free fantasy football draft order generator. Schedule the draw, share one link, and watch the randomizer pick your order live from open-source code. Sleeper, ESPN, MyFantasyLeague, Fleaflicker — football, basketball, baseball, and hockey leagues.",
+    "Free, open-source fantasy football draft order generator. Schedule the draw, share one link, and watch your order picked live. Sleeper, ESPN, MFL and more.",
   path: "/",
   keywords: [
     "fantasy football draft order generator",
@@ -31,7 +31,6 @@ export default function HomePage() {
   return (
     <main>
       <SoftwareApplicationLd />
-      <BreadcrumbLd items={[{ name: "Home", path: "/" }]} />
       <Hero />
       <HowItWorks />
       <WhyFair />

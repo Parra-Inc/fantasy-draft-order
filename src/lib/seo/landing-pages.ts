@@ -174,7 +174,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "mfl",
-    title: "MyFantasyLeague (MFL) Draft Order Randomizer — Free & Open Source",
+    title: "MFL Draft Order Randomizer: Free & Open Source",
     description:
       "Free MyFantasyLeague draft order generator. Fair, transparent fantasy football draft order for your MFL league. Import by league ID, schedule a time, and share one link the whole league can watch.",
     eyebrow: "MyFantasyLeague",
@@ -212,7 +212,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "fleaflicker",
-    title: "Fleaflicker Draft Order Randomizer — Free, Live, Auditable",
+    title: "Fleaflicker Draft Order Randomizer: Free, Live, Auditable",
     description:
       "Free Fleaflicker draft order generator. Randomize your Fleaflicker fantasy league's draft order and share one link. The whole league watches the order drawn live from open-source code.",
     eyebrow: "Fleaflicker",
@@ -248,7 +248,7 @@ export const LANDING_PAGES: LandingPage[] = [
   // Sport pages
   {
     slug: "fantasy-football",
-    title: "Fantasy Football Draft Order Generator — Free, Fair, Open Source",
+    title: "Fantasy Football Draft Order Generator: Free & Open Source",
     description:
       "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. 8, 10, 12, 14 teams — any league size.",
     eyebrow: "Fantasy football",
@@ -292,7 +292,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "fantasy-basketball",
-    title: "Fantasy Basketball Draft Order Generator — Free & Transparent",
+    title: "Fantasy Basketball Draft Order Generator: Free & Fair",
     description:
       "Free fantasy basketball draft order generator for NBA leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
     eyebrow: "Fantasy basketball",
@@ -323,7 +323,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "fantasy-baseball",
-    title: "Fantasy Baseball Draft Order Generator — Free, Fair, Open Source",
+    title: "Fantasy Baseball Draft Order Generator: Free & Fair",
     description:
       "Free fantasy baseball draft order generator for MLB leagues. Schedule a draw, share one link, and the whole league watches it drawn live from open-source code.",
     eyebrow: "Fantasy baseball",
@@ -354,7 +354,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "fantasy-hockey",
-    title: "Fantasy Hockey Draft Order Generator — Free & Transparent",
+    title: "Fantasy Hockey Draft Order Generator: Free & Transparent",
     description:
       "Free fantasy hockey draft order generator for NHL leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
     eyebrow: "Fantasy hockey",
@@ -378,8 +378,7 @@ export const LANDING_PAGES: LandingPage[] = [
   // Use-case pages
   {
     slug: "draft-lottery",
-    title:
-      "Fantasy Draft Lottery — Free, Sealed, Open-Source Random Draft Order",
+    title: "Fantasy Draft Lottery: Free, Sealed & Open Source",
     description:
       "Run a sealed fantasy draft lottery. A draft order wheel your league cannot re-spin: schedule the reveal, share one link, and let every team watch the order drawn live from open-source code. No re-rolls, no commissioner in the loop.",
     eyebrow: "Draft lottery",
