@@ -40,3 +40,17 @@ Already wired:
 
 - **Draw pages are NOT pinged at runtime, on purpose.** `/d/<slug>` and `/p/<slug>` are `noindex` until the result lands, and the transition to indexable is driven by the passage of time, not by a publish request. There used to be a `submitCompletedDraft` / `submitCompletedWheel` ping on `GET /api/drafts/[slug]/state`, `GET /api/punishments/[slug]/state` and both page renders, deduped by a module-level `Set`. That `Set` lives in one Worker isolate, of which there are many and which are recycled constantly, and it released the path again whenever a submission failed, so 500ms polling from every viewer re-fired the same single-URL POST until the submitter was rate limited: 490 logged `IndexNow submission failed: 429` errors in a week, with a 0% success rate (IndexNow throttles the shared Cloudflare Workers egress, so it was never going to work from here). Completed draws now reach engines through `sitemap.xml`, which lists every one with its real `lastModified`, and through the `indexnow-sync` worker, which has `fantasyfootballdraftorder-com` registered and sweeps that sitemap daily with batching, pacing and service-wide backoff. **Never reintroduce a submission on a read path.**
 - Static pages (landing pages, guides, `/`, `/new`) ship with a deploy and have no runtime publish event. After deploying a new or rewritten one, submit it manually: `pnpm indexnow:submit /guides/my-new-guide`. The same script takes `--sitemap` for a one-time backfill and `--dry-run` to print the payload.
+
+## Before you push
+
+Run `pnpm check`. It assumes dependencies are installed (`pnpm install`).
+
+In order: unit tests (`vitest run`), the Next.js + OpenNext build
+(`turbo run build:cf`), then the Storybook build. These are the same
+verification steps `.github/workflows/deploy.yml` runs before it would deploy
+anything. It never touches Pulumi, D1 migrations, or `wrangler deploy`, and
+needs no secrets.
+
+Takes about 30-45 seconds on a warm install.
+
+If you change what CI runs, update check to match.
