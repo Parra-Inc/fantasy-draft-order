@@ -1,0 +1,421 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "search-console",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-10T00:00:00Z",
+  "calls": [
+    {
+      "tool": "analytics_query",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "startDate": "2026-09-10",
+        "endDate": "2026-10-07",
+        "dimensions": [],
+        "engine": "google"
+      },
+      "ok": true,
+      "result": {
+        "clicks": 41,
+        "impressions": 8139,
+        "ctr": 0.00504,
+        "position": 10.4
+      }
+    },
+    {
+      "tool": "site_health_check",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "level": "full",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": {
+        "status": "critical",
+        "window": "7-day",
+        "current": {
+          "clicks": 11,
+          "impressions": 2079,
+          "position": 10.08,
+          "range": "2026-09-30..2026-10-07"
+        },
+        "previous": {
+          "clicks": 16,
+          "impressions": 2527,
+          "position": 9.92,
+          "range": "2026-09-22..2026-09-29"
+        },
+        "sitemaps": {
+          "total": 1,
+          "withErrors": 0,
+          "withWarnings": 0
+        },
+        "anomalies": [],
+        "issues": [
+          "Critical traffic drop: clicks down 31.3% week-over-week",
+          "Visibility declining: impressions down 17.7% week-over-week"
+        ]
+      }
+    },
+    {
+      "tool": "sitemaps_list",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": {
+        "path": "https://fantasyfootballdraftorder.com/sitemap.xml",
+        "lastDownloaded": "2026-10-09T03:01:25.082Z",
+        "errors": "0",
+        "warnings": "0",
+        "submitted": "38",
+        "indexed": "0"
+      }
+    },
+    {
+      "tool": "sitemaps_list",
+      "params": {
+        "siteUrl": "https://fantasyfootballdraftorder.com/",
+        "engine": "bing"
+      },
+      "ok": true,
+      "result": {
+        "bing": []
+      }
+    },
+    {
+      "tool": "site_health_check",
+      "params": {
+        "siteUrl": "https://fantasyfootballdraftorder.com/",
+        "level": "crawl_issues",
+        "engine": "bing"
+      },
+      "ok": true,
+      "result": {
+        "bingCrawlIssues": [],
+        "bingCrawlStats_latest": {
+          "Code2xx": 68,
+          "Code301": 1,
+          "Code4xx": 1,
+          "CrawlErrors": 1,
+          "InIndex": 43,
+          "InLinks": 3,
+          "AllOtherCodes": 2
+        },
+        "note": "daily series of ~70 rows trimmed to latest; InIndex grew 0 to 43 over the series; intermittent single 4xx"
+      }
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "recommendations",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": [
+        {
+          "title": "3 keywords with ranking potential",
+          "priority": "high",
+          "estimate": "~63 additional clicks",
+          "topKeywords": [
+            "how to find sleeper league id",
+            "where to find sleeper league id",
+            "how to find espn league id"
+          ]
+        }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "striking_distance",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": {
+        "rows": 50,
+        "top10": [
+          {
+            "query": "how to find espn league id",
+            "page": "/league-id",
+            "position": 9.83,
+            "impressions": 103,
+            "clicks": 0
+          },
+          {
+            "query": "sleeper league id",
+            "page": "/league-id/sleeper",
+            "position": 8.91,
+            "impressions": 89,
+            "clicks": 1
+          },
+          {
+            "query": "where to find espn league id",
+            "page": "/league-id",
+            "position": 9.68,
+            "impressions": 59,
+            "clicks": 0
+          },
+          {
+            "query": "where to find league id sleeper",
+            "page": "/league-id/sleeper",
+            "position": 8,
+            "impressions": 48,
+            "clicks": 0
+          },
+          {
+            "query": "how to find espn fantasy league id",
+            "page": "/league-id",
+            "position": 9.48,
+            "impressions": 42,
+            "clicks": 0
+          },
+          {
+            "query": "league id",
+            "page": "/league-id",
+            "position": 12.03,
+            "impressions": 39,
+            "clicks": 0
+          },
+          {
+            "query": "how to get sleeper league id",
+            "page": "/league-id/sleeper",
+            "position": 8.15,
+            "impressions": 34,
+            "clicks": 0
+          },
+          {
+            "query": "where to find espn fantasy league id",
+            "page": "/league-id",
+            "position": 9.78,
+            "impressions": 32,
+            "clicks": 0
+          },
+          {
+            "query": "how to randomize draft order in sleeper",
+            "page": "/sleeper",
+            "position": 8.83,
+            "impressions": 29,
+            "clicks": 0
+          },
+          {
+            "query": "league id sleeper",
+            "page": "/league-id/sleeper",
+            "position": 8.33,
+            "impressions": 27,
+            "clicks": 0
+          }
+        ]
+      }
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "quick_wins",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": []
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "low_hanging_fruit",
+        "engine": "google",
+        "minImpressions": 50
+      },
+      "ok": true,
+      "result": [
+        {
+          "query": "how to find sleeper league id",
+          "impressions": 189,
+          "clicks": 0,
+          "position": 6.37
+        },
+        {
+          "query": "where to find sleeper league id",
+          "impressions": 126,
+          "clicks": 0,
+          "position": 7.37
+        },
+        {
+          "query": "how to find espn league id",
+          "impressions": 103,
+          "clicks": 0,
+          "position": 9.83
+        },
+        {
+          "query": "sleeper league id",
+          "impressions": 90,
+          "clicks": 1,
+          "position": 8.89
+        },
+        {
+          "query": "how to find league id on sleeper",
+          "impressions": 81,
+          "clicks": 0,
+          "position": 7.89
+        },
+        {
+          "query": "where to find espn league id",
+          "impressions": 59,
+          "clicks": 0,
+          "position": 9.68
+        }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "lost_queries",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": [
+        {
+          "query": "sleeper randomize draft order",
+          "page": "/sleeper",
+          "previousClicks": 9,
+          "previousImpressions": 245,
+          "previousPosition": 4.93,
+          "currentClicks": 1,
+          "currentImpressions": 0,
+          "lostClicks": 8
+        }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "low_ctr",
+        "engine": "google",
+        "minImpressions": 50
+      },
+      "ok": true,
+      "result": [
+        {
+          "query": "how to find sleeper league id",
+          "page": "/league-id/sleeper",
+          "position": 6.37,
+          "impressions": 189,
+          "ctr": 0
+        },
+        {
+          "query": "where to find sleeper league id",
+          "page": "/league-id/sleeper",
+          "position": 7.37,
+          "impressions": 126,
+          "ctr": 0
+        },
+        {
+          "query": "how to find espn league id",
+          "page": "/league-id",
+          "position": 9.83,
+          "impressions": 103,
+          "ctr": 0
+        },
+        {
+          "query": "how to find league id on sleeper",
+          "page": "/league-id/sleeper",
+          "position": 7.56,
+          "impressions": 80,
+          "ctr": 0
+        },
+        {
+          "query": "where to find espn league id",
+          "page": "/league-id",
+          "position": 9.68,
+          "impressions": 59,
+          "ctr": 0
+        }
+      ]
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "cannibalization",
+        "engine": "google"
+      },
+      "ok": true,
+      "result": []
+    },
+    {
+      "tool": "seo_audit",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "type": "brand_vs_nonbrand",
+        "engine": "google",
+        "brandKeywords": [
+          "fantasy football draft order",
+          "fantasyfootballdraftorder",
+          "fantasy draft order"
+        ]
+      },
+      "ok": true,
+      "result": [
+        {
+          "segment": "Brand",
+          "clicks": 0,
+          "impressions": 45,
+          "position": 57.29,
+          "queryCount": 20
+        },
+        {
+          "segment": "Non-Brand",
+          "clicks": 5,
+          "impressions": 2318,
+          "position": 15.99,
+          "queryCount": 347
+        }
+      ]
+    },
+    {
+      "tool": "inspection_inspect",
+      "params": {
+        "siteUrl": "sc-domain:fantasyfootballdraftorder.com",
+        "urls": [
+          "/sleeper",
+          "/league-id/sleeper",
+          "/league-id"
+        ],
+        "engine": "google"
+      },
+      "ok": true,
+      "result": {
+        "/sleeper": {
+          "coverageState": "Submitted and indexed",
+          "lastCrawl": "2026-10-09",
+          "canonicalMatch": true
+        },
+        "/league-id/sleeper": {
+          "coverageState": "Submitted and indexed",
+          "lastCrawl": "2026-09-30",
+          "canonicalMatch": true
+        },
+        "/league-id": {
+          "coverageState": "Submitted and indexed",
+          "lastCrawl": "2026-10-05",
+          "canonicalMatch": true
+        },
+        "richResults": "Breadcrumbs PASS on all three, item name 'Unnamed item'"
+      }
+    }
+  ],
+  "notes": [
+    "GSC 28d window 2026-09-10 to 2026-10-07 (Google)",
+    "site_health_check numbers are its own trailing 7-day comparison",
+    "Google API does not expose Page Indexing / Enhancements / Manual Actions; not pulled",
+    "Sitemap 'indexed: 0' contradicts per-URL inspection (all 3 indexed); Google no longer populates this field reliably",
+    "Bing: no sitemap registered in Bing Webmaster (sitemaps_list empty), yet 43 pages InIndex",
+    "Bing insight types not repeated (Google volume sufficient)",
+    "ESPN league-id queries rank the /league-id hub, not /league-id/espn (200, in sitemap)"
+  ]
+}

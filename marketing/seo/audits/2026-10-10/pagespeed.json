@@ -1,0 +1,764 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "pagespeed",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-10T00:00:00Z",
+  "calls": [
+    {
+      "tool": "lighthouse.mjs",
+      "params": {
+        "sample": 2,
+        "strategy": "mobile",
+        "runs": 1
+      },
+      "ok": true,
+      "result": [
+        {
+          "url": "https://fantasyfootballdraftorder.com/",
+          "strategy": "mobile",
+          "score": 88,
+          "lcp": 3704.849500000001,
+          "tbt": 18.5,
+          "cls": 0,
+          "fcp": 1820.0204999999999,
+          "ttfb": 120,
+          "si": 1820.0204999999999,
+          "verdicts": {
+            "lcp": "needs-work",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 450
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+          "strategy": "mobile",
+          "score": 100,
+          "lcp": 1934.488,
+          "tbt": 41,
+          "cls": 0,
+          "fcp": 969.874,
+          "ttfb": 560,
+          "si": 1543.6407660054622,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 460
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/draft-lottery",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2398.3329999999996,
+          "tbt": 45,
+          "cls": 0,
+          "fcp": 1124.533,
+          "ttfb": 105,
+          "si": 1124.533,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/espn",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2395.581,
+          "tbt": 31,
+          "cls": 0,
+          "fcp": 1214.6599999999999,
+          "ttfb": 297,
+          "si": 1214.6599999999999,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 197
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-baseball",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2220.282,
+          "tbt": 43.5,
+          "cls": 0,
+          "fcp": 1193.2859999999998,
+          "ttfb": 804,
+          "si": 1845.4160720067855,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 704
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+          "strategy": "mobile",
+          "score": 78,
+          "lcp": 5550.397999999999,
+          "tbt": 48,
+          "cls": 0,
+          "fcp": 1802.425,
+          "ttfb": 106,
+          "si": 2732.2466159330193,
+          "verdicts": {
+            "lcp": "POOR",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 560
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-football",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2212.406,
+          "tbt": 28.5,
+          "cls": 0,
+          "fcp": 1198.322,
+          "ttfb": 604,
+          "si": 1583.4202499922394,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 504
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-football-facebook-groups",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2086.0360000000005,
+          "tbt": 43,
+          "cls": 0,
+          "fcp": 1143.9040000000002,
+          "ttfb": 88,
+          "si": 1143.9040000000002,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-football-punishments",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2127.0750000000003,
+          "tbt": 45.5,
+          "cls": 0,
+          "fcp": 1167.0810000000001,
+          "ttfb": 426,
+          "si": 1365.3939239896479,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 326
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2137.1,
+          "tbt": 38,
+          "cls": 0,
+          "fcp": 1082.788,
+          "ttfb": 93,
+          "si": 1082.788,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fleaflicker",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2158.5319999999997,
+          "tbt": 28,
+          "cls": 0,
+          "fcp": 1201.04,
+          "ttfb": 689,
+          "si": 1708.6059560156762,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 589
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/guides",
+          "strategy": "mobile",
+          "score": 97,
+          "lcp": 2640.8330000000005,
+          "tbt": 39,
+          "cls": 0,
+          "fcp": 976.543,
+          "ttfb": 84,
+          "si": 976.543,
+          "verdicts": {
+            "lcp": "needs-work",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/guides/weighted-vs-random-draft-lottery",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2057.74,
+          "tbt": 29.5,
+          "cls": 0,
+          "fcp": 1013.866,
+          "ttfb": 103,
+          "si": 1013.866,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/how-it-works",
+          "strategy": "mobile",
+          "score": 97,
+          "lcp": 2376.437,
+          "tbt": 34,
+          "cls": 0,
+          "fcp": 1852.36,
+          "ttfb": 573,
+          "si": 1852.36,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 473
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/league-id",
+          "strategy": "mobile",
+          "score": 79,
+          "lcp": 5371.7480000000005,
+          "tbt": 42,
+          "cls": 0,
+          "fcp": 1587.599,
+          "ttfb": 153,
+          "si": 2716.9914698778557,
+          "verdicts": {
+            "lcp": "POOR",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 620
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/league-id/yahoo",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2170.376,
+          "tbt": 16.5,
+          "cls": 0,
+          "fcp": 1177.844,
+          "ttfb": 639,
+          "si": 1624.8814499996663,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 539
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/mfl",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2197.4,
+          "tbt": 33.5,
+          "cls": 0,
+          "fcp": 1211.216,
+          "ttfb": 608,
+          "si": 1584.5190540130377,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 508
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/new",
+          "strategy": "mobile",
+          "score": 76,
+          "lcp": 5749.855,
+          "tbt": 38,
+          "cls": 0,
+          "fcp": 2043.3339999999998,
+          "ttfb": 267,
+          "si": 3435.3687774174314,
+          "verdicts": {
+            "lcp": "POOR",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 800
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 167
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+          "strategy": "mobile",
+          "score": 84,
+          "lcp": 4559.541500000001,
+          "tbt": 41.5,
+          "cls": 0,
+          "fcp": 1118.961,
+          "ttfb": 807,
+          "si": 2553.621437522219,
+          "verdicts": {
+            "lcp": "POOR",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 707
+            },
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 530
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2017.8459999999998,
+          "tbt": 47,
+          "cls": 0,
+          "fcp": 996.5139999999999,
+          "ttfb": 979,
+          "si": 2659.420108477838,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Reduce initial server response time",
+              "savingsMs": 879
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/punishment/new",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2087.152,
+          "tbt": 31,
+          "cls": 0,
+          "fcp": 1084.222,
+          "ttfb": 274,
+          "si": 1122.2525220009863,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 174
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/sleeper",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2107.5170000000003,
+          "tbt": 37,
+          "cls": 0,
+          "fcp": 1136.627,
+          "ttfb": 555,
+          "si": 1486.961113994646,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 455
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/why-fair",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2128.6059999999998,
+          "tbt": 39,
+          "cls": 0,
+          "fcp": 1153.8339999999998,
+          "ttfb": 106,
+          "si": 1153.8339999999998,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/yahoo",
+          "strategy": "mobile",
+          "score": 78,
+          "lcp": 5662.321,
+          "tbt": 26,
+          "cls": 0,
+          "fcp": 1777.4050000000002,
+          "ttfb": 111,
+          "si": 2683.2383758524384,
+          "verdicts": {
+            "lcp": "POOR",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 650
+            }
+          ],
+          "failedDiagnostics": []
+        }
+      ]
+    },
+    {
+      "tool": "lighthouse.mjs",
+      "params": {
+        "runs": 3,
+        "urls": [
+          "/new",
+          "/yahoo",
+          "/fantasy-basketball",
+          "/league-id",
+          "/"
+        ]
+      },
+      "ok": true,
+      "result": [
+        {
+          "url": "https://fantasyfootballdraftorder.com/new",
+          "strategy": "mobile",
+          "score": 94,
+          "lcp": 3062.1860000000006,
+          "tbt": 42,
+          "cls": 0,
+          "fcp": 1018.9939999999999,
+          "ttfb": 288,
+          "si": 1889.3962679990889,
+          "verdicts": {
+            "lcp": "needs-work",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [
+            {
+              "id": "unused-javascript",
+              "title": "Reduce unused JavaScript",
+              "savingsMs": 330
+            },
+            {
+              "id": "server-response-time",
+              "title": "Initial server response time was short",
+              "savingsMs": 129
+            }
+          ],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/yahoo",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2254.5649999999996,
+          "tbt": 28.5,
+          "cls": 0,
+          "fcp": 1229.705,
+          "ttfb": 173,
+          "si": 1229.705,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 2179.434,
+          "tbt": 34.5,
+          "cls": 0,
+          "fcp": 1181.2740000000001,
+          "ttfb": 103,
+          "si": 1181.2740000000001,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/league-id",
+          "strategy": "mobile",
+          "score": 99,
+          "lcp": 1962.067,
+          "tbt": 24,
+          "cls": 0,
+          "fcp": 1016.2160000000001,
+          "ttfb": 117,
+          "si": 1061.917,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        },
+        {
+          "url": "https://fantasyfootballdraftorder.com/",
+          "strategy": "mobile",
+          "score": 98,
+          "lcp": 2333.5769999999993,
+          "tbt": 35.5,
+          "cls": 0,
+          "fcp": 1199.586,
+          "ttfb": 124,
+          "si": 1199.586,
+          "verdicts": {
+            "lcp": "good",
+            "tbt": "good",
+            "cls": "good"
+          },
+          "lcpElement": null,
+          "opportunities": [],
+          "failedDiagnostics": []
+        }
+      ]
+    },
+    {
+      "tool": "pagespeed_analyze",
+      "params": {
+        "url": "https://fantasyfootballdraftorder.com/league-id",
+        "cwvOnly": true
+      },
+      "ok": true,
+      "result": {
+        "mobile": {
+          "score": 88,
+          "LCP": 3771.7,
+          "TBT": 89,
+          "CLS": 0,
+          "FCP": 1525.7
+        },
+        "desktop": {
+          "score": 100,
+          "LCP": 653.6
+        },
+        "crux": "no field data (loadingExperience empty)"
+      }
+    },
+    {
+      "tool": "pagespeed_analyze",
+      "params": {
+        "url": "https://fantasyfootballdraftorder.com/",
+        "cwvOnly": true
+      },
+      "ok": true,
+      "result": {
+        "mobile": {
+          "score": 82,
+          "LCP": 4652.1,
+          "TBT": 15,
+          "CLS": 0,
+          "FCP": 1673.1
+        },
+        "desktop": {
+          "score": 99,
+          "LCP": 696.1
+        },
+        "crux": "no field data"
+      }
+    }
+  ],
+  "notes": [
+    "single-run sweep: 7/24 over 2.5s LCP (worst /new 5.75s); median-of-3 rerun: only /new over (3.06s), rest 1.96-2.33s, so single-run outliers were cold starts",
+    "PSI mobile lab LCP /league-id 3.77s, / 4.65s; no CrUX field data (low traffic)"
+  ]
+}

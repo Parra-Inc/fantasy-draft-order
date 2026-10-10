@@ -17,7 +17,7 @@ import { BreadcrumbLd, FaqLd } from "@/lib/seo/jsonld";
 export const metadata = buildMetadata({
   title: "How to Ask Your Commissioner for a Fair Draft Order",
   description:
-    "You think the draft order should be drawn in public. Here is how to bring it up with your fantasy commissioner without starting a fight, plus a message you can paste straight into the league chat.",
+    "Want the draft order drawn in public? How to raise it with your fantasy commissioner without a fight, plus a message to paste straight into the league chat.",
   path: "/ask-your-commissioner",
   keywords: [
     "commissioner rigged draft order",

@@ -40,7 +40,7 @@ function parseSlug(value: string | string[] | undefined) {
 export const metadata = buildMetadata({
   title: "Schedule a Fantasy Football Draft Order",
   description:
-    "Set up a fair, transparent fantasy football draft order in under a minute. Pick a time, add your teams or import your league, and share one link. The randomizer fires live for the whole league.",
+    "Set up a fair, transparent fantasy football draft order in a minute. Pick a time, add or import your teams, and share one link. The league watches it live.",
   path: "/new",
   keywords: [
     "schedule fantasy draft order",

@@ -49,7 +49,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "sleeper",
     title: "Sleeper Draft Order Randomizer: Drawn Live, Free (2026)",
     description:
-      "Sleeper's randomize button fires where only the commissioner can see it. Paste your league ID, pick a time, and the whole league watches the same draw. Free, no login.",
+      "Randomize your Sleeper draft order where the whole league can watch. Paste your league ID, pick a time, and everyone sees the same live draw. Free, no login.",
     eyebrow: "Sleeper",
     h1: "Sleeper draft order randomizer.",
     h1Accent: "Drawn live. Auditable forever.",
@@ -94,7 +94,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "espn",
     title: "ESPN Fantasy Football Draft Order Randomizer: Free and Live",
     description:
-      "Free ESPN fantasy football draft order generator. Randomize your ESPN league's draft order and share one link. Public ESPN leagues import by league ID. Whole league watches it drawn live from open-source code.",
+      "Free ESPN fantasy football draft order generator. Import a public ESPN league by ID, share one link, and the whole league watches the order drawn live.",
     eyebrow: "ESPN",
     h1: "ESPN fantasy football draft order, done right.",
     h1Accent: "Scheduled. Synced. Tamper-proof.",
@@ -139,7 +139,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "yahoo",
     title: "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
     description:
-      "Generate a fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
+      "A fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
     eyebrow: "Yahoo",
     h1: "Yahoo fantasy football draft order, out in the open.",
     h1Accent: "No commish black box.",
@@ -176,7 +176,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "mfl",
     title: "MFL Draft Order Randomizer: Free & Open Source",
     description:
-      "Free MyFantasyLeague draft order generator. Fair, transparent fantasy football draft order for your MFL league. Import by league ID, schedule a time, and share one link the whole league can watch.",
+      "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
     eyebrow: "MyFantasyLeague",
     h1: "MFL draft order, verifiable by everyone.",
     h1Accent: "Not just the commish.",
@@ -214,7 +214,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "fleaflicker",
     title: "Fleaflicker Draft Order Randomizer: Free, Live, Auditable",
     description:
-      "Free Fleaflicker draft order generator. Randomize your Fleaflicker fantasy league's draft order and share one link. The whole league watches the order drawn live from open-source code.",
+      "Free Fleaflicker draft order generator. Randomize your league's draft order, share one link, and the whole league watches it drawn live from open-source code.",
     eyebrow: "Fleaflicker",
     h1: "Fleaflicker draft order, drawn in public.",
     h1Accent: "With a permanent record.",
@@ -250,7 +250,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "fantasy-football",
     title: "Fantasy Football Draft Order Generator: Free & Open Source",
     description:
-      "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. 8, 10, 12, 14 teams — any league size.",
+      "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. Any league size.",
     eyebrow: "Fantasy football",
     h1: "Fantasy football draft order,",
     h1Accent: "your league can trust.",
@@ -380,7 +380,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "draft-lottery",
     title: "Fantasy Draft Lottery: Free, Sealed & Open Source",
     description:
-      "Run a sealed fantasy draft lottery. A draft order wheel your league cannot re-spin: schedule the reveal, share one link, and let every team watch the order drawn live from open-source code. No re-rolls, no commissioner in the loop.",
+      "Run a sealed fantasy draft lottery your league cannot re-spin. Schedule the reveal, share one link, and every team watches the order drawn live. No re-rolls.",
     eyebrow: "Draft lottery",
     h1: "A fantasy draft lottery",
     h1Accent: "nobody can rig.",

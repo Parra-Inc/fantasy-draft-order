@@ -7,9 +7,9 @@ import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-  title: "Fantasy League ID Finder: Find Your League ID on Any Platform",
+  title: "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
   description:
-    "League ID finder for Sleeper, ESPN, Yahoo, MyFantasyLeague, and Fleaflicker. Exact steps for the web and the mobile app, what the ID looks like, and the parts of the URL to leave out.",
+    "Find your fantasy league ID on Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker. Exact web and app steps, what the ID looks like, and what to leave out.",
   path: "/league-id",
   keywords: [
     "league id finder",
@@ -71,6 +71,18 @@ export default function LeagueIdHubPage() {
             Every platform hides it somewhere slightly different. Pick yours for
             the exact path on the web and in the app, what the ID looks like,
             and the parts of the URL to leave out.
+          </p>
+          <p className="text-chalk/80 mx-auto mt-4 max-w-xl text-sm leading-relaxed">
+            On ESPN? Your league ID is the number after{" "}
+            <code className="font-mono">leagueId=</code> in your league URL. See
+            the{" "}
+            <Link
+              href="/league-id/espn"
+              className="text-signal underline underline-offset-4"
+            >
+              ESPN league ID
+            </Link>{" "}
+            guide for the app steps.
           </p>
         </div>
       </section>

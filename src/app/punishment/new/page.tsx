@@ -15,9 +15,9 @@ import { NewPunishmentForm } from "./new-punishment-form";
 export const dynamic = "force-dynamic";
 
 export const metadata = buildMetadata({
-  title: "Punishment Wheel: Draw a Fantasy Football Last-Place Punishment",
+  title: "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
   description:
-    "Build a punishment wheel for your fantasy league. Add the candidates, pick a time, share one link. The result is sealed the moment you create it and revealed publicly at the time you set, so nobody can accuse the commissioner of picking.",
+    "Build a fantasy league punishment wheel. Add candidates, pick a time, share one link. The result is sealed up front and revealed live, so no one cries rigged.",
   path: "/punishment/new",
   keywords: [
     "fantasy football punishment wheel",
