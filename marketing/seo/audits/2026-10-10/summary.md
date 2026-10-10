@@ -41,3 +41,14 @@ Technically clean: 0 errors, no indexability contradictions, all inspected pages
 - Page speed: median-of-3 puts every sampled page under 2.5s except /new (3.06s, the app create page, not a ranked page). Single-run 5s+ readings were cold starts. PSI mobile lab LCP 3.8s /league-id and 4.7s / with no CrUX field data; not the constraint.
 - Sitemap "indexed: 0" in GSC: contradicted by URL Inspection (all inspected pages indexed).
 - 63 notices not pulled.
+
+## Outcome
+Verified 2026-10-10 after PR #17 deployed (recheck landed 16:18Z, live curl of all 38 sitemap URLs).
+
+- title.too.long: 12 to 1. The one left is /fantasy-football ("Free &amp; Open Source"): the crawler counts the encoded `&amp;` (62), the rendered title is 58. All six PR targets cleared.
+- description.too.long: 22 to 7. Still flagged: /league-id/sleeper 164, /fleaflicker 163, /guides/is-your-draft-order-actually-random 161, /guides/weighted-vs-random-draft-lottery 165 (all raw, with `&#x27;` counted as 6 chars; each is <= 160 decoded), plus /p/ result pages (user content, out of scope). The repo length guard measures decoded text, so it passes while the crawler does not. Follow-up: trim those four by a few chars, or count apostrophes and ampersands as encoded in `metadata-length.test.ts`.
+- Fix now 1 to 3 (Sleeper CTR, ESPN hub vs guide, lost "sleeper randomize draft order"): shipped and live, but the outcome depends on Search Console. Re-read in 2 to 4 weeks.
+- Unchanged by design: link.broken.external (apps.apple.com 429, now 10 on 5 /p/ pages), page.orphan 5.
+- All 38 URLs return 200, and the sampled canonicals are self-referencing. Speed was not part of this PR, so Lighthouse was not re-run.
+
+Details: `verify.json`.
