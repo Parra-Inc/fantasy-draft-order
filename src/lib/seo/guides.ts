@@ -37,7 +37,7 @@ export const GUIDES: Guide[] = [
     slug: "is-your-draft-order-actually-random",
     title: "Is your fantasy draft order actually random?",
     description:
-      "Most fantasy draft randomizers ask you to take their word for it. Here's how to tell whether your league's draft order is verifiably random — and what to do when it isn't.",
+      "Most fantasy draft randomizers ask you to take their word for it. How to tell whether your league's draft order is verifiably random, and what to do if not.",
     excerpt:
       "The phrase \"unbiased random draft order\" is on every randomizer's homepage. Almost none of them can prove it. Here's how to tell.",
     datePublished: "2026-04-15",
@@ -123,7 +123,7 @@ export const GUIDES: Guide[] = [
     slug: "fun-ways-to-determine-fantasy-draft-order",
     title: "10 fun ways to determine your fantasy football draft order",
     description:
-      "Pizza races, paper airplanes, fantasy combines, NASCAR. Ten creative ways to pick draft order — plus one boring, perfectly fair backup for when the chaos doesn't decide it.",
+      "Pizza races, paper airplanes, fantasy combines, NASCAR. Ten creative ways to pick draft order, plus one boring, perfectly fair backup when chaos fails.",
     excerpt:
       "The funniest part of fantasy football is the draft order ritual. Here are ten of the best ones, ranked by how much beer they require.",
     datePublished: "2026-04-08",
@@ -214,6 +214,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "snake-vs-straight-draft-order",
     title: "Snake draft vs straight draft: which order should your league use?",
+    metaTitle: "Snake vs Straight Draft: Which Order Should Your League Use?",
     description:
       "Snake drafts reverse every round. Straight drafts repeat. Here's the difference, when each makes sense, and why almost every fantasy league uses snake.",
     excerpt:
@@ -290,6 +291,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "weighted-vs-random-draft-lottery",
     title: "Weighted vs random draft lottery: which is fair for your league?",
+    metaTitle: "Weighted vs Random Draft Lottery: Which Is Fairer?",
     description:
       "A random lottery gives every team equal odds. A weighted lottery gives worse teams better odds — like the NBA. Here's which one your league should use, and why.",
     excerpt:
@@ -363,7 +365,7 @@ export const GUIDES: Guide[] = [
     title: "How to randomize draft order on Sleeper (and how to do it better)",
     metaTitle: "How to Randomize or Set Draft Order on Sleeper (2026)",
     description:
-      "Gear icon, Draft, Draft Order, Randomize, Save: the exact six taps in Sleeper, what the rest of your league cannot see when you use them, and how to run a draw they can check.",
+      "Gear icon, Draft, Draft Order, Randomize, Save: the exact taps in Sleeper, what the rest of your league cannot see, and how to run a draw they can check.",
     excerpt:
       "Sleeper's randomize button is one click. Here's where it is — plus when you should use a public, scheduled draw instead.",
     datePublished: "2026-03-18",
@@ -427,7 +429,7 @@ export const GUIDES: Guide[] = [
     title: "How to randomize draft order on ESPN Fantasy",
     metaTitle: "How to Randomize or Set Draft Order on ESPN (2026)",
     description:
-      "ESPN randomizes your draft order automatically one hour before the draft if nobody sets it first. The six clicks to set it yourself, the cutoff that decides it, and how to make the result checkable.",
+      "ESPN randomizes your draft order one hour before the draft if nobody sets it. The clicks to set it yourself, the cutoff, and how to make the result checkable.",
     excerpt:
       "ESPN's draft order behavior is one of the more confusing parts of the platform. Here's exactly what happens and when.",
     datePublished: "2026-03-11",
@@ -491,7 +493,7 @@ export const GUIDES: Guide[] = [
     title: "How to set, change, or randomize draft order on Yahoo Fantasy",
     metaTitle: "How to Set or Change Draft Order in Yahoo Fantasy (2026)",
     description:
-      "Yahoo hides the draft order behind Edit next to Draft Type and Time. The exact path to set it, drag it into a new order, or randomize it, and the deadline that closes it.",
+      "Yahoo hides the draft order behind Edit next to Draft Type and Time. The exact path to set, reorder, or randomize it, and the deadline that closes it.",
     excerpt:
       "Setting the order, changing it later, and randomizing it are all the same Yahoo screen. Here is where it is and when it locks.",
     datePublished: "2026-03-04",
@@ -569,6 +571,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "commissioner-guide-running-a-fair-draft-order-reveal",
     title: "Commissioner's guide: running a fair fantasy draft order reveal",
+    metaTitle: "Commissioner's Guide to a Fair Draft Order Reveal",
     description:
       "Everything a commissioner needs to do to run a draft order reveal that nobody can dispute. Schedule, message, run, archive.",
     excerpt:

@@ -7,7 +7,7 @@ import { listGuides } from "@/lib/seo/guides";
 export const metadata = buildMetadata({
   title: "Fantasy Football Draft Order Guides: Trust and Tradition",
   description:
-    "Long-form guides on running fair fantasy football drafts. Snake vs straight, weighted vs random lotteries, platform-by-platform randomizer walkthroughs, and creative ways to pick draft order.",
+    "Guides to running fair fantasy football drafts: snake vs straight, weighted vs random lotteries, platform randomizer walkthroughs, and fun ways to pick order.",
   path: "/guides",
   keywords: [
     "fantasy draft guides",

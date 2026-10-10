@@ -26,7 +26,7 @@ const CHECKED_ON = "August 10, 2026";
 export const metadata = buildMetadata({
   title: "The Best Fantasy Football Facebook Groups (2026)",
   description:
-    "The fantasy football Facebook groups worth joining, what each one is actually for, how to find a league that will not fold by week six, and which league decisions you should never put to a group vote.",
+    "The fantasy football Facebook groups worth joining, what each is for, how to find a league that will not fold by week six, and what never to put to a vote.",
   path: "/fantasy-football-facebook-groups",
   keywords: [
     "fantasy football facebook groups",

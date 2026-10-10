@@ -39,9 +39,9 @@ const FAQS = [
 ];
 
 export const metadata = buildMetadata({
-  title: "Fantasy Football Punishments: 40+ Ideas and a Fair Way to Draw One",
+  title: "Fantasy Football Punishments: 40+ Ideas, Drawn Fairly",
   description:
-    "A running list of fantasy football last-place punishments, from cheap and silly to genuinely permanent. Pick the ones your league would actually do, then draw one publicly so nobody can accuse the commissioner of rigging it.",
+    "40+ fantasy football last-place punishments, from cheap and silly to permanent. Pick the ones your league will do, then draw one live so no one cries rigged.",
   path: "/fantasy-football-punishments",
 });
 
