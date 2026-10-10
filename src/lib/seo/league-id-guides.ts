@@ -50,9 +50,9 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     source: "SLEEPER",
     platformPage: "/sleeper",
     draftOrderGuide: "how-to-randomize-draft-order-on-sleeper",
-    title: "Find Your Sleeper League ID: 18 Digits, Web or App (2026)",
+    title: "How to Find Your Sleeper League ID (Web and App, 2026)",
     description:
-      "Two ten-second paths: the 18-digit number after /leagues/ in your Sleeper URL, or Copy League ID in the app's General settings. Plus why last season's ID fails.",
+      "Your Sleeper league ID is the 18-digit number after /leagues/ in the URL, or tap Copy League ID in the app's General settings. Why last season's ID fails.",
     keywords: [
       "sleeper league id finder",
       "sleeper league id",
@@ -142,9 +142,9 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     source: "ESPN",
     platformPage: "/espn",
     draftOrderGuide: "how-to-randomize-draft-order-on-espn",
-    title: "ESPN League ID Finder: Where to Find Your League ID",
+    title: "How to Find Your ESPN League ID (Web and App, 2026)",
     description:
-      "Your ESPN league ID is the number after leagueId= in your league URL, and it is listed under the League tab in the ESPN Fantasy app. Here is exactly where to look.",
+      "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
     keywords: [
       "espn league id finder",
       "espn fantasy league id",
@@ -235,7 +235,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     draftOrderGuide: "how-to-randomize-draft-order-on-yahoo",
     title: "Yahoo League ID Finder: Where to Find Your League ID",
     description:
-      "Your Yahoo league ID is the number after /f1/ in your league URL, and the first row of your league settings page. Here is where to find it and what to do with it.",
+      "Your Yahoo league ID is the number after /f1/ in your league URL, and the first row of your league settings page. Where to find it and what to do with it.",
     keywords: [
       "yahoo league id finder",
       "yahoo fantasy league id",
@@ -323,7 +323,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     platformPage: "/mfl",
     title: "MFL League ID Finder: Where to Find Your MyFantasyLeague ID",
     description:
-      "Your MFL league ID is the 5-digit number at the end of your league home URL, right after the season year. Here is how to read it correctly and what to leave out.",
+      "Your MFL league ID is the 5-digit number at the end of your league home URL, right after the season year. How to read it correctly and what to leave out.",
     keywords: [
       "mfl league id finder",
       "myfantasyleague league id finder",
