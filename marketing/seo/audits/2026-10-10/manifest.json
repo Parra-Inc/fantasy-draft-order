@@ -1,0 +1,38 @@
+{
+  "schema": "audit-seo/v1",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "project": "Fantasy Draft Order",
+  "repo": "/Users/ianmaccallum/Developer/Repos/fantasy-draft-order",
+  "rank": 5,
+  "date": "2026-10-10",
+  "coverage": {
+    "audited": 38,
+    "pages": 38
+  },
+  "gscWindow": {
+    "start": "2026-09-10",
+    "end": "2026-10-07"
+  },
+  "pagespeed": {
+    "local": "lighthouse.mjs --sample=2 mobile (24 URLs) + --runs=3 rerun of 5 worst",
+    "psi": [
+      "/league-id",
+      "/"
+    ]
+  },
+  "phasesRun": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "phasesSkipped": {
+    "5": "out of scope for this run: no fixes, commits, or deploys"
+  },
+  "failedCalls": [],
+  "caveats": [
+    "recheck queued 38 pages but results had not landed when audit_report was re-read; title findings were verified by live fetch instead"
+  ]
+}

@@ -1,0 +1,108 @@
+[
+  {
+    "url": "https://fantasyfootballdraftorder.com/new",
+    "strategy": "mobile",
+    "score": 94,
+    "lcp": 3062.1860000000006,
+    "tbt": 42,
+    "cls": 0,
+    "fcp": 1018.9939999999999,
+    "ttfb": 288,
+    "si": 1889.3962679990889,
+    "verdicts": {
+      "lcp": "needs-work",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 330
+      },
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 129
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/yahoo",
+    "strategy": "mobile",
+    "score": 98,
+    "lcp": 2254.5649999999996,
+    "tbt": 28.5,
+    "cls": 0,
+    "fcp": 1229.705,
+    "ttfb": 173,
+    "si": 1229.705,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 2179.434,
+    "tbt": 34.5,
+    "cls": 0,
+    "fcp": 1181.2740000000001,
+    "ttfb": 103,
+    "si": 1181.2740000000001,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/league-id",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 1962.067,
+    "tbt": 24,
+    "cls": 0,
+    "fcp": 1016.2160000000001,
+    "ttfb": 117,
+    "si": 1061.917,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/",
+    "strategy": "mobile",
+    "score": 98,
+    "lcp": 2333.5769999999993,
+    "tbt": 35.5,
+    "cls": 0,
+    "fcp": 1199.586,
+    "ttfb": 124,
+    "si": 1199.586,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  }
+]
