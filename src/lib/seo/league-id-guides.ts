@@ -52,7 +52,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     draftOrderGuide: "how-to-randomize-draft-order-on-sleeper",
     title: "How to Find Your Sleeper League ID (Web and App, 2026)",
     description:
-      "Your Sleeper league ID is the 18-digit number after /leagues/ in the URL, or tap Copy League ID in the app's General settings. Why last season's ID fails.",
+      "Your Sleeper league ID is the 18-digit number after /leagues/ in the URL, or tap Copy League ID in the app's General settings. Why an old season ID fails.",
     keywords: [
       "sleeper league id finder",
       "sleeper league id",

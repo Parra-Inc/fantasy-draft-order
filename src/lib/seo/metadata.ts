@@ -8,6 +8,37 @@ export const SITE_TAGLINE =
 export const SITE_TWITTER = "@fantasydraftord";
 export const GITHUB_URL = "https://github.com/Parra-Inc/fantasy-draft-order";
 
+export const MAX_TITLE = 60;
+export const MAX_DESCRIPTION = 160;
+
+/**
+ * Length as an HTML crawler counts it: React escapes & < > " ' in attribute
+ * and text output, so "&" costs 5 chars and "'" costs 6 (&#x27;).
+ */
+export function encodedLength(text: string): number {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;").length;
+}
+
+/** Trim text (on a word boundary, with an ellipsis) until its encoded length fits. */
+export function clampMeta(text: string, max: number): string {
+  if (encodedLength(text) <= max) return text;
+  const words = text.split(/\s+/);
+  while (words.length > 1) {
+    words.pop();
+    const out = `${words.join(" ").replace(/[\s,;:.!?\u2014-]+$/, "")}\u2026`;
+    if (encodedLength(out) <= max) return out;
+  }
+  let out = text;
+  while (out.length && encodedLength(`${out}\u2026`) > max)
+    out = out.slice(0, -1);
+  return `${out}\u2026`;
+}
+
 type BuildMetadataInput = {
   title: string;
   description: string;
@@ -27,6 +58,8 @@ export function buildMetadata({
   type = "website",
   keywords,
 }: BuildMetadataInput): Metadata {
+  title = clampMeta(title, MAX_TITLE);
+  description = clampMeta(description, MAX_DESCRIPTION);
   const url = path === "/" ? SITE_URL : `${SITE_URL}${path}`;
   const ogImage = image ?? "/opengraph-image";
 
