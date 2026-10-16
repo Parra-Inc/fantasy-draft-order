@@ -174,7 +174,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "mfl",
-    title: "MFL Draft Order Randomizer: Free & Open Source",
+    title: "MFL Draft Order Randomizer: Free and Open Source",
     description:
       "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
     eyebrow: "MyFantasyLeague",
@@ -214,7 +214,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "fleaflicker",
     title: "Fleaflicker Draft Order Randomizer: Free, Live, Auditable",
     description:
-      "Free Fleaflicker draft order generator. Randomize your league's draft order, share one link, and the whole league watches it drawn live from open-source code.",
+      "Free Fleaflicker draft order generator. Randomize your league draft order, share one link, and the whole league watches it drawn live from open-source code.",
     eyebrow: "Fleaflicker",
     h1: "Fleaflicker draft order, drawn in public.",
     h1Accent: "With a permanent record.",
@@ -248,7 +248,7 @@ export const LANDING_PAGES: LandingPage[] = [
   // Sport pages
   {
     slug: "fantasy-football",
-    title: "Fantasy Football Draft Order Generator: Free & Open Source",
+    title: "Fantasy Football Draft Order Generator: Free, Open Source",
     description:
       "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. Any league size.",
     eyebrow: "Fantasy football",

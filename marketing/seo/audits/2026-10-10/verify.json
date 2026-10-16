@@ -1,0 +1,25 @@
+{
+  "schema": "audit-seo-verify/v1",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "pr": "Parra-Inc/fantasy-draft-order#17",
+  "verifiedAt": "2026-10-10T16:20:00Z",
+  "method": "indexnow-seo recheck(site_id) queued 38 pages plus recheck(url) on /league-id/sleeper; audit_report re-read after page_audit showed lastAudit 16:18Z (post-deploy). Live curl of all 38 sitemap URLs for status, title, description, canonical. No speed fixes shipped, so Lighthouse was not re-run.",
+  "findings": [
+    {"id": "title.too.long", "before": 12, "after": 1, "cleared": false,
+     "evidence": "Crawler still flags /fantasy-football at 62 chars: 'Free &amp; Open Source' counted entity-encoded. Rendered title is 58 chars. All 38 sitemap URLs render titles <= 60. The 6 PR-targeted pages (punishments 66->53, punishment/new 63->54, league-id 61->55, 3 guides) all cleared in the crawler."},
+    {"id": "description.too.long", "before": 22, "after": 7, "cleared": false,
+     "evidence": "Crawler measures raw HTML with entities (&#x27; = 6 chars). Raw lengths over 160: /league-id/sleeper 164, /fleaflicker 163, /guides/is-your-draft-order-actually-random 161, /guides/weighted-vs-random-draft-lottery 165, plus /p/ result pages (/p/amber-tiger-69j9 215, user content, not touched by the PR). Decoded, the four template pages are <= 160, so readers see no truncation, but the crawler finding will not clear until apostrophes/ampersands are budgeted or descriptions trimmed a few more chars."},
+    {"id": "low_ctr sleeper league id (fix now 1)", "before": "~395 impr / 0 clicks, pos 6.4 to 7.4", "after": "pending", "cleared": null,
+     "evidence": "Live: title 'How to Find Your Sleeper League ID (Web and App, 2026)' (54), description opens with the answer, canonical self. CTR outcome needs 2 to 4 weeks of GSC data."},
+    {"id": "ESPN queries rank /league-id hub (fix now 2)", "before": "103 impr pos 9.8, 0 clicks", "after": "pending", "cleared": null,
+     "evidence": "Live: hub title 55 chars, hub links 'ESPN league ID' to /league-id/espn (200), ESPN guide title 'How to Find Your ESPN League ID (Web and App, 2026)'. Ranking shift needs GSC follow-up."},
+    {"id": "lost query 'sleeper randomize draft order' (fix now 3)", "before": "9 clicks, 245 impr, pos 4.9 -> 0", "after": "pending", "cleared": null,
+     "evidence": "Live /sleeper description leads with 'Randomize your Sleeper draft order' (157 chars). Off-season decay may dominate; recheck in GSC."},
+    {"id": "link.broken.external", "before": 4, "after": 10, "cleared": false,
+     "evidence": "Not in PR scope. All apps.apple.com 429 rate limiting on /p/ pages; known false positive. Count rose with more /p/ pages rechecked."},
+    {"id": "page.orphan", "before": 5, "after": 5, "cleared": false, "evidence": "Skipped by design (/p/ results intentionally unlinked)."},
+    {"id": "links and canonicals (spot check)", "before": null, "after": 0, "cleared": true,
+     "evidence": "All 38 sitemap URLs return 200 live; sampled pages have self-referencing canonicals."}
+  ]
+}

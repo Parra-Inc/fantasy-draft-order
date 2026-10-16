@@ -4,12 +4,17 @@ import { describe, expect, it } from "vitest";
 import { GUIDES } from "./guides";
 import { LANDING_PAGES } from "./landing-pages";
 import { LEAGUE_ID_GUIDES } from "./league-id-guides";
+import {
+  MAX_DESCRIPTION,
+  MAX_TITLE,
+  buildMetadata,
+  clampMeta,
+  encodedLength,
+} from "./metadata";
 
 // Google truncates titles past ~60 characters and descriptions past ~160.
-// The SEO crawler flags both, so keep every page inside the limits here
-// instead of finding out from the next audit.
-const MAX_TITLE = 60;
-const MAX_DESCRIPTION = 160;
+// The SEO crawler counts the raw HTML, with entities like &#x27; and &amp;
+// still encoded, so every check here uses the encoded length.
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -21,17 +26,19 @@ function walk(dir: string): string[] {
 describe("SEO metadata length", () => {
   it("guides fit", () => {
     for (const g of GUIDES) {
-      expect((g.metaTitle ?? g.title).length, g.slug).toBeLessThanOrEqual(
+      expect(encodedLength(g.metaTitle ?? g.title), g.slug).toBeLessThanOrEqual(
         MAX_TITLE,
       );
-      expect(g.description.length, g.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
+      expect(encodedLength(g.description), g.slug).toBeLessThanOrEqual(
+        MAX_DESCRIPTION,
+      );
     }
   });
 
   it("landing pages and league ID guides fit", () => {
     for (const p of [...LANDING_PAGES, ...LEAGUE_ID_GUIDES]) {
-      expect(p.title.length, p.title).toBeLessThanOrEqual(MAX_TITLE);
-      expect(p.description.length, p.title).toBeLessThanOrEqual(
+      expect(encodedLength(p.title), p.title).toBeLessThanOrEqual(MAX_TITLE);
+      expect(encodedLength(p.description), p.title).toBeLessThanOrEqual(
         MAX_DESCRIPTION,
       );
     }
@@ -45,13 +52,27 @@ describe("SEO metadata length", () => {
       const src = readFileSync(f, "utf8");
       if (!src.includes("buildMetadata(")) continue;
       for (const m of src.matchAll(/\btitle:\s*"([^"]+)"/g)) {
-        expect(m[1].length, `${f}: ${m[1]}`).toBeLessThanOrEqual(MAX_TITLE);
+        expect(encodedLength(m[1]), `${f}: ${m[1]}`).toBeLessThanOrEqual(
+          MAX_TITLE,
+        );
       }
       for (const m of src.matchAll(/\bdescription:\s*"([^"]+)"/g)) {
-        expect(m[1].length, `${f}: ${m[1]}`).toBeLessThanOrEqual(
+        expect(encodedLength(m[1]), `${f}: ${m[1]}`).toBeLessThanOrEqual(
           MAX_DESCRIPTION,
         );
       }
     }
+  });
+
+  it("buildMetadata clamps long user content by encoded length", () => {
+    const long = `Pat O'Brien & friends ${"finished last again ".repeat(15)}`;
+    const md = buildMetadata({ title: long, description: long });
+    expect(encodedLength(md.description as string)).toBeLessThanOrEqual(
+      MAX_DESCRIPTION,
+    );
+    expect(
+      encodedLength((md.title as { absolute: string }).absolute),
+    ).toBeLessThanOrEqual(MAX_TITLE);
+    expect(clampMeta("short", 160)).toBe("short");
   });
 });

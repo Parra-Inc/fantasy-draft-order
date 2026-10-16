@@ -37,7 +37,7 @@ export const GUIDES: Guide[] = [
     slug: "is-your-draft-order-actually-random",
     title: "Is your fantasy draft order actually random?",
     description:
-      "Most fantasy draft randomizers ask you to take their word for it. How to tell whether your league's draft order is verifiably random, and what to do if not.",
+      "Most fantasy draft randomizers ask you to take their word for it. How to tell if your league's draft order is verifiably random, and what to do if not.",
     excerpt:
       "The phrase \"unbiased random draft order\" is on every randomizer's homepage. Almost none of them can prove it. Here's how to tell.",
     datePublished: "2026-04-15",
@@ -293,7 +293,7 @@ export const GUIDES: Guide[] = [
     title: "Weighted vs random draft lottery: which is fair for your league?",
     metaTitle: "Weighted vs Random Draft Lottery: Which Is Fairer?",
     description:
-      "A random lottery gives every team equal odds. A weighted lottery gives worse teams better odds — like the NBA. Here's which one your league should use, and why.",
+      "A random lottery gives every team equal odds. A weighted lottery gives worse teams better odds, like the NBA. Which one should your league use, and why?",
     excerpt:
       "The NBA uses a weighted lottery to discourage tanking. Most fantasy leagues use uniform random. Here's the actual case for each.",
     datePublished: "2026-03-25",
