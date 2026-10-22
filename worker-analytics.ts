@@ -71,6 +71,50 @@ declare const HTMLRewriter: {
   };
 };
 
+/**
+ * Cloud and hosting networks (by ASN) whose requests never get the tag.
+ *
+ * Headless browsers on these networks run the gtag script like a real visitor,
+ * so GA counts them: on Tax Days in Oct 2026 about three quarters of all
+ * sessions were "direct" visits from Singapore datacenters (Tencent Cloud
+ * AS132203 alone sent ~6,300 requests in three days), every one unengaged.
+ * GA4 has no bot filter beyond the IAB list and no way to drop sessions by
+ * network after the fact, so the only clean fix is not loading the tag.
+ *
+ * Only networks that sell servers are listed, never consumer ISPs. The cost is
+ * the occasional real visitor on a VPN that exits from one of these, which is
+ * small next to the bot volume. Extend per app with `excludeAsns`.
+ */
+const DATACENTER_ASNS = new Set<number>([
+  16509, 14618, // Amazon AWS
+  8075, // Microsoft Azure
+  396982, // Google Cloud
+  45102, 37963, // Alibaba Cloud
+  132203, // Tencent Cloud (shows as "ACEVILLE PTE.LTD.")
+  136907, 55990, // Huawei Cloud
+  14061, // DigitalOcean
+  16276, // OVH
+  24940, // Hetzner
+  63949, // Akamai / Linode
+  20473, // Vultr (Choopa)
+  31898, // Oracle Cloud
+]);
+
+/** True when the request comes from a known cloud or hosting network. */
+export function isDatacenterRequest(request: Request, extraAsns: number[] = []): boolean {
+  const asn = (request as Request & { cf?: { asn?: unknown } }).cf?.asn;
+  if (typeof asn !== "number") return false;
+  return DATACENTER_ASNS.has(asn) || extraAsns.includes(asn);
+}
+
+/**
+ * App store links tracked as the `app_store_click` event. A delegated listener
+ * on the document catches every badge, header button and inline link at once,
+ * including ones rendered after load, so no component has to remember to call
+ * anything. Mark `app_store_click` as a key event in GA to report on it.
+ */
+const STORE_LINK_PATTERN = "apps\\.apple\\.com|itunes\\.apple\\.com|play\\.google\\.com\\/store\\/apps";
+
 export interface InjectGaOptions {
   /**
    * Every domain in this property's user journey, for cross-domain measurement.
@@ -83,11 +127,13 @@ export interface InjectGaOptions {
   euConsentDefaultDenied?: boolean;
   /** Path prefixes never tagged. `/api` and `/_next` are always excluded. */
   excludePathPrefixes?: string[];
+  /** ASNs skipped on top of DATACENTER_ASNS. */
+  excludeAsns?: number[];
 }
 
 const ALWAYS_EXCLUDED_PREFIXES = ["/api", "/_next"];
 
-function buildTagHtml(
+export function buildTagHtml(
   measurementId: string,
   linkerDomains: string[],
   euDenied: boolean,
@@ -112,6 +158,14 @@ function buildTagHtml(
     consent +
     `gtag('js',new Date());` +
     config +
+    // app_store_click: capture phase, so it runs even when a handler stops
+    // propagation; transport beacon, so the hit survives the navigation away.
+    `document.addEventListener('click',function(e){` +
+    `var a=e.target&&e.target.closest&&e.target.closest('a[href]');if(!a)return;` +
+    `var h=a.href;if(!/${STORE_LINK_PATTERN}/.test(h))return;` +
+    `gtag('event','app_store_click',{'store':/play\\.google/.test(h)?'google_play':'app_store',` +
+    `'link_url':h,'link_text':(a.textContent||a.getAttribute('aria-label')||'').trim().slice(0,100),` +
+    `'transport_type':'beacon'});},true);` +
     `</script>`
   );
 }
@@ -148,6 +202,8 @@ export function injectGoogleAnalytics(
     ...(options.excludePathPrefixes ?? []),
   ];
   if (excluded.some((p) => url.pathname.startsWith(p))) return response;
+
+  if (isDatacenterRequest(request, options.excludeAsns)) return response;
 
   const tag = buildTagHtml(
     id,
