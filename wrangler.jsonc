@@ -35,7 +35,22 @@
   // production logs/metrics are queryable without redeploying.
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1
+    "head_sampling_rate": 1,
+    // OTLP export to Grafana Cloud. Destinations are managed in
+    // Parra-Inc/observability-infra (Pulumi), not in the dashboard.
+    // Workers Logs persistence is left at its default (persist: true), so
+    // the 7-day Cloudflare logs the error-audit collector reads keep working.
+    "traces": {
+      "enabled": true,
+      "destinations": ["grafana-traces"],
+      "head_sampling_rate": 1
+    },
+    "logs": {
+      "enabled": true,
+      "destinations": ["grafana-logs"],
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
   },
   // Required by OpenNext so its cache layer can invoke the worker's own
   // routes. The service name must equal `name` above.
