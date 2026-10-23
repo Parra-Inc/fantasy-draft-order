@@ -42,6 +42,9 @@
 # Optional `scripts/deploy.config.sh`, sourced if present. Every value optional:
 #
 #   APP_DIR="apps/web"                  override the detected app directory
+#   EXTRA_APP_DIRS=(apps/marketing)     more Workers built by the same BUILD_CMD,
+#                                       deployed after APP_DIR (which keeps the
+#                                       migrations and secrets)
 #   BUILD_CMD="pnpm exec turbo run build:cf --filter=my-web"
 #   SITE_URL="https://example.com"      exported as NEXT_PUBLIC_SITE_URL
 #   REQUIRED_SECRETS=(NAME:ENV_VAR)     prompted for if absent everywhere
@@ -164,6 +167,7 @@ BUILD_CMD=""
 SITE_URL=""
 MIGRATE_BY_DEFAULT=0
 PLACEHOLDERS=()
+EXTRA_APP_DIRS=()
 
 # Our own committed file, so sourcing is correct here (unlike the dotenvs above).
 # shellcheck source=/dev/null
@@ -208,16 +212,33 @@ done
 # unmapped one still stops the deploy: the name is the one thing not guessed.
 PLACEHOLDER_RE='[:=][[:space:]]*"REPLACE_WITH_'
 PLACEHOLDERS_PENDING=0
-if [ -n "$WRANGLER_CFG" ] && grep -nE "$PLACEHOLDER_RE" "$WRANGLER_CFG" >&2; then
-  for tok in $(grep -oE '"REPLACE_WITH_[A-Z0-9_]+"' "$WRANGLER_CFG" | tr -d '"' | sort -u); do
+
+# Every wrangler config this run deploys: the primary app, then EXTRA_APP_DIRS.
+wrangler_cfg_in() {
+  local f
+  for f in wrangler.jsonc wrangler.json wrangler.toml; do
+    [ -f "$1/$f" ] && { echo "$1/$f"; return 0; }
+  done
+  return 1
+}
+ALL_CFGS=()
+[ -n "$WRANGLER_CFG" ] && ALL_CFGS+=("$WRANGLER_CFG")
+for d in ${EXTRA_APP_DIRS[@]+"${EXTRA_APP_DIRS[@]}"}; do
+  c=$(wrangler_cfg_in "$ROOT/$d") || die "EXTRA_APP_DIRS: no wrangler config in $d."
+  ALL_CFGS+=("$c")
+done
+
+for CFG in ${ALL_CFGS[@]+"${ALL_CFGS[@]}"}; do
+  grep -nE "$PLACEHOLDER_RE" "$CFG" >&2 || continue
+  for tok in $(grep -oE '"REPLACE_WITH_[A-Z0-9_]+"' "$CFG" | tr -d '"' | sort -u); do
     mapped=0
     for entry in ${PLACEHOLDERS[@]+"${PLACEHOLDERS[@]}"}; do
       [ "${entry%%=*}" = "$tok" ] && mapped=1
     done
-    [ "$mapped" -eq 1 ] || die "$(basename "$WRANGLER_CFG") has an unmapped placeholder $tok (above). Map it in scripts/deploy.config.sh, e.g. PLACEHOLDERS=(\"$tok=kv:<namespace title>\") (kinds: kv, d1, hyperdrive; the name CI's provision step uses), or deploy via CI."
+    [ "$mapped" -eq 1 ] || die "${CFG#$ROOT/} has an unmapped placeholder $tok (above). Map it in scripts/deploy.config.sh, e.g. PLACEHOLDERS=(\"$tok=kv:<namespace title>\") (kinds: kv, d1, hyperdrive; the name CI's provision step uses), or deploy via CI."
   done
   PLACEHOLDERS_PENDING=1
-fi
+done
 
 if   [ -f "$ROOT/pnpm-lock.yaml" ];   then PM=pnpm
 elif [ -f "$ROOT/bun.lockb" ];        then PM=bun
@@ -297,11 +318,17 @@ if [ -n "$SITE_URL" ]; then export NEXT_PUBLIC_SITE_URL="$SITE_URL"; fi
 # An already-set environment variable wins: CI sets these explicitly, and Node's
 # env-file loader does not override real environment variables either, so this
 # only fills the gap a local deploy leaves.
+# With EXTRA_APP_DIRS one build serves several Workers, so the vars of every
+# config are exported; on a key declared twice the primary app's value wins.
 if [ -n "$WRANGLER_CFG" ]; then
-  case "$WRANGLER_CFG" in
-    *.toml) _pub_pairs=$(grep -oE '^[[:space:]]*NEXT_PUBLIC_[A-Z0-9_]+[[:space:]]*=[[:space:]]*"[^"]*"' "$WRANGLER_CFG" 2>/dev/null | sed 's/^[[:space:]]*//; s/[[:space:]]*=[[:space:]]*"/=/; s/"$//' || true) ;;
-    *)      _pub_pairs=$(grep -oE '"NEXT_PUBLIC_[A-Z0-9_]+"[[:space:]]*:[[:space:]]*"[^"]*"' "$WRANGLER_CFG" 2>/dev/null | sed 's/^"//; s/"[[:space:]]*:[[:space:]]*"/=/; s/"$//' || true) ;;
-  esac
+  _pub_pairs=""
+  for _cfg in ${ALL_CFGS[@]+"${ALL_CFGS[@]}"}; do
+    case "$_cfg" in
+      *.toml) _p=$(grep -oE '^[[:space:]]*NEXT_PUBLIC_[A-Z0-9_]+[[:space:]]*=[[:space:]]*"[^"]*"' "$_cfg" 2>/dev/null | sed 's/^[[:space:]]*//; s/[[:space:]]*=[[:space:]]*"/=/; s/"$//' || true) ;;
+      *)      _p=$(grep -oE '"NEXT_PUBLIC_[A-Z0-9_]+"[[:space:]]*:[[:space:]]*"[^"]*"' "$_cfg" 2>/dev/null | sed 's/^"//; s/"[[:space:]]*:[[:space:]]*"/=/; s/"$//' || true) ;;
+    esac
+    _pub_pairs=$(printf '%s\n%s' "$_pub_pairs" "$_p")
+  done
 
   _pub_bad=""
   _pub_seen=""
@@ -343,6 +370,7 @@ PUBLIC_VARS="${_pub_exported:-}"
 if [ "$DETECT_ONLY" -eq 1 ]; then
   echo "Detected for $(basename "$ROOT"):"
   echo "  app dir     : $APP_DIR"
+  [ ${#EXTRA_APP_DIRS[@]} -gt 0 ] && echo "  extra apps  : ${EXTRA_APP_DIRS[*]}"
   echo "  wrangler    : ${WRANGLER_CFG#"$ROOT"/}"
   echo "  worker      : ${WORKER:-unknown}"
   echo "  pkg manager : $PM"
@@ -368,11 +396,14 @@ for required in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
 done
 
 SECRETS_FILE=""
-WRANGLER_CFG_BACKUP=""
+CFG_BACKUPS=()
 cleanup() {
   [ -n "$SECRETS_FILE" ] && rm -f "$SECRETS_FILE" "$SECRETS_FILE.tmp"
-  # Put the committed config back so resolved ids never end up in a commit.
-  [ -n "$WRANGLER_CFG_BACKUP" ] && mv -f "$WRANGLER_CFG_BACKUP" "$WRANGLER_CFG"
+  # Put the committed configs back so resolved ids never end up in a commit.
+  local pair
+  for pair in ${CFG_BACKUPS[@]+"${CFG_BACKUPS[@]}"}; do
+    mv -f "${pair%%|*}" "${pair#*|}"
+  done
   return 0
 }
 trap cleanup EXIT INT TERM
@@ -585,19 +616,23 @@ resolve_resource_id() {
 
 if [ "$PLACEHOLDERS_PENDING" -eq 1 ]; then
   step "Resolve resource ids"
-  WRANGLER_CFG_BACKUP=$(mktemp)
-  cp "$WRANGLER_CFG" "$WRANGLER_CFG_BACKUP"
-  for entry in "${PLACEHOLDERS[@]}"; do
-    tok=${entry%%=*}; spec=${entry#*=}; kind=${spec%%:*}; name=${spec#*:}
-    grep -q "\"$tok\"" "$WRANGLER_CFG" || continue
-    id=$(resolve_resource_id "$kind" "$name")
-    [ -n "$id" ] || die "No $kind resource named '$name' in this account (for $tok). Create it via CI's provision step first."
-    sed -i.bak "s/\"$tok\"/\"$id\"/" "$WRANGLER_CFG" && rm -f "$WRANGLER_CFG.bak"
-    echo "  $tok -> $kind $name"
+  for CFG in "${ALL_CFGS[@]}"; do
+    grep -qE "$PLACEHOLDER_RE" "$CFG" || continue
+    bak=$(mktemp)
+    cp "$CFG" "$bak"
+    CFG_BACKUPS+=("$bak|$CFG")
+    for entry in "${PLACEHOLDERS[@]}"; do
+      tok=${entry%%=*}; spec=${entry#*=}; kind=${spec%%:*}; name=${spec#*:}
+      grep -q "\"$tok\"" "$CFG" || continue
+      id=$(resolve_resource_id "$kind" "$name")
+      [ -n "$id" ] || die "No $kind resource named '$name' in this account (for $tok). Create it via CI's provision step first."
+      sed -i.bak "s/\"$tok\"/\"$id\"/" "$CFG" && rm -f "$CFG.bak"
+      echo "  ${CFG#$ROOT/}: $tok -> $kind $name"
+    done
+    if grep -nE "$PLACEHOLDER_RE" "$CFG" >&2; then
+      die "Placeholders still unresolved in ${CFG#$ROOT/} after substitution (above)."
+    fi
   done
-  if grep -nE "$PLACEHOLDER_RE" "$WRANGLER_CFG" >&2; then
-    die "Placeholders still unresolved after substitution (above)."
-  fi
 fi
 
 # ── Migrate ───────────────────────────────────────────────────────────────────
@@ -643,6 +678,10 @@ fi
 step "Deploy worker"
 confirm "Ship ${WORKER:-this worker} ($SHA) to production now?"
 wrangler_run deploy
+for d in ${EXTRA_APP_DIRS[@]+"${EXTRA_APP_DIRS[@]}"}; do
+  step "Deploy worker ($d)"
+  ( cd "$ROOT/$d" && "$PM" exec wrangler deploy )
+done
 
 # Written only after a successful deploy, so a failed run does not advance the
 # baseline the next IndexNow range is diffed from.
