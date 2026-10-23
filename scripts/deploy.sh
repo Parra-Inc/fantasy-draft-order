@@ -48,6 +48,10 @@
 #   OPTIONAL_SECRETS=(NAME:ENV_VAR)     skipped with a warning if absent
 #   MIGRATE_BY_DEFAULT=1                migrate on every deploy, as CI does
 #                                       (default is opt-in: --migrate only)
+#   PLACEHOLDERS=(TOKEN=kind:name)      resolve a REPLACE_WITH_* id in the
+#                                       wrangler config by looking the resource
+#                                       up by name; kind is kv, d1 or hyperdrive.
+#                                       e.g. "REPLACE_WITH_KV_ID=kv:my-app-state"
 #
 # Credentials:
 #   ~/Developer/Repos/.env.prod   fleet-wide Cloudflare / Pulumi / R2. Exported
@@ -159,6 +163,7 @@ APP_DIR=""
 BUILD_CMD=""
 SITE_URL=""
 MIGRATE_BY_DEFAULT=0
+PLACEHOLDERS=()
 
 # Our own committed file, so sourcing is correct here (unlike the dotenvs above).
 # shellcheck source=/dev/null
@@ -197,8 +202,21 @@ done
 # Matches a JSON/TOML VALUE (`: "REPLACE_WITH_` / `= "REPLACE_WITH_`) rather than
 # the bare token, so the comments explaining this mechanism do not block every
 # deploy.
-if [ -n "$WRANGLER_CFG" ] && grep -nE '[:=][[:space:]]*"REPLACE_WITH_' "$WRANGLER_CFG" >&2; then
-  die "$(basename "$WRANGLER_CFG") has an unsubstituted placeholder (above). CI resolves these at deploy time; this script will not guess. Resolve the id (npx wrangler hyperdrive list / kv namespace list / d1 list) and commit it, or deploy via CI."
+#
+# A placeholder mapped in PLACEHOLDERS (deploy.config.sh) is resolved by name
+# after preflight, the way CI does it, and the config is restored on exit. An
+# unmapped one still stops the deploy: the name is the one thing not guessed.
+PLACEHOLDER_RE='[:=][[:space:]]*"REPLACE_WITH_'
+PLACEHOLDERS_PENDING=0
+if [ -n "$WRANGLER_CFG" ] && grep -nE "$PLACEHOLDER_RE" "$WRANGLER_CFG" >&2; then
+  for tok in $(grep -oE '"REPLACE_WITH_[A-Z0-9_]+"' "$WRANGLER_CFG" | tr -d '"' | sort -u); do
+    mapped=0
+    for entry in ${PLACEHOLDERS[@]+"${PLACEHOLDERS[@]}"}; do
+      [ "${entry%%=*}" = "$tok" ] && mapped=1
+    done
+    [ "$mapped" -eq 1 ] || die "$(basename "$WRANGLER_CFG") has an unmapped placeholder $tok (above). Map it in scripts/deploy.config.sh, e.g. PLACEHOLDERS=(\"$tok=kv:<namespace title>\") (kinds: kv, d1, hyperdrive; the name CI's provision step uses), or deploy via CI."
+  done
+  PLACEHOLDERS_PENDING=1
 fi
 
 if   [ -f "$ROOT/pnpm-lock.yaml" ];   then PM=pnpm
@@ -256,6 +274,69 @@ if [ -z "$SITE_URL" ] && [ -n "$WRANGLER_CFG" ]; then
 fi
 if [ -n "$SITE_URL" ]; then export NEXT_PUBLIC_SITE_URL="$SITE_URL"; fi
 
+# Export EVERY NEXT_PUBLIC_* var the wrangler config declares, not just the one
+# named NEXT_PUBLIC_SITE_URL above.
+#
+# NEXT_PUBLIC_* is inlined at BUILD time. A var that lives only in the wrangler
+# `vars` block is applied to the deployed Worker long after Next has already
+# baked a value into the bundle, so it never reaches the build at all. The build
+# then falls through to the repo-root .env, which on a laptop holds a localhost
+# origin, and the site ships canonicals, og:image and sitemap URLs pointing at
+# a dev host. Because only ONE key was forwarded, and forwarded by name, every
+# repo that called its origin something else was silently exposed.
+#
+# The 2026-08-17 fleet audit caught two shipping that way: diyproject.ai
+# (NEXT_PUBLIC_URL, 212 sitemap URLs on http://localhost:3003) and
+# betterheader.app (NEXT_PUBLIC_APP_URL, 79 submitted / 79 errors / 0 indexed
+# in Search Console). Both wrangler configs held the correct https origin the
+# whole time.
+#
+# An already-set environment variable wins: CI sets these explicitly, and Node's
+# env-file loader does not override real environment variables either, so this
+# only fills the gap a local deploy leaves.
+if [ -n "$WRANGLER_CFG" ]; then
+  case "$WRANGLER_CFG" in
+    *.toml) _pub_pairs=$(grep -oE '^[[:space:]]*NEXT_PUBLIC_[A-Z0-9_]+[[:space:]]*=[[:space:]]*"[^"]*"' "$WRANGLER_CFG" 2>/dev/null | sed 's/^[[:space:]]*//; s/[[:space:]]*=[[:space:]]*"/=/; s/"$//' || true) ;;
+    *)      _pub_pairs=$(grep -oE '"NEXT_PUBLIC_[A-Z0-9_]+"[[:space:]]*:[[:space:]]*"[^"]*"' "$WRANGLER_CFG" 2>/dev/null | sed 's/^"//; s/"[[:space:]]*:[[:space:]]*"/=/; s/"$//' || true) ;;
+  esac
+
+  _pub_bad=""
+  _pub_seen=""
+  _pub_exported=""
+  while IFS= read -r _pair; do
+    [ -n "$_pair" ] || continue
+    _k=${_pair%%=*}
+    _v=${_pair#*=}
+    # First declaration wins, matching the single-key behaviour above.
+    case " $_pub_seen " in *" $_k "*) continue ;; esac
+    _pub_seen="$_pub_seen $_k"
+
+    if [ -n "${!_k-}" ]; then continue; fi
+    export "$_k=$_v"
+    _pub_exported="$_pub_exported $_k"
+
+    # Guard: an origin var that is not https will be inlined into the bundle and
+    # is unfixable after the fact without a rebuild. Fail loudly rather than
+    # ship it. This is the check whose absence cost diyproject.ai its canonicals.
+    case "$_k" in
+      *URL|*ORIGIN|*DOMAIN)
+        case "$_v" in
+          https://*|"") ;;
+          *.*) [ "${_k##*_}" = DOMAIN ] || _pub_bad="$_pub_bad $_k=$_v" ;;
+          *) _pub_bad="$_pub_bad $_k=$_v" ;;
+        esac ;;
+    esac
+  done <<EOF
+$_pub_pairs
+EOF
+
+  if [ -n "$_pub_bad" ]; then
+    die "wrangler config declares a non-https origin:$_pub_bad
+     These are inlined into the bundle at build time. Fix ${WRANGLER_CFG#"$ROOT"/} before deploying."
+  fi
+fi
+PUBLIC_VARS="${_pub_exported:-}"
+
 if [ "$DETECT_ONLY" -eq 1 ]; then
   echo "Detected for $(basename "$ROOT"):"
   echo "  app dir     : $APP_DIR"
@@ -264,6 +345,7 @@ if [ "$DETECT_ONLY" -eq 1 ]; then
   echo "  pkg manager : $PM"
   echo "  build       : ${BUILD_CMD:-<none, deploying without a build>}"
   echo "  site url    : ${SITE_URL:-<not set>}"
+  echo "  build env   : ${PUBLIC_VARS:-<no NEXT_PUBLIC_* in wrangler vars>}"
   echo "  infra       : $([ "$HAS_PULUMI" -eq 1 ] && echo 'Pulumi (program/)' || echo none)"
   echo "  migrations  : $MIGRATE_KIND"
   echo "  indexnow    : $([ "$HAS_INDEXNOW" -eq 1 ] && echo yes || echo no)"
@@ -283,8 +365,11 @@ for required in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
 done
 
 SECRETS_FILE=""
+WRANGLER_CFG_BACKUP=""
 cleanup() {
   [ -n "$SECRETS_FILE" ] && rm -f "$SECRETS_FILE" "$SECRETS_FILE.tmp"
+  # Put the committed config back so resolved ids never end up in a commit.
+  [ -n "$WRANGLER_CFG_BACKUP" ] && mv -f "$WRANGLER_CFG_BACKUP" "$WRANGLER_CFG"
   return 0
 }
 trap cleanup EXIT INT TERM
@@ -472,6 +557,38 @@ fi
 # CI never hit it because it runs `pnpm exec wrangler deploy`.
 wrangler_run() { ( cd "$APP" && "$PM" exec wrangler "$@" ); }
 
+# ── Resolve placeholders ──────────────────────────────────────────────────────
+resolve_resource_id() {
+  case "$1" in
+    kv) wrangler_run kv namespace list 2>/dev/null \
+          | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s).find(n=>n.title===process.argv[1]);process.stdout.write(r?r.id:"")})' "$2" ;;
+    d1) wrangler_run d1 list --json 2>/dev/null \
+          | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s).find(n=>n.name===process.argv[1]);process.stdout.write(r?r.uuid:"")})' "$2" ;;
+    # No --json for hyperdrive list: take the id from the row naming it.
+    hyperdrive) wrangler_run hyperdrive list 2>/dev/null \
+          | grep -E "(^|[^a-z0-9-])$2([^a-z0-9-]|$)" \
+          | grep -oE '[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | head -1 ;;
+    *) die "Unknown placeholder kind '$1' (use kv, d1 or hyperdrive)." ;;
+  esac
+}
+
+if [ "$PLACEHOLDERS_PENDING" -eq 1 ]; then
+  step "Resolve resource ids"
+  WRANGLER_CFG_BACKUP=$(mktemp)
+  cp "$WRANGLER_CFG" "$WRANGLER_CFG_BACKUP"
+  for entry in "${PLACEHOLDERS[@]}"; do
+    tok=${entry%%=*}; spec=${entry#*=}; kind=${spec%%:*}; name=${spec#*:}
+    grep -q "\"$tok\"" "$WRANGLER_CFG" || continue
+    id=$(resolve_resource_id "$kind" "$name")
+    [ -n "$id" ] || die "No $kind resource named '$name' in this account (for $tok). Create it via CI's provision step first."
+    sed -i.bak "s/\"$tok\"/\"$id\"/" "$WRANGLER_CFG" && rm -f "$WRANGLER_CFG.bak"
+    echo "  $tok -> $kind $name"
+  done
+  if grep -nE "$PLACEHOLDER_RE" "$WRANGLER_CFG" >&2; then
+    die "Placeholders still unresolved after substitution (above)."
+  fi
+fi
+
 # ── Migrate ───────────────────────────────────────────────────────────────────
 if [ "$DO_MIGRATE" -eq 1 ]; then
   step "Migrate database ($MIGRATE_KIND)"
@@ -503,6 +620,9 @@ fi
 # ── Build ─────────────────────────────────────────────────────────────────────
 if [ -n "$BUILD_CMD" ]; then
   step "Build ($BUILD_CMD)"
+  # NEXT_PUBLIC_* is inlined here and cannot be corrected after the fact, so say
+  # which values the bundle is being baked with.
+  [ -n "${PUBLIC_VARS:-}" ] && echo "  inlining:${PUBLIC_VARS}"
   ( cd "$APP" && eval "$BUILD_CMD" )
 else
   warn "No build script detected; deploying whatever is already built."
