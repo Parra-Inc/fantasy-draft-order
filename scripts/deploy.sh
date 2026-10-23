@@ -19,8 +19,8 @@
 #   package manager pnpm / npm / bun, from the lockfile
 #   build script    build:cf, else build, else none
 #   infra           a top-level program/ directory means Pulumi
-#   migrations      prisma/schema.prisma, or migrations/ plus a d1_databases
-#                   binding in the wrangler config
+#   migrations      a d1_databases binding in the wrangler config (D1), else
+#                   prisma/schema.prisma (Prisma on Postgres)
 #   indexnow        an "indexnow" script in the app's package.json
 #
 # Run `bash scripts/deploy.sh --detect` to print what it found and exit. Do that
@@ -243,13 +243,16 @@ HAS_INDEXNOW=0
 if pkg_has_script indexnow; then HAS_INDEXNOW=1; fi
 
 MIGRATE_KIND=none
-if compgen -G "$ROOT/prisma/schema.prisma" >/dev/null 2>&1 \
+# A d1_databases binding wins: wrangler applies D1 migrations from the binding's
+# migrations_dir (often prisma/migrations), and a Prisma schema next to it is
+# only the client generator, not a Postgres database to migrate.
+if grep -q 'd1_databases' "$WRANGLER_CFG" 2>/dev/null; then
+  MIGRATE_KIND=d1
+elif compgen -G "$ROOT/prisma/schema.prisma" >/dev/null 2>&1 \
   || compgen -G "$ROOT/prisma/schema/*.prisma" >/dev/null 2>&1 \
   || compgen -G "$APP/prisma/schema.prisma" >/dev/null 2>&1 \
   || compgen -G "$APP/prisma/schema/*.prisma" >/dev/null 2>&1; then
   MIGRATE_KIND=prisma
-elif [ -d "$ROOT/migrations" ] && grep -q 'd1_databases' "$WRANGLER_CFG" 2>/dev/null; then
-  MIGRATE_KIND=d1
 fi
 
 # Migrations rewrite production data, so they are OPT-IN: this script is shared
@@ -537,11 +540,19 @@ command -v "$PM" >/dev/null 2>&1 || die "$PM not found."
 # ── Install ───────────────────────────────────────────────────────────────────
 if [ "$DO_INSTALL" -eq 1 ]; then
   step "Install dependencies"
-  case "$PM" in
-    pnpm) pnpm install --frozen-lockfile ;;
-    npm)  npm ci ;;
-    bun)  bun install --frozen-lockfile ;;
-  esac
+  install_in() {
+    ( cd "$1" && case "$PM" in
+        pnpm) pnpm install --frozen-lockfile ;;
+        npm)  if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then npm ci; else npm install; fi ;;
+        bun)  bun install --frozen-lockfile ;;
+      esac )
+  }
+  install_in "$ROOT"
+  # An app directory with its own lockfile is a separate install (e.g. web/
+  # next to a root that only holds asset tooling).
+  if [ "$APP" != "$ROOT" ] && compgen -G "$APP/*lock*" >/dev/null 2>&1; then
+    install_in "$APP"
+  fi
 fi
 
 if [ ! -x "$APP/node_modules/.bin/wrangler" ] && [ ! -x "$ROOT/node_modules/.bin/wrangler" ]; then
