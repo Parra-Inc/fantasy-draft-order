@@ -28,14 +28,6 @@ export const metadata = buildMetadata({
   description:
     "The fantasy football Facebook groups worth joining, what each is for, how to find a league that will not fold by week six, and what never to put to a vote.",
   path: "/fantasy-football-facebook-groups",
-  keywords: [
-    "fantasy football facebook groups",
-    "best fantasy football groups",
-    "fantasy football league finder",
-    "find a fantasy football league",
-    "dynasty fantasy football facebook group",
-    "fantasy football community",
-  ],
 });
 
 const GROUPS = [

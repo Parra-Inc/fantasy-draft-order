@@ -42,14 +42,6 @@ export const metadata = buildMetadata({
   description:
     "Set up a fair, transparent fantasy football draft order in a minute. Pick a time, add or import your teams, and share one link. The league watches it live.",
   path: "/new",
-  keywords: [
-    "schedule fantasy draft order",
-    "create fantasy draft order",
-    "fantasy draft order randomizer",
-    "fantasy football draft order generator",
-    "draft order picker",
-    "draft order lottery",
-  ],
 });
 
 export default async function NewDraftPage({

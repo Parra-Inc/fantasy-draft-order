@@ -46,7 +46,6 @@ type BuildMetadataInput = {
   image?: string;
   noindex?: boolean;
   type?: "website" | "article";
-  keywords?: string[];
 };
 
 export function buildMetadata({
@@ -56,7 +55,6 @@ export function buildMetadata({
   image,
   noindex = false,
   type = "website",
-  keywords,
 }: BuildMetadataInput): Metadata {
   title = clampMeta(title, MAX_TITLE);
   description = clampMeta(description, MAX_DESCRIPTION);
@@ -66,7 +64,6 @@ export function buildMetadata({
   return {
     title: { absolute: title },
     description,
-    keywords,
     alternates: { canonical: url },
     openGraph: {
       title,

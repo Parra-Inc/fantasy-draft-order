@@ -9,7 +9,6 @@ export const metadata = buildMetadata({
   title: page.title,
   description: page.description,
   path: `/${page.slug}`,
-  keywords: page.keywords,
 });
 
 export default function MflPage() {
