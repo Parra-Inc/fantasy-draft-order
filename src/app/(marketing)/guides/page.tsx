@@ -9,11 +9,6 @@ export const metadata = buildMetadata({
   description:
     "Guides to running fair fantasy football drafts: snake vs straight, weighted vs random lotteries, platform randomizer walkthroughs, and fun ways to pick order.",
   path: "/guides",
-  keywords: [
-    "fantasy draft guides",
-    "fantasy draft order how to",
-    "fantasy commissioner guides",
-  ],
 });
 
 export default function GuidesIndexPage() {

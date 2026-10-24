@@ -19,14 +19,6 @@ export const metadata = buildMetadata({
   description:
     "Want the draft order drawn in public? How to raise it with your fantasy commissioner without a fight, plus a message to paste straight into the league chat.",
   path: "/ask-your-commissioner",
-  keywords: [
-    "commissioner rigged draft order",
-    "fantasy commissioner cheating",
-    "fair fantasy draft order",
-    "how to prove draft order was random",
-    "verify fantasy draft order",
-    "league voted draft order",
-  ],
 });
 
 const FAQS = [

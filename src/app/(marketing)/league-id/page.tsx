@@ -11,19 +11,6 @@ export const metadata = buildMetadata({
   description:
     "Find your fantasy league ID on Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker. Exact web and app steps, what the ID looks like, and what to leave out.",
   path: "/league-id",
-  keywords: [
-    "league id finder",
-    "fantasy league id finder",
-    "find my fantasy league id",
-    "what is my league id",
-    "where is my league id",
-    "fantasy league id lookup",
-    "sleeper league id finder",
-    "espn league id finder",
-    "yahoo league id finder",
-    "mfl league id finder",
-    "fleaflicker league id finder",
-  ],
 });
 
 const HUB_FAQS = [

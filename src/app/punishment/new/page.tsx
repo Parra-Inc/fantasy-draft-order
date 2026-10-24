@@ -19,13 +19,6 @@ export const metadata = buildMetadata({
   description:
     "Build a fantasy league punishment wheel. Add candidates, pick a time, share one link. The result is sealed up front and revealed live, so no one cries rigged.",
   path: "/punishment/new",
-  keywords: [
-    "fantasy football punishment wheel",
-    "fantasy football punishment generator",
-    "last place punishment randomizer",
-    "fantasy loser punishment picker",
-    "punishment spinner",
-  ],
 });
 
 export default async function NewPunishmentPage({

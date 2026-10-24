@@ -26,7 +26,6 @@ export async function generateMetadata({ params }: Props) {
     title: guide.title,
     description: guide.description,
     path: `/league-id/${guide.slug}`,
-    keywords: guide.keywords,
     type: "article",
   });
 }
