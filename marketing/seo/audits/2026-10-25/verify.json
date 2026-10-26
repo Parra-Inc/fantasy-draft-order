@@ -1,0 +1,30 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "verify",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-26T03:45:00Z",
+  "deploy": {
+    "trigger": "gh workflow run Deploy --ref main (workflow_dispatch)",
+    "runId": "40265332723",
+    "conclusion": "success",
+    "shipped": ["#29 remove meta keywords", "#24 skip GA on datacenter networks + app-store click tracking", "#25 Grafana OTLP observability", "#26/#27/#28 deploy.sh sync"]
+  },
+  "findings": [
+    { "id": "A5 (meta keywords)", "before": "meta keywords on 11/12 pages (live)", "after": "0 keywords on /, /league-id/sleeper, /sleeper (live, post-deploy)", "cleared": true, "provedBy": "curl of live pages after deploy 40265332723 succeeded" },
+    { "id": "B7 (llms-full.txt)", "before": "404", "after": "still 404 on production", "cleared": false, "reason": "Fix is in PR #30, not yet merged (merge blocked for the agent by the auto-mode classifier - user to merge). Route verified locally: pnpm build:cf green on Node 22 with CI env, renders 63.9KB valid markdown, 0 em dashes. Will clear on the redeploy after #30 merges." }
+  ],
+  "serpInvestigation": {
+    "method": "Claude-in-Chrome extension not connected, so the live Google SERP could not be driven. Used WebSearch on the top zero-click queries as a lower-fidelity substitute.",
+    "queries": ["how to find sleeper league id", "how to find espn fantasy league id"],
+    "finding": "Both are answer-complete informational queries whose answer ('the number in your league URL') is one sentence, so a featured snippet / inline answer satisfies the searcher without a click - which is why a position-5 organic result takes ~0 clicks.",
+    "espn": "ESPN publishes an official League-ID support page (support.espn.com). Google favours it and almost certainly shows a featured snippet from it. Our /league-id and /league-id/espn rank ~9-10, below the snippet and the official source. Low ROI to chase.",
+    "sleeper": "No official Sleeper help article exists; top results are third-party dev/API docs. This is the one league-id family we can own. Our /league-id/sleeper already ranks top-5 with HowTo+FAQ schema; structuring the first on-page answer for snippet capture is the highest-leverage content fix in the cluster.",
+    "strategicConclusion": "The /league-id cluster is high-impression, answer-complete, and low-intent for a draft tool; it will always convert poorly to clicks and worse to the product goal (creating a draw). The real growth lever is the TRANSACTIONAL cluster at positions 6-13: '[platform] draft order randomizer/generator' and 'how to randomize draft order on [platform]' (e.g. /sleeper at pos 6.15 for 'how to randomize draft order sleeper', 0 clicks). A click there is a likely product user. The guides.ts metaTitle comment already names this tension."
+  },
+  "notes": [
+    "A5 verified cleared in production.",
+    "B7 ships on the next deploy after PR #30 merges.",
+    "SERP investigation is advisory (no live SERP access); conclusion rests on WebSearch competitive landscape + GSC position/CTR data, which agree."
+  ]
+}

@@ -1,0 +1,1025 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "standard",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-26T03:15:51.253Z",
+  "origin": "https://fantasyfootballdraftorder.com",
+  "summary": {
+    "pass": 20,
+    "partial": 6,
+    "fail": 8,
+    "n/a": 4,
+    "manual": 5
+  },
+  "checks": [
+    {
+      "id": "A2",
+      "section": "A",
+      "title": "No page canonicalizes to the homepage (no root canonical)",
+      "status": "pass",
+      "evidence": "11 non-home pages, none canonicalize to the homepage"
+    },
+    {
+      "id": "A3",
+      "section": "A",
+      "title": "Title, description and self canonical on every sampled page",
+      "status": "pass",
+      "evidence": "12/12 sampled pages complete"
+    },
+    {
+      "id": "A4",
+      "section": "A",
+      "title": "Meta descriptions 150 to 160 characters",
+      "status": "partial",
+      "evidence": "10/12 in 150 to 160 (min 123, median 156, max 158)"
+    },
+    {
+      "id": "A5",
+      "section": "A",
+      "title": "No filler meta keywords",
+      "status": "partial",
+      "evidence": "meta keywords on 11/12 sampled pages"
+    },
+    {
+      "id": "A6",
+      "section": "A",
+      "title": "One host: www 301s to the apex",
+      "status": "pass",
+      "evidence": "www.fantasyfootballdraftorder.com 301 -> https://fantasyfootballdraftorder.com/"
+    },
+    {
+      "id": "B1",
+      "section": "B",
+      "title": "robots.txt allows / and lists every AI crawler with the * rules",
+      "status": "partial",
+      "evidence": "* allows / (1 disallow rules); 24/25 AI crawlers listed; missing: OAI-AdsBot; Sitemap: https://fantasyfootballdraftorder.com/sitemap.xml",
+      "data": {
+        "missing": [
+          "OAI-AdsBot"
+        ],
+        "blocked": [],
+        "drift": []
+      }
+    },
+    {
+      "id": "B2",
+      "section": "B",
+      "title": "Sitemap, robots.txt and noindex agree",
+      "status": "pass",
+      "evidence": "38 sitemap URLs all crawlable; no sampled page carries noindex"
+    },
+    {
+      "id": "B3",
+      "section": "B",
+      "title": "Sitemap lists live 200 URLs on this host",
+      "status": "pass",
+      "evidence": "38 URLs in 1 file(s), 5 families; hreflang on 0, images on 0"
+    },
+    {
+      "id": "B4",
+      "section": "B",
+      "title": "Sitemap lastmod is a real per-page date",
+      "status": "pass",
+      "evidence": "13 distinct dates across 26 URLs; most common 2026-08-11 on 35%; 12 URLs without lastmod"
+    },
+    {
+      "id": "B5",
+      "section": "B",
+      "title": "HTML sitemap page",
+      "status": "manual",
+      "evidence": "none at /sitemap, /sitemap-html, /site-map, /sitemap.html, /html-sitemap"
+    },
+    {
+      "id": "B6",
+      "section": "B",
+      "title": "llms.txt served as text, no em dashes",
+      "status": "pass",
+      "evidence": "8692 bytes, 37 links, 0 em dashes"
+    },
+    {
+      "id": "B7",
+      "section": "B",
+      "title": "llms-full.txt served",
+      "status": "fail",
+      "evidence": "llms-full.txt 404"
+    },
+    {
+      "id": "B8",
+      "section": "B",
+      "title": "IndexNow key file served on the host",
+      "status": "pass",
+      "evidence": "/0d280b\u2026.txt 200, exact key, no newline"
+    },
+    {
+      "id": "B9",
+      "section": "B",
+      "title": "IndexNow submit runs after every deploy",
+      "status": "fail",
+      "evidence": "no IndexNow step in 1 workflow(s); only the nightly indexnow-sync sweep submits"
+    },
+    {
+      "id": "B11",
+      "section": "B",
+      "title": "Registered in indexnow-sync",
+      "status": "pass",
+      "evidence": "id fantasyfootballdraftorder-com, rank 5, google on"
+    },
+    {
+      "id": "C1",
+      "section": "C",
+      "title": "Valid JSON-LD on every sampled page",
+      "status": "pass",
+      "evidence": "12/12 sampled pages have JSON-LD"
+    },
+    {
+      "id": "C2",
+      "section": "C",
+      "title": "Organization and WebSite on the homepage",
+      "status": "pass",
+      "evidence": "homepage types: Action, Answer, FAQPage, Offer, Organization, Question, SoftwareApplication, WebSite"
+    },
+    {
+      "id": "C3",
+      "section": "C",
+      "title": "App entity with an Offer on the homepage",
+      "status": "pass",
+      "evidence": "app entity on home with Offer"
+    },
+    {
+      "id": "C4",
+      "section": "C",
+      "title": "Tool pages carry WebApplication or SoftwareApplication",
+      "status": "n/a",
+      "evidence": "no tools or calculators family"
+    },
+    {
+      "id": "C5",
+      "section": "C",
+      "title": "BreadcrumbList below home, every item named",
+      "status": "pass",
+      "evidence": "11/11 family pages carry BreadcrumbList"
+    },
+    {
+      "id": "C6",
+      "section": "C",
+      "title": "FAQPage only where the questions are visible",
+      "status": "pass",
+      "evidence": "9 page(s) with FAQPage, questions visible"
+    },
+    {
+      "id": "C7",
+      "section": "C",
+      "title": "Articles carry author, datePublished, dateModified",
+      "status": "pass",
+      "evidence": "1 Article node(s) complete"
+    },
+    {
+      "id": "C8",
+      "section": "C",
+      "title": "Glossary pages carry DefinedTerm",
+      "status": "n/a",
+      "evidence": "no glossary family"
+    },
+    {
+      "id": "C9",
+      "section": "C",
+      "title": "HowTo only on real procedures",
+      "status": "manual",
+      "evidence": "HowTo on /league-id/espn: keep it only where the page is a real step-by-step procedure"
+    },
+    {
+      "id": "D1",
+      "section": "D",
+      "title": "Per-page OG images that load",
+      "status": "partial",
+      "evidence": "og:image on 12/12; 2 distinct image(s) across 6 families; /opengraph-image on 11/12 pages: no per-route cards; repo: 4 opengraph-image/twitter-image file(s)",
+      "data": {
+        "images": [
+          {
+            "url": "https://fantasyfootballdraftorder.com/opengraph-image",
+            "status": 200,
+            "type": "image/png"
+          },
+          {
+            "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9/opengraph-image",
+            "status": 200,
+            "type": "image/png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "D2",
+      "section": "D",
+      "title": "Pages that set og:title still carry og:image",
+      "status": "pass",
+      "evidence": "every page with og:title carries og:image"
+    },
+    {
+      "id": "E5",
+      "section": "E",
+      "title": "Every indexable page reaches the sitemap and every family llms.txt",
+      "status": "partial",
+      "evidence": "3/3 families linked from llms.txt; 1 indexable page(s) linked from the site but not in the sitemap: /p/amber-tiger-69j9/card",
+      "data": {
+        "missingFromSitemap": [
+          "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9/card"
+        ]
+      }
+    },
+    {
+      "id": "F1",
+      "section": "F",
+      "title": "Every page declares <html lang>",
+      "status": "pass",
+      "evidence": "lang set on all 12 (en)"
+    },
+    {
+      "id": "F2",
+      "section": "F",
+      "title": "hreflang sets carry x-default and a self entry",
+      "status": "n/a",
+      "evidence": "no hreflang on sampled pages (single-language site)"
+    },
+    {
+      "id": "G1",
+      "section": "G",
+      "title": "Homepage links every page family",
+      "status": "fail",
+      "evidence": "2/3 families linked from the homepage; not linked: /p"
+    },
+    {
+      "id": "G2",
+      "section": "G",
+      "title": "Family pages link their hub and a sibling",
+      "status": "fail",
+      "evidence": "3/4 sampled family pages link their hub and a sibling; thin on /p/amber-tiger-69j9"
+    },
+    {
+      "id": "H3",
+      "section": "H",
+      "title": "Author pages",
+      "status": "manual",
+      "evidence": "no /authors page; check bylines on articles"
+    },
+    {
+      "id": "H4",
+      "section": "H",
+      "title": "Trust pages (about, methodology, editorial policy)",
+      "status": "manual",
+      "evidence": "/about no, /methodology no, /editorial-policy no"
+    },
+    {
+      "id": "I2",
+      "section": "I",
+      "title": "Immutable caching on hashed assets, security headers",
+      "status": "partial",
+      "evidence": "0ktunvptaaxs1.css: cache-control \"public, max-age=0, must-revalidate\"; security headers: strict-transport-security, x-content-type-options"
+    },
+    {
+      "id": "J1",
+      "section": "J",
+      "title": "Smart App Banner when the app is live",
+      "status": "fail",
+      "evidence": "App Store links present but no Smart App Banner"
+    },
+    {
+      "id": "J2",
+      "section": "J",
+      "title": "Banner hands the app the page URL with a campaign tag",
+      "status": "n/a",
+      "evidence": "no banner"
+    },
+    {
+      "id": "J4",
+      "section": "J",
+      "title": "App Store links carry page-level ct tokens",
+      "status": "pass",
+      "evidence": "2/2 App Store links carry ct (1 distinct)"
+    },
+    {
+      "id": "J6",
+      "section": "J",
+      "title": "AASA served as JSON",
+      "status": "fail",
+      "evidence": "AASA 404"
+    },
+    {
+      "id": "K1",
+      "section": "K",
+      "title": "GA4 at the edge with a Consent Mode default",
+      "status": "pass",
+      "evidence": "GA4 G-0T390QPZ9M on 12/12; consent default set"
+    },
+    {
+      "id": "L1",
+      "section": "L",
+      "title": "Prebuild SEO gates",
+      "status": "manual",
+      "evidence": "no prebuild scripts"
+    },
+    {
+      "id": "M1",
+      "section": "M",
+      "title": "Growth plan in docs/seo",
+      "status": "fail",
+      "evidence": "no docs/seo/growth-plan*.md"
+    },
+    {
+      "id": "M2",
+      "section": "M",
+      "title": "Page plans in docs/seo/page-plans",
+      "status": "fail",
+      "evidence": "0 page plan(s)"
+    },
+    {
+      "id": "M4",
+      "section": "M",
+      "title": "Dated audits with history.md",
+      "status": "pass",
+      "evidence": "3 dated audit(s), latest 2026-10-25"
+    }
+  ],
+  "families": [
+    {
+      "family": "/guides",
+      "urls": 9,
+      "hub": true,
+      "sampled": [
+        "/guides",
+        "/guides/commissioner-guide-running-a-fair-draft-order-reveal"
+      ],
+      "types": [
+        "Action",
+        "Answer",
+        "Article",
+        "BreadcrumbList",
+        "FAQPage",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "Question",
+        "WebSite"
+      ],
+      "ogImage": 1
+    },
+    {
+      "family": "/league-id",
+      "urls": 6,
+      "hub": true,
+      "sampled": [
+        "/league-id",
+        "/league-id/espn"
+      ],
+      "types": [
+        "Action",
+        "Answer",
+        "BreadcrumbList",
+        "FAQPage",
+        "HowTo",
+        "HowToStep",
+        "ListItem",
+        "Organization",
+        "Question",
+        "WebSite"
+      ],
+      "ogImage": 1
+    },
+    {
+      "family": "/p",
+      "urls": 5,
+      "hub": false,
+      "sampled": [
+        "/p/amber-tiger-69j9"
+      ],
+      "types": [
+        "Action",
+        "BreadcrumbList",
+        "ListItem",
+        "Organization",
+        "WebSite"
+      ],
+      "ogImage": 1
+    },
+    {
+      "family": "/punishment",
+      "urls": 1,
+      "hub": false,
+      "sampled": [
+        "/punishment/new"
+      ],
+      "types": [
+        "Action",
+        "BreadcrumbList",
+        "ListItem",
+        "Organization",
+        "WebSite"
+      ],
+      "ogImage": 1
+    },
+    {
+      "family": "(pages)",
+      "urls": 16,
+      "hub": false,
+      "sampled": [
+        "/ask-your-commissioner",
+        "/fantasy-basketball",
+        "/fantasy-hockey",
+        "/mfl",
+        "/yahoo"
+      ],
+      "types": [
+        "Action",
+        "Answer",
+        "BreadcrumbList",
+        "FAQPage",
+        "ListItem",
+        "Organization",
+        "Question",
+        "WebSite"
+      ],
+      "ogImage": 1
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://fantasyfootballdraftorder.com/",
+      "family": "(home)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/",
+      "lang": "en",
+      "title": "Fantasy Football Draft Order: Free, Open-Source Randomizer",
+      "titleLength": 58,
+      "description": "Free, open-source fantasy football draft order generator. Schedule the draw, share one link, and watch your order picked live. Sleeper, ESPN, MFL and more.",
+      "descriptionLength": 155,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy Football Draft Order: Free, Open-Source Randomizer",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "FAQPage",
+          "Offer",
+          "Organization",
+          "Question",
+          "SoftwareApplication",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 10,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 29
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/guides",
+      "family": "guides",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/guides",
+      "lang": "en",
+      "title": "Fantasy Football Draft Order Guides: Trust and Tradition",
+      "titleLength": 56,
+      "description": "Guides to running fair fantasy football drafts: snake vs straight, weighted vs random lotteries, platform randomizer walkthroughs, and fun ways to pick order.",
+      "descriptionLength": 158,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/guides",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy Football Draft Order Guides: Trust and Tradition",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 3,
+        "errors": [],
+        "types": [
+          "Action",
+          "BreadcrumbList",
+          "ListItem",
+          "Organization",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 0,
+      "faqVisible": 0,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": true,
+      "internalLinks": 27
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+      "family": "guides",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+      "lang": "en",
+      "title": "Commissioner's Guide to a Fair Draft Order Reveal",
+      "titleLength": 49,
+      "description": "Everything a commissioner needs to do to run a draft order reveal that nobody can dispute. Schedule, message, run, archive.",
+      "descriptionLength": 123,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Commissioner's Guide to a Fair Draft Order Reveal",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 5,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "Article",
+          "BreadcrumbList",
+          "FAQPage",
+          "ImageObject",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 2,
+      "faqVisible": 2,
+      "articles": [
+        {
+          "type": "Article",
+          "author": true,
+          "datePublished": true,
+          "dateModified": true
+        }
+      ],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 22
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/league-id",
+      "family": "league-id",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/league-id",
+      "lang": "en",
+      "title": "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
+      "titleLength": 55,
+      "description": "Find your fantasy league ID on Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker. Exact web and app steps, what the ID looks like, and what to leave out.",
+      "descriptionLength": 157,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/league-id",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 4,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": true,
+      "internalLinks": 24
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/league-id/espn",
+      "family": "league-id",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/league-id/espn",
+      "lang": "en",
+      "title": "How to Find Your ESPN League ID (Web and App, 2026)",
+      "titleLength": 51,
+      "description": "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
+      "descriptionLength": 154,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/league-id/espn",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "How to Find Your ESPN League ID (Web and App, 2026)",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 5,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "HowTo",
+          "HowToStep",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 5,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 25
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+      "family": "p",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+      "lang": "en",
+      "title": "Fantasy fairy \u2014 Punishment Wheel",
+      "titleLength": 32,
+      "description": "Fantasy fairy finished last in Quit your bitching and drew their punishment live from 5 options: Public Apology \u2013 Record a 60-second video apologizing to the\u2026",
+      "descriptionLength": 158,
+      "keywords": false,
+      "canonical": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy fairy  \u2014 Punishment Wheel",
+      "ogImage": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 3,
+        "errors": [],
+        "types": [
+          "Action",
+          "BreadcrumbList",
+          "ListItem",
+          "Organization",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 0,
+      "faqVisible": 0,
+      "articles": [],
+      "appStore": [
+        {
+          "ct": "fantasy_draft_order",
+          "pt": "128415653"
+        },
+        {
+          "ct": "fantasy_draft_order",
+          "pt": "128415653"
+        }
+      ],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 4
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/punishment/new",
+      "family": "punishment",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/punishment/new",
+      "lang": "en",
+      "title": "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
+      "titleLength": 54,
+      "description": "Build a fantasy league punishment wheel. Add candidates, pick a time, share one link. The result is sealed up front and revealed live, so no one cries rigged.",
+      "descriptionLength": 158,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/punishment/new",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 3,
+        "errors": [],
+        "types": [
+          "Action",
+          "BreadcrumbList",
+          "ListItem",
+          "Organization",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 0,
+      "faqVisible": 0,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 2
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+      "family": "(pages)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+      "lang": "en",
+      "title": "How to Ask Your Commissioner for a Fair Draft Order",
+      "titleLength": 51,
+      "description": "Want the draft order drawn in public? How to raise it with your fantasy commissioner without a fight, plus a message to paste straight into the league chat.",
+      "descriptionLength": 156,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "How to Ask Your Commissioner for a Fair Draft Order",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 4,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 20
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+      "family": "(pages)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+      "lang": "en",
+      "title": "Fantasy Basketball Draft Order Generator: Free & Fair",
+      "titleLength": 53,
+      "description": "Free fantasy basketball draft order generator for NBA leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+      "descriptionLength": 155,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy Basketball Draft Order Generator: Free & Fair",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 5,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 21
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+      "family": "(pages)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+      "lang": "en",
+      "title": "Fantasy Hockey Draft Order Generator: Free & Transparent",
+      "titleLength": 56,
+      "description": "Free fantasy hockey draft order generator for NHL leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+      "descriptionLength": 151,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Fantasy Hockey Draft Order Generator: Free & Transparent",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 4,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 21
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/mfl",
+      "family": "(pages)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/mfl",
+      "lang": "en",
+      "title": "MFL Draft Order Randomizer: Free and Open Source",
+      "titleLength": 48,
+      "description": "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
+      "descriptionLength": 142,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/mfl",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "MFL Draft Order Randomizer: Free and Open Source",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 6,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 23
+    },
+    {
+      "url": "https://fantasyfootballdraftorder.com/yahoo",
+      "family": "(pages)",
+      "status": 200,
+      "finalUrl": "https://fantasyfootballdraftorder.com/yahoo",
+      "lang": "en",
+      "title": "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+      "titleLength": 60,
+      "description": "A fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
+      "descriptionLength": 158,
+      "keywords": true,
+      "canonical": "https://fantasyfootballdraftorder.com/yahoo",
+      "robots": "index, follow",
+      "hreflangs": [],
+      "ogTitle": "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+      "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+      "twitterCard": "summary_large_image",
+      "banner": null,
+      "ld": {
+        "blocks": 4,
+        "errors": [],
+        "types": [
+          "Action",
+          "Answer",
+          "BreadcrumbList",
+          "FAQPage",
+          "ListItem",
+          "Organization",
+          "Question",
+          "WebSite"
+        ]
+      },
+      "unnamedCrumbs": [],
+      "faqQuestions": 6,
+      "faqVisible": 3,
+      "articles": [],
+      "appStore": [],
+      "ga": "G-0T390QPZ9M",
+      "consentDefault": true,
+      "hashedAsset": "/_next/static/chunks/0ktunvptaaxs1.css",
+      "hub": false,
+      "internalLinks": 23
+    }
+  ],
+  "siteFiles": {
+    "robots": {
+      "status": 200,
+      "type": "text/plain",
+      "groups": 25,
+      "sitemaps": [
+        "https://fantasyfootballdraftorder.com/sitemap.xml"
+      ]
+    },
+    "sitemaps": [
+      {
+        "url": "https://fantasyfootballdraftorder.com/sitemap.xml",
+        "status": 200,
+        "type": "application/xml"
+      }
+    ],
+    "llms": {
+      "status": 200,
+      "type": "text/markdown; charset=utf-8",
+      "bytes": 8692
+    },
+    "llmsFull": {
+      "status": 404,
+      "type": "text/html; charset=utf-8",
+      "bytes": 22574
+    },
+    "aasa": {
+      "status": 404,
+      "type": "text/html; charset=utf-8",
+      "location": null
+    },
+    "www": {
+      "status": 301,
+      "location": "https://fantasyfootballdraftorder.com/"
+    }
+  },
+  "notes": [
+    "AUDITOR MANUAL GRADES / RECLASSIFICATIONS (2026-10-25):",
+    "A5 (meta keywords, PARTIAL): already fixed in code by #29 (56324dd, 2026-10-24) which strips keywords from every page; buildMetadata in src/lib/seo/metadata.ts emits none. The live site still shows keywords only because production is stale (last deploy 2026-10-19). Deploying main clears A5 on all 11 pages. Not a code fix - a deploy.",
+    "B9 (IndexNow after every deploy, FAIL): BY-DESIGN DEVIATION, not a real gap. CLAUDE.md/AGENTS.md document that runtime IndexNow submission was removed (490 x 429 in a week from Workers egress, 0% success) and the site intentionally relies on (a) the registered nightly indexnow-sync sweep of sitemap.xml and (b) manual `pnpm indexnow:submit <path>` after shipping a new static page. 'Never reintroduce a submission on a read path.' Do not add a CI submit step without the maintainer's call.",
+    "B7 (llms-full.txt, FAIL): REAL gap. Only /llms.txt exists (curated links). A full-content llms-full.txt would serve the AI-crawler strategy the site explicitly courts in robots.ts. New route: src/app/llms-full.txt/route.ts. Propose, non-trivial (inlines page bodies).",
+    "B1 (robots AI crawlers, PARTIAL): missing OAI-AdsBot. Note OAI-AdsBot is OpenAI's ADS crawler, not an answer/citation crawler; the robots.ts list is explicitly 'crawlers we welcome for citations'. Adding an ads bot may be off-intent. Optional.",
+    "title.too.long /fantasy-football (crawl warning): FALSE POSITIVE. Rendered title is 58 chars; the 62 count treats '&amp;' as 5 chars. No fix needed.",
+    "J1 (Smart App Banner, FAIL) + J6 (AASA JSON, FAIL): real but low-impact for a web tool ranking on informational queries. AASA 404 means universal-link handoff to the iOS app does not resolve. Relevant only when the native app push is prioritised. Batch/defer.",
+    "G1/G2 (/p family homepage + sibling links, FAIL): /p/* are user-generated punishment-wheel result pages, orphaned by design (CLAUDE.md). Not a nav gap.",
+    "M1/M2 (docs/seo growth-plan + page-plans, FAIL): process docs, not user-facing. Low priority.",
+    "B5 (HTML sitemap, manual): none. Optional for a 38-page site; sitemap.xml + llms.txt cover discovery.",
+    "C9 (HowTo only on real procedures, manual): /league-id/espn and /league-id/sleeper are genuine step-by-step procedures; HowTo is appropriate. Pass.",
+    "H3/H4 (author + trust pages, manual): no /about, /methodology, /editorial-policy. The trust story here is open-source + the randomizer linked at commit SHA, not editorial bylines. Low priority for this product.",
+    "L1 (prebuild SEO gates, manual): none. src/lib/seo/metadata-length.test.ts covers title/description length in unit tests instead."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "pagespeed",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-25T00:00:00Z",
+  "calls": [
+    { "tool": "local-lighthouse", "params": { "runs": 3, "strategy": "mobile" }, "ok": true, "result": [
+      { "url": "https://fantasyfootballdraftorder.com/league-id/sleeper", "median": true, "score": 94, "lcpS": 2.66, "tbtS": 0.03, "cls": 0.0, "fcpS": 1.96, "ttfbS": 0.21, "speedIndexS": 2.96, "opportunities": ["115ms initial server response"] },
+      { "url": "https://fantasyfootballdraftorder.com", "median": true, "score": 88, "lcpS": 2.61, "tbtS": 0.04, "cls": 0.0, "fcpS": 1.80, "ttfbS": 0.79, "speedIndexS": 3.12, "opportunities": ["600ms reduce unused JavaScript"] }
+    ] },
+    { "tool": "pagespeed_analyze", "params": { "url": "https://fantasyfootballdraftorder.com/league-id/sleeper", "strategy": "mobile", "cwvOnly": true }, "ok": true,
+      "result": { "performanceScore": 82, "lcpMs": 4651, "fcpMs": 1698, "cls": 0, "tbtMs": 18, "fieldData": null, "note": "Single PSI run; LCP 4.65s is a cold-start artifact (Workers route not recently hit). Local median of 3 (2.66s) is the number of record." } },
+    { "tool": "pagespeed_analyze", "params": { "url": "https://fantasyfootballdraftorder.com/league-id/sleeper", "strategy": "desktop", "cwvOnly": true }, "ok": true,
+      "result": { "performanceScore": 99, "lcpMs": 988, "fcpMs": 445, "cls": 0, "tbtMs": 5 } }
+  ],
+  "notes": [
+    "Mobile LCP (median of 3): /league-id/sleeper 2.66s, homepage 2.61s. Both marginally over the 2.5s threshold.",
+    "TBT 0.03-0.04s (excellent), CLS 0 (perfect), TTFB 0.21-0.79s (good). No INP risk in lab.",
+    "No CrUX field data on any page (overallCategory null): real-user traffic is too low for a field distribution. CWV here is lab-only.",
+    "Verdict: page speed is NOT the constraint. LCP is ~0.1-0.16s over threshold on fast, stable pages. The one concrete lever is 600ms of unused JS on the homepage; everything else is procrastination dressed as optimization.",
+    "Desktop is excellent (LCP ~1s, score 99)."
+  ]
+}

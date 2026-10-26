@@ -87,6 +87,7 @@ export async function GET() {
   lines.push("## Crawl guidance");
   lines.push("");
   lines.push(`- Full sitemap: ${SITE_URL}/sitemap.xml`);
+  lines.push(`- Full page content inlined for answer engines: ${SITE_URL}/llms-full.txt`);
   lines.push("- Every page is public. There are no accounts, no paywall, and no sign-in anywhere on the site.");
   lines.push(
     `- Draft pages live at ${SITE_URL}/d/[slug] and punishment wheels at ${SITE_URL}/p/[slug]. Both are noindex until their result has been revealed, after which they are listed in sitemap.xml.`,
