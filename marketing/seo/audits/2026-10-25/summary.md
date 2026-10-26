@@ -126,3 +126,44 @@ reclassifications (full rationale in `standard.json` notes).
   lists; none were pulled.
 - Bing's health/sitemaps/feeds endpoints reject the `sc-domain:` identifier; Bing was read
   via crawl_issues/crawl_stats on the `https://` property instead (crawl clean, 44 in index).
+
+## Outcome
+
+- **Deployed `main`** (Deploy run 40265332723, workflow_dispatch, success). Cleared the
+  6-day / 5-PR production backlog. **A5 verified cleared live**: meta keywords are now gone
+  from `/`, `/league-id/sleeper`, and `/sleeper`. Also shipped #24 (GA datacenter skip +
+  app-store click tracking) and #25 (Grafana OTLP observability). See `verify.json`.
+- **B7 llms-full.txt**: route built and verified locally (`pnpm build:cf` green on Node 22
+  with the CI env; renders 63.9 KB of valid markdown, 0 em dashes, in the Worker output).
+  Shipped in **PR #30** together with this audit directory. The agent was blocked from
+  merging by the auto-mode classifier, so **#30 awaits a human merge**; `/llms-full.txt`
+  (404 today) clears on the redeploy that merge triggers.
+
+### SERP investigation (the league-id CTR problem)
+
+The Claude-in-Chrome extension was not connected, so the live Google SERP could not be
+driven; WebSearch on the top zero-click queries was used instead (advisory, not a live
+SERP read). Both the search landscape and the GSC position/CTR data point the same way:
+
+- These are **answer-complete informational queries**. "How to find your [platform] league
+  id" is answered in one sentence (it is the number in your league URL), so a featured
+  snippet / inline answer satisfies the searcher without a click. That is why a position-5
+  organic result takes ~0 clicks. It is not a weak title.
+- **ESPN**: an official `support.espn.com` League-ID page exists and almost certainly owns
+  the featured snippet. Our pages rank ~9-10, below it. **Low ROI to chase.**
+- **Sleeper**: **no official help article exists** (top results are third-party dev/API
+  docs). This is the one league-id family we can own. `/league-id/sleeper` already ranks
+  top-5 with HowTo + FAQ schema; leading the page body with a crisp, snippet-extractable
+  answer (one-sentence definition + the exact 18-digit example + a 2-3 step list directly
+  under the H1) is the highest-leverage content fix in the cluster. Repo:
+  `src/lib/seo/league-id-guides.ts` (the `sleeper` entry) and
+  `src/app/(marketing)/league-id/[platform]/page.tsx`.
+- **The real growth lever is the transactional cluster, not league-id.** The league-id
+  pages are high-impression, answer-complete, and low-intent for a draft tool, so they will
+  always convert poorly to clicks and worse to the product goal (creating a draw). The
+  queries worth winning are `[platform] draft order randomizer/generator` and
+  `how to randomize draft order on [platform]` sitting at positions 6-13 (e.g. `/sleeper`
+  at pos 6.15 for "how to randomize draft order sleeper", 0 clicks), where a click is a
+  likely product user. `guides.ts`'s `metaTitle` comment already names this tension; the
+  next content pass should target those landing pages (`/sleeper`, `/espn`, `/yahoo`) and
+  their walkthrough guides rather than more league-id surface.
