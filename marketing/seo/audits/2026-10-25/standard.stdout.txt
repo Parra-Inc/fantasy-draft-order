@@ -1,0 +1,125 @@
+seo-standard: https://fantasyfootballdraftorder.com
+sitemap: 38 URLs
+sampling 12 pages across 5 families
+
+A
+  A2   pass    No page canonicalizes to the homepage (no root canonical)
+              11 non-home pages, none canonicalize to the homepage
+  A3   pass    Title, description and self canonical on every sampled page
+              12/12 sampled pages complete
+  A4   PARTIAL Meta descriptions 150 to 160 characters
+              10/12 in 150 to 160 (min 123, median 156, max 158)
+  A5   PARTIAL No filler meta keywords
+              meta keywords on 11/12 sampled pages
+  A6   pass    One host: www 301s to the apex
+              www.fantasyfootballdraftorder.com 301 -> https://fantasyfootballdraftorder.com/
+
+B
+  B1   PARTIAL robots.txt allows / and lists every AI crawler with the * rules
+              * allows / (1 disallow rules); 24/25 AI crawlers listed; missing: OAI-AdsBot; Sitemap: https://fantasyfootballdraftorder.com/sitemap.xml
+  B2   pass    Sitemap, robots.txt and noindex agree
+              38 sitemap URLs all crawlable; no sampled page carries noindex
+  B3   pass    Sitemap lists live 200 URLs on this host
+              38 URLs in 1 file(s), 5 families; hreflang on 0, images on 0
+  B4   pass    Sitemap lastmod is a real per-page date
+              13 distinct dates across 26 URLs; most common 2026-08-11 on 35%; 12 URLs without lastmod
+  B5   manual  HTML sitemap page
+              none at /sitemap, /sitemap-html, /site-map, /sitemap.html, /html-sitemap
+  B6   pass    llms.txt served as text, no em dashes
+              8692 bytes, 37 links, 0 em dashes
+  B7   FAIL    llms-full.txt served
+              llms-full.txt 404
+  B8   pass    IndexNow key file served on the host
+              /0d280b….txt 200, exact key, no newline
+  B9   FAIL    IndexNow submit runs after every deploy
+              no IndexNow step in 1 workflow(s); only the nightly indexnow-sync sweep submits
+  B11  pass    Registered in indexnow-sync
+              id fantasyfootballdraftorder-com, rank 5, google on
+
+C
+  C1   pass    Valid JSON-LD on every sampled page
+              12/12 sampled pages have JSON-LD
+  C2   pass    Organization and WebSite on the homepage
+              homepage types: Action, Answer, FAQPage, Offer, Organization, Question, SoftwareApplication, WebSite
+  C3   pass    App entity with an Offer on the homepage
+              app entity on home with Offer
+  C4   n/a     Tool pages carry WebApplication or SoftwareApplication
+              no tools or calculators family
+  C5   pass    BreadcrumbList below home, every item named
+              11/11 family pages carry BreadcrumbList
+  C6   pass    FAQPage only where the questions are visible
+              9 page(s) with FAQPage, questions visible
+  C7   pass    Articles carry author, datePublished, dateModified
+              1 Article node(s) complete
+  C8   n/a     Glossary pages carry DefinedTerm
+              no glossary family
+  C9   manual  HowTo only on real procedures
+              HowTo on /league-id/espn: keep it only where the page is a real step-by-step procedure
+
+D
+  D1   PARTIAL Per-page OG images that load
+              og:image on 12/12; 2 distinct image(s) across 6 families; /opengraph-image on 11/12 pages: no per-route cards; repo: 4 opengraph-image/twitter-image file(s)
+  D2   pass    Pages that set og:title still carry og:image
+              every page with og:title carries og:image
+
+E
+  E5   PARTIAL Every indexable page reaches the sitemap and every family llms.txt
+              3/3 families linked from llms.txt; 1 indexable page(s) linked from the site but not in the sitemap: /p/amber-tiger-69j9/card
+
+F
+  F1   pass    Every page declares <html lang>
+              lang set on all 12 (en)
+  F2   n/a     hreflang sets carry x-default and a self entry
+              no hreflang on sampled pages (single-language site)
+
+G
+  G1   FAIL    Homepage links every page family
+              2/3 families linked from the homepage; not linked: /p
+  G2   FAIL    Family pages link their hub and a sibling
+              3/4 sampled family pages link their hub and a sibling; thin on /p/amber-tiger-69j9
+
+H
+  H3   manual  Author pages
+              no /authors page; check bylines on articles
+  H4   manual  Trust pages (about, methodology, editorial policy)
+              /about no, /methodology no, /editorial-policy no
+
+I
+  I2   PARTIAL Immutable caching on hashed assets, security headers
+              0ktunvptaaxs1.css: cache-control "public, max-age=0, must-revalidate"; security headers: strict-transport-security, x-content-type-options
+
+J
+  J1   FAIL    Smart App Banner when the app is live
+              App Store links present but no Smart App Banner
+  J2   n/a     Banner hands the app the page URL with a campaign tag
+              no banner
+  J4   pass    App Store links carry page-level ct tokens
+              2/2 App Store links carry ct (1 distinct)
+  J6   FAIL    AASA served as JSON
+              AASA 404
+
+K
+  K1   pass    GA4 at the edge with a Consent Mode default
+              GA4 G-0T390QPZ9M on 12/12; consent default set
+
+L
+  L1   manual  Prebuild SEO gates
+              no prebuild scripts
+
+M
+  M1   FAIL    Growth plan in docs/seo
+              no docs/seo/growth-plan*.md
+  M2   FAIL    Page plans in docs/seo/page-plans
+              0 page plan(s)
+  M4   pass    Dated audits with history.md
+              3 dated audit(s), latest 2026-10-25
+
+Families
+  /guides                          9 URLs  Action, Answer, Article, BreadcrumbList, FAQPage, ImageObject, ListItem, Organization, Question, WebSite
+  /league-id                       6 URLs  Action, Answer, BreadcrumbList, FAQPage, HowTo, HowToStep, ListItem, Organization, Question, WebSite
+  /p                               5 URLs  Action, BreadcrumbList, ListItem, Organization, WebSite
+  /punishment                      1 URLs  Action, BreadcrumbList, ListItem, Organization, WebSite
+  (pages)                         16 URLs  Action, Answer, BreadcrumbList, FAQPage, ListItem, Organization, Question, WebSite
+
+20 pass, 6 partial, 8 fail, 4 n/a, 5 manual
+wrote marketing/seo/audits/2026-10-25/standard.json

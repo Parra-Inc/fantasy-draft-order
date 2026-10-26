@@ -1,0 +1,35 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "manifest",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "rank": 5,
+  "capturedAt": "2026-10-25T00:00:00Z",
+  "coverage": { "audited": 38, "pages": 38, "percent": 100 },
+  "gscWindow": { "start": "2026-09-25", "end": "2026-10-22", "days": 28, "note": "ends 3 days back for GSC lag" },
+  "google": { "property": "sc-domain:fantasyfootballdraftorder.com", "verified": true },
+  "bing": { "property": "https://fantasyfootballdraftorder.com/", "verified": true },
+  "phasesRun": {
+    "phase0_scope": true,
+    "phase1_crawl": "recheck queued 38 pages (not capped), read after re-crawl",
+    "phase2_search_console": true,
+    "phase3_pagespeed": "local lighthouse median of 3, mobile; one PSI mobile run on /league-id/sleeper",
+    "phase4_standard": true
+  },
+  "pagespeed": {
+    "runner": "local lighthouse mjs --runs=3 (mobile)",
+    "urls": ["https://fantasyfootballdraftorder.com/league-id/sleeper", "https://fantasyfootballdraftorder.com"],
+    "note": "PSI mobile single run on /league-id/sleeper returned LCP 4.65s (cold start); local median of 3 is the number used"
+  },
+  "productionState": {
+    "lastDeploy": "2026-10-19T19:06:37Z (workflow_dispatch on main, run 39308202260)",
+    "headCommit": "56324dd (2026-10-24, remove meta keywords #29)",
+    "undeployedMergedPRs": ["#29 remove meta keywords", "#28/#27/#26 deploy.sh sync (local script only)", "#25 Grafana OTLP observability", "#24 skip GA on datacenter networks + app store click tracking"],
+    "autoDeploy": "disabled; workflow_dispatch only"
+  },
+  "skipped": {
+    "phase2_bing_insight_tools": "site_health_check full + sitemaps_list + feeds error on Bing with sc-domain format (InvalidUrl); crawl_issues/crawl_stats pulled with https:// identifier instead",
+    "gsc_ui_lists": "Page Indexing / Manual Actions / Security / Enhancements not exposed by GSC API"
+  },
+  "notMaintainedFilter": "n/a (single-site audit of a maintained site)"
+}

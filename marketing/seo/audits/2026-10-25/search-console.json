@@ -1,0 +1,51 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "search-console",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-10-25T00:00:00Z",
+  "calls": [
+    { "tool": "analytics_query", "params": { "siteUrl": "sc-domain:fantasyfootballdraftorder.com", "startDate": "2026-09-25", "endDate": "2026-10-22", "dimensions": [], "engine": "google" },
+      "ok": true, "result": { "clicks": 74, "impressions": 11658, "ctr": 0.00635, "position": 9.56 } },
+    { "tool": "site_health_check", "params": { "level": "full", "engine": "all" }, "ok": true,
+      "result": { "google": { "status": "warning", "performance7d": { "current": { "clicks": 23, "impressions": 4573, "ctr": 0.00503, "position": 9.25, "startDate": "2026-10-16", "endDate": "2026-10-23" }, "previous": { "clicks": 28, "impressions": 3536, "position": 9.21 }, "changes": { "clicksPercent": -17.86, "impressionsPercent": 29.33 } }, "sitemaps": { "total": 1, "withErrors": 0, "withWarnings": 0, "lastDownloaded": "2026-10-17T23:52:41Z" }, "anomalies": [], "issues": ["Traffic declining: clicks down 17.9% week-over-week"] },
+        "bing": { "error": "Bing GetRankAndTrafficStats 400 InvalidUrl (sc-domain format rejected by Bing)" } } },
+    { "tool": "sitemaps_list", "params": { "engine": "all" }, "ok": true,
+      "result": { "google": [ { "path": "https://fantasyfootballdraftorder.com/sitemap.xml", "lastSubmitted": "2026-10-09T03:01:22Z", "lastDownloaded": "2026-10-17T23:52:41Z", "errors": "0", "warnings": "0", "contents": [ { "type": "web", "submitted": "38", "indexed": "0" } ] } ], "bing": { "error": "GetFeeds 400 InvalidUrl (sc-domain rejected)" } } },
+    { "tool": "site_health_check", "params": { "siteUrl": "https://fantasyfootballdraftorder.com/", "level": "crawl_issues", "engine": "bing" }, "ok": true,
+      "result": { "bingCrawlIssues": [], "bingCrawlStatsLatest": { "InIndex": 44, "Code2xx": 77, "Code4xx": 0, "Code5xx": 0, "BlockedByRobotsTxt": 0, "note": "90 daily rows returned verbatim from API; trimmed here to latest. Trend: InIndex climbed 2 -> 44 over the window, no 5xx, occasional single 4xx. Bing crawl is clean; the 'missing sitemap' Recommendation in Bing WMT is stale (sitemap submitted + downloaded, 44 pages in index)." } } },
+    { "tool": "seo_audit", "params": { "type": "recommendations", "engine": "google" }, "ok": true,
+      "result": [ { "type": "opportunity", "category": "Rankings", "title": "7 keywords with ranking potential", "description": "Keywords at positions 5-20 with high impressions. Moving to top 3 could bring ~145 additional clicks.", "priority": "high", "topKeywords": ["how to find sleeper league id", "how to find espn league id", "how to find espn fantasy league id", "sleeper league id", "how to find league id on espn"] } ] },
+    { "tool": "seo_audit", "params": { "type": "striking_distance", "engine": "google" }, "ok": true,
+      "result": "49 rows, positions 8-12, almost all /league-id and /league-id/{espn,sleeper}, 0 clicks each. Top by impressions: 'how to find espn fantasy league id' (/league-id, pos 9.6, 137 impr), 'sleeper league id' (/league-id/sleeper, pos 8.9, 131 impr), 'how to find espn league id' (/league-id, pos 9.5, 109 impr), 'how to find league id on espn' (/league-id/espn, pos 8.6, 89 impr). Also /fantasy-basketball 'nba fantasy draft order generator' pos 8.4 25 impr; guides 'how to set draft order in sleeper' pos 8.2 18 impr." },
+    { "tool": "seo_audit", "params": { "type": "low_ctr", "engine": "google", "minImpressions": 50 }, "ok": true,
+      "result": [
+        { "query": "how to find sleeper league id", "page": "/league-id/sleeper", "position": 5.26, "impressions": 172, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.04 },
+        { "query": "how to find espn fantasy league id", "page": "/league-id", "position": 9.62, "impressions": 137, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 },
+        { "query": "sleeper league id", "page": "/league-id/sleeper", "position": 8.85, "impressions": 131, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 },
+        { "query": "how to find espn league id", "page": "/league-id", "position": 9.50, "impressions": 109, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 },
+        { "query": "where to find sleeper league id", "page": "/league-id/sleeper", "position": 5.18, "impressions": 101, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.04 },
+        { "query": "how to find league id on espn", "page": "/league-id/espn", "position": 8.56, "impressions": 89, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 },
+        { "query": "how to find league id on sleeper", "page": "/league-id/sleeper", "position": 6.48, "impressions": 63, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.03 },
+        { "query": "how to randomize draft order sleeper", "page": "/sleeper", "position": 6.15, "impressions": 53, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.03 },
+        { "query": "where to find espn fantasy league id", "page": "/league-id", "position": 9.65, "impressions": 52, "clicks": 0, "ctr": 0, "benchmarkCtr": 0.01 }
+      ] },
+    { "tool": "seo_audit", "params": { "type": "quick_wins", "engine": "google" }, "ok": true, "result": [] },
+    { "tool": "seo_audit", "params": { "type": "lost_queries", "engine": "google" }, "ok": true, "result": [] },
+    { "tool": "seo_audit", "params": { "type": "cannibalization", "engine": "google" }, "ok": true, "result": [] },
+    { "tool": "seo_audit", "params": { "type": "brand_vs_nonbrand", "engine": "google", "brandKeywords": ["fantasy football draft order", "fantasyfootballdraftorder", "fantasy draft order"] }, "ok": true,
+      "result": [ { "segment": "Brand", "clicks": 0, "impressions": 86, "ctr": 0, "position": 45.35, "queryCount": 31 }, { "segment": "Non-Brand", "clicks": 6, "impressions": 3230, "ctr": 0.00186, "position": 13.52, "queryCount": 409 } ] }
+  ],
+  "notes": [
+    "GSC window: 28 days, 2026-09-25 to 2026-10-22 (ends 3 days back for lag).",
+    "HEADLINE: strong page-1 rankings with near-zero CTR. 74 clicks on 11,658 impressions = 0.63% CTR at avg position 9.56.",
+    "The /league-id family (hub + /espn + /sleeper + others) ranks positions 5-12 for a large 'how to find [platform] league id' query cluster and takes 0 clicks on nearly every one; benchmark CTR for those positions is 1-4%.",
+    "low_ctr standouts are the alarming ones: /league-id/sleeper at position 5.2 (172 impr) and 5.2 (101 impr) with 0 clicks vs 4% benchmark. A well-ranked page at pos 5 taking 0 clicks points to a SERP feature (featured snippet / PAA / video) or a competitor result above the fold eating the click, not a weak title.",
+    "Live metadata on the /league-id family is already strong and answer-shaped, and /league-id/sleeper already carries HowTo + FAQPage + 5 Question nodes. There is no cheap on-page title/meta fix; the lever is SERP-feature capture and/or a judgement that these informational queries convert poorly to a tool.",
+    "Brand search is negligible (6 non-brand clicks drove the window; 'brand' segment 0 clicks). Nobody searches the product name yet; all value is non-brand informational.",
+    "quick_wins, lost_queries, cannibalization all empty.",
+    "Sitemap: GSC downloaded 2026-10-17, 0 errors/0 warnings, 38 submitted. 'indexed: 0' is the GSC API's usual null for this field, not a real zero (Bing shows 44 in index).",
+    "Bing insight endpoints (health full, sitemaps_list, feeds) reject the sc-domain identifier; use https://fantasyfootballdraftorder.com/ for Bing. Bing crawl_issues empty, crawl clean.",
+    "The GSC health 'traffic declining 17.9% WoW' is noise: 7-day clicks 28 -> 23 (single digits) while impressions rose 29% (3536 -> 4573). 3-audit trend is UP: clicks 82 (Aug) -> 41 (Oct 10) -> 74 (now), impressions 6872 -> 11658, position 11.5 -> 9.56."
+  ]
+}
