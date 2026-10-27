@@ -25,13 +25,6 @@ const SCANNER_PATH_PATTERN =
 const worker = {
   async fetch(request: Request, env: CloudflareEnv, ctx: ExecutionContext) {
     const url = new URL(request.url);
-    // Canonical host: NEXT_PUBLIC_BASE_URL has no www, so 301 www -> apex,
-    // preserving path and query. Both hostnames are attached to this worker as
-    // Custom Domains.
-    if (url.hostname === "www.fantasyfootballdraftorder.com") {
-      url.hostname = "fantasyfootballdraftorder.com";
-      return Response.redirect(url.toString(), 301);
-    }
     if (SCANNER_PATH_PATTERN.test(url.pathname + url.search)) {
       return new Response("Not found", { status: 404 });
     }
