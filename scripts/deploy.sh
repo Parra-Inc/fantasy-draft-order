@@ -42,6 +42,11 @@
 # Optional `scripts/deploy.config.sh`, sourced if present. Every value optional:
 #
 #   APP_DIR="apps/web"                  override the detected app directory
+#   $DEPLOY_APP                         set by --app before this file is sourced,
+#                                       so a repo with several Workers can branch
+#                                       on it (`case "${DEPLOY_APP:-}" in ...`)
+#                                       to give each its own BUILD_CMD, SITE_URL,
+#                                       PLACEHOLDERS and secrets
 #   EXTRA_APP_DIRS=(apps/marketing)     more Workers built by the same BUILD_CMD,
 #                                       deployed after APP_DIR (which keeps the
 #                                       migrations and secrets)
@@ -77,6 +82,8 @@
 #   bash scripts/deploy.sh --yes             answer every prompt with yes
 #   bash scripts/deploy.sh --allow-dirty     deploy despite uncommitted changes
 #   bash scripts/deploy.sh --allow-branch    deploy from a non-default branch
+#   bash scripts/deploy.sh --app NAME        deploy the Worker in NAME or apps/NAME
+#                                            instead of the default one
 
 set -euo pipefail
 
@@ -98,9 +105,14 @@ ASSUME_YES=0
 ALLOW_DIRTY=0
 ALLOW_BRANCH=0
 DETECT_ONLY=0
+DEPLOY_APP=""
 
-for arg in "$@"; do
+while [ $# -gt 0 ]; do
+  arg="$1"; shift
   case "$arg" in
+    --app)            [ $# -gt 0 ] || { echo "--app needs a name" >&2; exit 2; }
+                      DEPLOY_APP="$1"; shift ;;
+    --app=*)          DEPLOY_APP="${arg#--app=}" ;;
     --detect)         DETECT_ONLY=1 ;;
     --skip-infra)     SKIP_INFRA=1 ;;
     --infra-only)     INFRA_ONLY=1 ;;
@@ -185,6 +197,21 @@ find_app_dir() {
         -not -path '*/node_modules/*' -not -path '*/.next/*' -not -path '*/.open-next/*' 2>/dev/null | head -1)
   [ -n "$c" ] && dirname "${c#"$ROOT"/}" || echo ""
 }
+
+# --app picks the Worker; the config above has already seen $DEPLOY_APP and set
+# everything else for it. Only that one Worker ships, never EXTRA_APP_DIRS, and
+# it keeps its own IndexNow baseline so apps do not move each other's range.
+if [ -n "$DEPLOY_APP" ]; then
+  APP_DIR=""
+  for c in "$DEPLOY_APP" "apps/$DEPLOY_APP"; do
+    for f in wrangler.jsonc wrangler.json wrangler.toml; do
+      [ -z "$APP_DIR" ] && [ -f "$ROOT/$c/$f" ] && APP_DIR="$c"
+    done
+  done
+  [ -n "$APP_DIR" ] || die "--app $DEPLOY_APP: no wrangler config in $DEPLOY_APP or apps/$DEPLOY_APP."
+  EXTRA_APP_DIRS=()
+  LAST_DEPLOY="$ROOT/$APP_DIR/.last-deploy-sha"
+fi
 
 [ -n "$APP_DIR" ] || APP_DIR=$(find_app_dir)
 [ -n "$APP_DIR" ] || die "No wrangler config found. This does not look like a Cloudflare Workers repo."
