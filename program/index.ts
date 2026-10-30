@@ -1,6 +1,8 @@
+import * as path from "path";
 import * as pulumi from "@pulumi/pulumi";
 import {
   AccessProtectedHost,
+  nextApiRoutePrefixes,
   ProjectEmail,
   WafScannerBlock,
   WebAnalytics,
@@ -27,7 +29,17 @@ new WwwRedirect({ zoneId, domain });
 
 // custom-worker.ts short-circuits the same scanner paths as a second line of
 // defense in case this rule is ever missing.
-new WafScannerBlock(domain, { zoneId });
+//
+// Unknown /api paths are blocked too: the allow list is generated from the
+// Next app's route.ts files under src/app/api, so a new route is covered on
+// the next infra deploy. The storybook host is a separate Worker, so only the
+// apex and www (both served by this app's Worker) are scoped.
+const apiRoutes = nextApiRoutePrefixes([path.join(__dirname, "../src/app")]);
+new WafScannerBlock(domain, {
+  zoneId,
+  knownApiPrefixes: apiRoutes,
+  apiHosts: [domain, `www.${domain}`],
+});
 
 // Inbound only: drafts are shared by URL and creatorEmail is only stored, so
 // the app sends no mail.
