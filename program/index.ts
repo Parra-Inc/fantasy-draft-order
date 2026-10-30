@@ -2,6 +2,7 @@ import * as path from "path";
 import * as pulumi from "@pulumi/pulumi";
 import {
   AccessProtectedHost,
+  AgentDiscovery,
   nextApiRoutePrefixes,
   ProjectEmail,
   WafScannerBlock,
@@ -25,6 +26,9 @@ new WebAnalytics(domain, { accountId, zoneId });
 // GA4 is injected by the Worker, not a GoogleAnalytics Snippet: Snippets need a
 // paid zone plan, and @parra/cloudflare-pulumi >= 1.14.0 throws on a Free zone.
 new ZoneSecurity({ zoneId, domain });
+// DNSSEC + DNS-AID SVCB at _index._agents. Registrar is Cloudflare, so the
+// DS record is published automatically.
+new AgentDiscovery({ zoneId, domain });
 new WwwRedirect({ zoneId, domain });
 
 // custom-worker.ts short-circuits the same scanner paths as a second line of

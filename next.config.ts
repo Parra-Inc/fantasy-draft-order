@@ -29,6 +29,21 @@ const nextConfig: NextConfig = {
     ".prisma/client",
     "@prisma/adapter-d1",
   ],
+  async headers() {
+    return [
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value:
+              '</llms.txt>; rel="describedby"; type="text/markdown", </sitemap.xml>; rel="sitemap"',
+          },
+          { key: "Vary", value: "Accept" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
@@ -46,5 +61,7 @@ export default nextConfig;
 // Exposes the wrangler.jsonc bindings (D1, ASSETS) inside plain `next dev` via
 // miniflare, so the local loop needs no wrangler command and reads the same
 // .wrangler/state database that `pnpm db:migrate:local` writes to.
-// No-op outside `next dev`.
-initOpenNextCloudflareForDev();
+// No-op outside `next dev`. remoteBindings: false keeps the AI binding (remote
+// only, used by markdown negotiation in custom-worker.ts) from opening a
+// remote proxy session that needs a Cloudflare token during build.
+initOpenNextCloudflareForDev({ remoteBindings: false });
