@@ -32,7 +32,8 @@
     { "pattern": "www.fantasyfootballdraftorder.com", "custom_domain": true }
   ],
   // Kept on as a fallback URL for debugging a deploy before DNS settles.
-  "workers_dev": true,
+  "workers_dev": false,
+  "preview_urls": false,
   // Workers Logs: capture 100% of invocations (head_sampling_rate: 1) so
   // production logs/metrics are queryable without redeploying.
   "observability": {

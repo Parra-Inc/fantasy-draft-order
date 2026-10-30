@@ -142,7 +142,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     source: "ESPN",
     platformPage: "/espn",
     draftOrderGuide: "how-to-randomize-draft-order-on-espn",
-    title: "How to Find Your ESPN League ID (Web and App, 2026)",
+    title: "How to Find Your ESPN Fantasy League ID (Web and App)",
     description:
       "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
     keywords: [

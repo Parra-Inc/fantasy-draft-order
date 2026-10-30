@@ -1,0 +1,253 @@
+{
+ "site": "fantasyfootballdraftorder.com",
+ "capturedAt": "2026-10-30T15:21:15.496Z",
+ "pages": [
+  {
+   "url": "https://fantasyfootballdraftorder.com/",
+   "status": 200,
+   "title": "Fantasy Football Draft Order: Free, Open-Source Randomizer",
+   "description": "Free, open-source fantasy football draft order generator. Schedule the draw, share one link, and watch your order picked live. Sleeper, ESPN, MFL and more.",
+   "canonical": "https://fantasyfootballdraftorder.com/",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy Football Draft Order: Free, Open-Source Randomizer",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "FAQPage",
+    "Offer",
+    "Organization",
+    "Question",
+    "SoftwareApplication",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides",
+   "status": 200,
+   "title": "Fantasy Football Draft Order Guides: Trust and Tradition",
+   "description": "Guides to running fair fantasy football drafts: snake vs straight, weighted vs random lotteries, platform randomizer walkthroughs, and fun ways to pick order.",
+   "canonical": "https://fantasyfootballdraftorder.com/guides",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy Football Draft Order Guides: Trust and Tradition",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "BreadcrumbList",
+    "ListItem",
+    "Organization",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+   "status": 200,
+   "title": "Commissioner's Guide to a Fair Draft Order Reveal",
+   "description": "Everything a commissioner needs to do to run a draft order reveal that nobody can dispute. Schedule, message, run, archive.",
+   "canonical": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+   "robots": "index, follow",
+   "ogTitle": "Commissioner's Guide to a Fair Draft Order Reveal",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "Article",
+    "BreadcrumbList",
+    "FAQPage",
+    "ImageObject",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id",
+   "status": 200,
+   "title": "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
+   "description": "Find your fantasy league ID on Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker. Exact web and app steps, what the ID looks like, and what to leave out.",
+   "canonical": "https://fantasyfootballdraftorder.com/league-id",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/espn",
+   "status": 200,
+   "title": "How to Find Your ESPN League ID (Web and App, 2026)",
+   "description": "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
+   "canonical": "https://fantasyfootballdraftorder.com/league-id/espn",
+   "robots": "index, follow",
+   "ogTitle": "How to Find Your ESPN League ID (Web and App, 2026)",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "HowTo",
+    "HowToStep",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+   "status": 200,
+   "title": "Fantasy fairy — Punishment Wheel",
+   "description": "Fantasy fairy finished last in Quit your bitching and drew their punishment live from 5 options: Public Apology – Record a 60-second video apologizing to the…",
+   "canonical": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy fairy  — Punishment Wheel",
+   "ogImage": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9/opengraph-image",
+   "ld": [
+    "Action",
+    "BreadcrumbList",
+    "ListItem",
+    "Organization",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/punishment/new",
+   "status": 200,
+   "title": "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
+   "description": "Build a fantasy league punishment wheel. Add candidates, pick a time, share one link. The result is sealed up front and revealed live, so no one cries rigged.",
+   "canonical": "https://fantasyfootballdraftorder.com/punishment/new",
+   "robots": "index, follow",
+   "ogTitle": "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "BreadcrumbList",
+    "ListItem",
+    "Organization",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+   "status": 200,
+   "title": "How to Ask Your Commissioner for a Fair Draft Order",
+   "description": "Want the draft order drawn in public? How to raise it with your fantasy commissioner without a fight, plus a message to paste straight into the league chat.",
+   "canonical": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+   "robots": "index, follow",
+   "ogTitle": "How to Ask Your Commissioner for a Fair Draft Order",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+   "status": 200,
+   "title": "Fantasy Basketball Draft Order Generator: Free & Fair",
+   "description": "Free fantasy basketball draft order generator for NBA leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+   "canonical": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy Basketball Draft Order Generator: Free & Fair",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+   "status": 200,
+   "title": "Fantasy Hockey Draft Order Generator: Free & Transparent",
+   "description": "Free fantasy hockey draft order generator for NHL leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+   "canonical": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+   "robots": "index, follow",
+   "ogTitle": "Fantasy Hockey Draft Order Generator: Free & Transparent",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/mfl",
+   "status": 200,
+   "title": "MFL Draft Order Randomizer: Free and Open Source",
+   "description": "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
+   "canonical": "https://fantasyfootballdraftorder.com/mfl",
+   "robots": "index, follow",
+   "ogTitle": "MFL Draft Order Randomizer: Free and Open Source",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/yahoo",
+   "status": 200,
+   "title": "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+   "description": "A fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
+   "canonical": "https://fantasyfootballdraftorder.com/yahoo",
+   "robots": "index, follow",
+   "ogTitle": "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+   "ogImage": "https://fantasyfootballdraftorder.com/opengraph-image",
+   "ld": [
+    "Action",
+    "Answer",
+    "BreadcrumbList",
+    "FAQPage",
+    "ListItem",
+    "Organization",
+    "Question",
+    "WebSite"
+   ],
+   "hreflangs": []
+  }
+ ]
+}

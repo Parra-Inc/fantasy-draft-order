@@ -38,8 +38,6 @@ const AI_CRAWLERS = [
   "MistralAI-User",
   "Kagibot",
   "YouBot",
-  "Bytespider",
-  "CCBot",
 ];
 
 // /.well-known/ must never be covered by a Disallow.
