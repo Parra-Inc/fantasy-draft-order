@@ -14,6 +14,8 @@
   // node:crypto is fully supported under this flag, which is what
   // src/lib/randomizer.ts (randomInt) and the draft seed (randomBytes) need.
   "compatibility_flags": ["nodejs_compat"],
+  // Workers AI, used only for toMarkdown (markdown negotiation for agents).
+  "ai": { "binding": "AI" },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
