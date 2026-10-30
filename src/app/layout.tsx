@@ -45,6 +45,9 @@ export const metadata: Metadata = {
   },
   description: SITE_TAGLINE,
   applicationName: SITE_NAME,
+  icons: {
+    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#00E676" }],
+  },
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
