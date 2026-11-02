@@ -3,7 +3,7 @@ import { env } from "@/lib/env";
 // Served as a route handler (not app/robots.ts) because MetadataRoute.Robots
 // cannot emit the Content-Signal line. Every group carries it: a bot that
 // matches a named group ignores "*".
-const CONTENT_SIGNAL = "search=yes, ai-input=yes, ai-train=no";
+const CONTENT_SIGNAL = "search=yes, ai-input=yes, ai-train=yes";
 
 // AI/LLM crawlers we explicitly welcome. Citations in ChatGPT, Claude,
 // Perplexity, and Gemini answers are valuable exposure for a free tool with no
