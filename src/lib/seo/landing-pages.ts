@@ -21,6 +21,16 @@ export type LandingPage = {
   relatedGuides?: string[];
   faqs: { q: string; a: string }[];
   breadcrumbName: string;
+  /** ISO date the page copy was last reviewed, shown on the page. */
+  updated?: string;
+  /** Factual comparison table rendered under the hero. Blank cell = not verified. */
+  comparison?: {
+    heading: string;
+    columns: string[];
+    rows: { label: string; cells: string[] }[];
+    sources: { label: string; url: string }[];
+    note?: string;
+  };
 };
 
 const TRUST_FAQ = {
@@ -47,6 +57,7 @@ export const LANDING_PAGES: LandingPage[] = [
   // Platform pages
   {
     slug: "sleeper",
+    updated: "2026-11-02",
     title: "Sleeper Draft Order Randomizer: Drawn Live, Free (2026)",
     description:
       "Randomize your Sleeper draft order where the whole league can watch. Paste your league ID, pick a time, and everyone sees the same live draw. Free, no login.",
@@ -54,7 +65,7 @@ export const LANDING_PAGES: LandingPage[] = [
     h1: "Sleeper draft order randomizer.",
     h1Accent: "Drawn live. Auditable forever.",
     intro:
-      "Sleeper's built-in randomize button works — but nobody on your league can verify it. Fantasy Football Draft Order imports your Sleeper teams by league ID, schedules a public draw time, and runs the order from open-source code with a permanent seed and commit hash. No commissioner in the loop.",
+      "To randomize draft order natively on Sleeper, the commissioner opens League Settings (gear icon), then Draft, then Draft Order, taps Randomize Order and saves. Use Fantasy Football Draft Order instead when the league wants to watch the draw: it imports your Sleeper teams by league ID, draws the order at a scheduled public time from open-source code, and keeps a permanent seed and commit hash that nobody can re-roll.",
     keywords: [
       "sleeper draft order randomizer",
       "sleeper fantasy draft order",
@@ -92,6 +103,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "espn",
+    updated: "2026-11-02",
     title: "ESPN Fantasy Football Draft Order Randomizer: Free and Live",
     description:
       "Free ESPN fantasy football draft order generator. Import a public ESPN league by ID, share one link, and the whole league watches the order drawn live.",
@@ -99,7 +111,7 @@ export const LANDING_PAGES: LandingPage[] = [
     h1: "ESPN fantasy football draft order, done right.",
     h1Accent: "Scheduled. Synced. Tamper-proof.",
     intro:
-      "ESPN auto-randomizes your draft order an hour before the draft — if nobody sets it first. That moment is invisible, unverifiable, and the commissioner can re-run it. Fantasy Football Draft Order replaces that black box with a public, scheduled draw: paste your ESPN league ID, share the link, and the whole league watches the order come out of open-source code at a pre-announced time.",
+      "To randomize draft order natively on ESPN, the commissioner opens League Settings, then Draft Settings, then Draft Order, clicks Randomize Order and saves; if nobody sets it, ESPN randomizes the order automatically one hour before the draft. Use Fantasy Football Draft Order instead when the league wants to see the draw happen: paste your ESPN league ID, share one link, and everyone watches the order drawn from open-source code at a pre-announced time, with no way to re-run it.",
     keywords: [
       "espn fantasy draft order",
       "espn draft order randomizer",
@@ -385,7 +397,7 @@ export const LANDING_PAGES: LandingPage[] = [
     h1: "A fantasy draft lottery",
     h1Accent: "nobody can rig.",
     intro:
-      "A lottery is only fair if the results are truly sealed until the reveal and truly unalterable after. Most fantasy draft lottery tools sell you trust. Fantasy Football Draft Order proves it. The randomizer is open source, the seed is recorded, and once a draft is scheduled there are no edit endpoints — even the commissioner can't touch it.",
+      "Fantasy Football Draft Order is a free fantasy draft lottery: you schedule a draw time, share one link, and every team watches the order revealed live at the same second, with teams imported from Sleeper, ESPN, MFL or Fleaflicker by league ID (or typed in by hand for Yahoo and any other platform). The randomizer is open source, the seed is recorded, and once a draft is scheduled there are no edit endpoints, so even the commissioner cannot re-spin it.",
     keywords: [
       "fantasy draft lottery",
       "sealed fantasy draft lottery",
@@ -400,7 +412,69 @@ export const LANDING_PAGES: LandingPage[] = [
       "commissioner-guide-running-a-fair-draft-order-reveal",
     ],
     breadcrumbName: "Draft lottery",
+    updated: "2026-11-02",
+    comparison: {
+      heading: "How it compares to other draft order tools",
+      columns: [
+        "Fantasy Football Draft Order",
+        "Fantasy Nerds Random Draft Order LIVE",
+        "Fantasy Alarm Draft Order Generator",
+        "FanDraft",
+      ],
+      rows: [
+        { label: "Price", cells: ["Free", "Free", "", ""] },
+        {
+          label: "Draw at a scheduled date and time",
+          cells: ["Yes", "Yes", "", ""],
+        },
+        {
+          label: "Shareable link the whole league watches live",
+          cells: ["Yes", "Yes", "", ""],
+        },
+        {
+          label: "Can be re-run before the order is final",
+          cells: ["No, the draw is sealed", "", "Yes", ""],
+        },
+        {
+          label: "Randomizer source code is public",
+          cells: ["Yes, on GitHub", "", "", ""],
+        },
+        {
+          label: "Import teams by league ID",
+          cells: ["Sleeper, ESPN, MFL, Fleaflicker", "", "", ""],
+        },
+        { label: "Account required", cells: ["No", "", "", ""] },
+        {
+          label: "What the tool is",
+          cells: [
+            "Draft order draw",
+            "Draft order tool",
+            "Draft order generator",
+            "Draft board software",
+          ],
+        },
+      ],
+      sources: [
+        {
+          label: "Fantasy Nerds: New Feature: Random Draft Order LIVE (Aug 2016)",
+          url: "https://www.fantasynerds.com/news/article/335/new-feature-random-draft-order-live",
+        },
+        {
+          label: "Fantasy Alarm: Draft Order Generator",
+          url: "https://www.fantasyalarm.com/nfl/draft-order-generator/",
+        },
+        {
+          label: "FanDraft help: different draft order in every round",
+          url: "https://help.fandraft.com/article/95-different-draft-order-in-every-multiple-rounds",
+        },
+      ],
+      note: "A blank cell means the competitor's public page does not say, not that the feature is missing. Competitor details checked on 2026-11-02.",
+    },
     faqs: [
+      {
+        q: "What is the best free fantasy draft lottery with a live reveal?",
+        a: "Fantasy Football Draft Order runs a free draft lottery with a live reveal: schedule the draw time, share one link, and every team watches the same reveal at the same second. Teams import from Sleeper, ESPN, MFL or Fleaflicker by league ID, or you can type them in for Yahoo and other platforms. The order cannot be re-spun once scheduled.",
+      },
       {
         q: "Is this a weighted lottery or a random draw?",
         a: "Today, Fantasy Football Draft Order runs a uniform random draw — every team has equal odds at every slot. Weighted NBA-style lotteries are on the roadmap.",
