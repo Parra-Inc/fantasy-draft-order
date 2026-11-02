@@ -65,6 +65,88 @@ function ReadNext({ page }: { page: LandingPage }) {
   );
 }
 
+function formatUpdated(iso: string) {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function Comparison({ page }: { page: LandingPage }) {
+  const c = page.comparison;
+  if (!c) return null;
+  return (
+    <section className="border-sideline/50 border-b">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <h2 className="font-display text-chalk text-center text-3xl font-bold tracking-tight sm:text-4xl">
+          {c.heading}
+        </h2>
+        <div className="border-sideline/50 mt-10 overflow-x-auto rounded-2xl border">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead className="bg-sideline/30">
+              <tr>
+                <th scope="col" className="text-hashmark px-4 py-3 font-medium">
+                  <span className="sr-only">Feature</span>
+                </th>
+                {c.columns.map((col) => (
+                  <th
+                    key={col}
+                    scope="col"
+                    className="text-chalk px-4 py-3 font-semibold"
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {c.rows.map((row) => (
+                <tr key={row.label} className="border-sideline/40 border-t">
+                  <th
+                    scope="row"
+                    className="text-chalk px-4 py-3 font-medium"
+                  >
+                    {row.label}
+                  </th>
+                  {row.cells.map((cell, i) => (
+                    <td key={i} className="text-hashmark px-4 py-3">
+                      {cell || (
+                        <span aria-label="Not stated">
+                          <span aria-hidden>-</span>
+                        </span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {c.note ? (
+          <p className="text-hashmark/80 mt-4 text-xs">{c.note}</p>
+        ) : null}
+        <ul className="text-hashmark/80 mt-2 space-y-1 text-xs">
+          {c.sources.map((s) => (
+            <li key={s.url}>
+              Source:{" "}
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-signal underline underline-offset-2"
+              >
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export function LandingPageView({ page }: { page: LandingPage }) {
   return (
     <main>
@@ -116,6 +198,12 @@ export function LandingPageView({ page }: { page: LandingPage }) {
           <p className="text-hashmark/70 mt-6 text-xs">
             Free to use. Under a minute to set up. No credit card ever.
           </p>
+          {page.updated ? (
+            <p className="text-hashmark/70 mt-3 text-xs">
+              Updated{" "}
+              <time dateTime={page.updated}>{formatUpdated(page.updated)}</time>
+            </p>
+          ) : null}
           {page.leagueIdSlug ? (
             <Link
               href={`/league-id/${page.leagueIdSlug}`}
@@ -128,6 +216,7 @@ export function LandingPageView({ page }: { page: LandingPage }) {
         </div>
       </section>
 
+      <Comparison page={page} />
       <HowItWorks />
       <WhyFair />
       <Integrations highlight={page.highlightPlatform} />
