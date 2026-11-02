@@ -38,8 +38,10 @@ export function Hero() {
           </h1>
 
           <p className="text-hashmark mx-auto mt-6 max-w-xl text-lg leading-relaxed">
-            The only draft order randomizer that shows its work: open code, a
-            public seed, and a live draw your whole league watches together.
+            Fantasy Football Draft Order is a free, open-source fantasy draft
+            order randomizer: schedule a draw time, share one link, and your
+            whole league watches the order drawn live, with a public seed
+            anyone can check.
           </p>
 
           <LeagueIdForm />
