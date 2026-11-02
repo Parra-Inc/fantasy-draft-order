@@ -1,0 +1,69 @@
+{
+  "outDir": "public/fonts",
+  "cssOut": "src/app/fonts.css",
+  "variablesSelector": "html.fonts",
+  "families": [
+    {
+      "family": "Space Grotesk",
+      "source": [
+        "scripts/fonts/src/SpaceGrotesk-google-latin.woff2",
+        "scripts/fonts/src/SpaceGrotesk-google-latin-ext.woff2"
+      ],
+      "features": ["ccmp", "locl", "mark", "mkmk", "kern", "liga", "calt", "rlig", "rvrn"],
+      "usedCodepoints": "scripts/fonts/usage.json",
+      "usageKeys": ["Space Grotesk"],
+      "display": "swap",
+      "fallbackCss": "@font-face { font-family: \"Space Grotesk Fallback\"; src: local(\"Arial\"); ascent-override: 89.71%; descent-override: 26.62%; line-gap-override: 0.0%; size-adjust: 109.69%; }",
+      "variable": "--font-display",
+      "renderedBy": "scripts/fonts/coverage-space-grotesk.json"
+    },
+    {
+      "family": "Inter",
+      "source": [
+        "scripts/fonts/src/Inter-google-latin.woff2",
+        "scripts/fonts/src/Inter-google-latin-ext.woff2"
+      ],
+      "axes": { "wght": "400:900" },
+      "features": ["ccmp", "locl", "mark", "mkmk", "kern", "liga", "calt", "rlig", "rvrn"],
+      "usedCodepoints": "scripts/fonts/usage.json",
+      "usageKeys": ["Inter"],
+      "display": "swap",
+      "fallbackCss": "@font-face { font-family: \"Inter Fallback\"; src: local(\"Arial\"); ascent-override: 90.44%; descent-override: 22.52%; line-gap-override: 0.0%; size-adjust: 107.12%; }",
+      "variable": "--font-body",
+      "renderedBy": "scripts/fonts/coverage-inter.json",
+      "coreExtra": "©·"
+    },
+    {
+      "family": "DM Mono",
+      "slug": "dm-mono-400",
+      "weight": "400",
+      "source": [
+        "scripts/fonts/src/DMMono-400-google-latin.woff2",
+        "scripts/fonts/src/DMMono-400-google-latin-ext.woff2"
+      ],
+      "features": ["ccmp", "locl", "mark", "mkmk", "kern", "liga", "calt", "rlig", "rvrn"],
+      "usedCodepoints": "scripts/fonts/usage.json",
+      "usageKeys": ["DM Mono"],
+      "display": "swap",
+      "fallbackCss": "@font-face { font-family: \"DM Mono Fallback\"; src: local(\"Arial\"); ascent-override: 73.71%; descent-override: 23.03%; line-gap-override: 0.0%; size-adjust: 134.59%; }",
+      "variable": "--font-mono",
+      "renderedBy": "scripts/fonts/coverage-dm-mono.json",
+      "coreExtra": "·"
+    },
+    {
+      "family": "DM Mono",
+      "slug": "dm-mono-500",
+      "weight": "500",
+      "source": [
+        "scripts/fonts/src/DMMono-500-google-latin.woff2",
+        "scripts/fonts/src/DMMono-500-google-latin-ext.woff2"
+      ],
+      "features": ["ccmp", "locl", "mark", "mkmk", "kern", "liga", "calt", "rlig", "rvrn"],
+      "usedCodepoints": "scripts/fonts/usage.json",
+      "usageKeys": ["DM Mono"],
+      "display": "swap",
+      "renderedBy": "scripts/fonts/coverage-dm-mono.json",
+      "coreExtra": "·"
+    }
+  ]
+}
