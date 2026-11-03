@@ -71,11 +71,9 @@
   // `prisma migrate diff` (Prisma Migrate does not drive D1 directly) —
   // see the db:migrate:* scripts in package.json.
   //
-  // The id is substituted by the deploy workflow, which looks the database up
-  // by name and creates it only if missing. Committing the real id here once
-  // known makes that step a no-op. Auto-provisioning by binding name alone is
-  // unreliable: a deploy that dies after the database is created leaves
-  // wrangler retrying create() and failing with "already exists".
+  // The database is declared in program/index.ts (Pulumi, adopted and
+  // protected). Its id is committed here and must match that program; nothing
+  // in CI creates or looks it up.
   "d1_databases": [
     {
       "binding": "DB",
