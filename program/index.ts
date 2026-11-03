@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import {
   AccessProtectedHost,
@@ -71,3 +72,21 @@ new AccessProtectedHost("storybook.fantasyfootballdraftorder.com", {
   domain: "storybook.fantasyfootballdraftorder.com",
   appName: "Fantasy Football Draft Order Storybook",
 });
+
+// ---------------------------------------------------------------------------
+// D1 database (binding DB in wrangler.jsonc). Adopted, not created: it already
+// exists and holds every draft, so it is protected. The name and id must match
+// wrangler.jsonc. Migrations stay with `wrangler d1 migrations apply`.
+const d1DatabaseId = "8aa0ab93-44d4-405d-bb49-4c077cf97c55";
+const db = new cloudflare.D1Database(
+  "fantasy-draft-order-db-production",
+  { accountId, name: "fantasy-draft-order-db-production" },
+  {
+    import: `${accountId}/${d1DatabaseId}`,
+    // primaryLocationHint is create-only; the API does not echo it back.
+    ignoreChanges: ["primaryLocationHint"],
+    protect: true,
+  },
+);
+
+export const d1DatabaseIdOutput = db.id;
