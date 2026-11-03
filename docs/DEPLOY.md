@@ -102,16 +102,11 @@ The deploy job targets the `production` environment. It holds no secrets here, b
 environment must exist (Settings -> Environments -> New environment -> `production`), and
 it is the right place to add a required reviewer if you ever want deploys gated.
 
-### 3. Commit the D1 id
+### 3. The D1 database
 
-Whichever step first creates `fantasy-draft-order-db-production` (the deploy, the
-migrations workflow, or the cutover below) substitutes its id into `wrangler.jsonc` at
-build time. Grab it afterwards and commit it, so every later run skips the lookup:
-
-```bash
-pnpm exec wrangler d1 info fantasy-draft-order-db-production --json | jq -r '.uuid'
-# paste over REPLACE_WITH_D1_ID in wrangler.jsonc
-```
+`fantasy-draft-order-db-production` is declared in `program/index.ts` (Pulumi, adopted
+with `import` and `protect: true`), and its real id is committed in `wrangler.jsonc`.
+Nobody creates it with wrangler; only migrations run through `wrangler d1 migrations`.
 
 If there is Neon data to bring over, do that **before** the first deploy: see
 [Moving the Neon data into D1](#moving-the-neon-data-into-d1).
@@ -128,10 +123,9 @@ normally create it. Migrations are a step of the deploy pipeline, not a workflow
 run on their own, so this first one is done from a laptop:
 
 ```bash
-# 1. Create the database and apply the schema, without deploying anything.
-pnpm exec wrangler d1 create fantasy-draft-order-db-production
-pnpm exec wrangler d1 info fantasy-draft-order-db-production --json | jq -r '.uuid'
-# paste over REPLACE_WITH_D1_ID in wrangler.jsonc and commit it
+# 1. Apply the schema, without deploying anything. The database itself is
+#    declared in program/index.ts (Pulumi) and its id is committed in
+#    wrangler.jsonc, so there is nothing to create by hand.
 pnpm db:migrate:remote
 
 # 2. Export from Neon. Reads DATABASE_URL from .env.production, writes
