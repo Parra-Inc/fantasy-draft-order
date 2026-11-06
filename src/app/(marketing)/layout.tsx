@@ -163,6 +163,14 @@ export default function MarketingLayout({
               accounts, no tracking.
             </p>
             <p className="font-mono">Built with crypto.randomInt.</p>
+            <a
+              href="https://parra.io"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-chalk transition-colors"
+            >
+              A Parra product
+            </a>
           </div>
         </div>
       </footer>
