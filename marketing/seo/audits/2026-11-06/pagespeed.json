@@ -1,0 +1,37 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "pagespeed",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-11-06",
+  "notes": [
+    "Mobile strategy. Lab (Lighthouse) metrics only - loadingExperience/CrUX field data is empty (overallCategory null, metrics {}): too little real-user traffic for a field distribution. Lab numbers are all green.",
+    "LCP 0.92s, CLS 0, TBT 11ms, FCP 0.92s, TTI 3.46s. Performance score 100, SEO 100, Best-Practices 100, Accessibility 95.",
+    "SPEED IS NOT THE CONSTRAINT. No Core Web Vital is over threshold (LCP<2.5s, CLS<0.1, TBT low). The homepage is a Workers/OpenNext route and still returns a sub-second LCP; no cold-start penalty observed in this run. Do not spend effort here.",
+    "Accessibility 95 (not 100) is the only sub-100 lab category; not an SEO ranking factor and out of scope for this audit - noted only for completeness."
+  ],
+  "calls": [
+    {
+      "tool": "mcp__search-console__pagespeed_analyze",
+      "params": { "url": "https://fantasyfootballdraftorder.com", "strategy": "mobile" },
+      "ok": true,
+      "result": {
+        "url": "https://fantasyfootballdraftorder.com",
+        "strategy": "mobile",
+        "performanceScore": 100,
+        "accessibilityScore": 95,
+        "bestPracticesScore": 100,
+        "seoScore": 100,
+        "coreWebVitals": {
+          "largestContentfulPaint": 920.0126037386135,
+          "firstInputDelay": 59,
+          "cumulativeLayoutShift": 0,
+          "firstContentfulPaint": 920.0126037386135,
+          "timeToInteractive": 3462.0126037386144,
+          "totalBlockingTime": 11
+        },
+        "loadingExperience": { "overallCategory": null, "metrics": {} }
+      }
+    }
+  ]
+}

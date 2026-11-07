@@ -1,0 +1,52 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "crawl",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-11-06",
+  "notes": [
+    "recheck queued all 38 pages (site is small; a full re-crawl, not a slice - capped:false).",
+    "Coverage: 38/38 pages audited. 0 errors. After recheck the only open warning-severity check is page.orphan (5 pages, all /p/* punishment-wheel result pages). This matches the 5 warnings reported pre-run.",
+    "NO indexability contradiction of any kind: no noindex.in.sitemap, no canonical.elsewhere, no sitemap.not.200, no robots.disallowed, no soft.404, no redirect issues. GSC inspection confirms homepage + /league-id + /league-id/espn + /league-id/sleeper all 'Submitted and indexed'. Standard B2 confirms 38 sitemap URLs all crawlable, no sampled page noindexed.",
+    "page.orphan (the single warning check) is LARGELY BY DESIGN and demoted: the 5 orphans are /p/<slug> punishment-wheel pages that are noindex until their result lands and intentionally reach engines via the sitemap + indexnow-sync, not via internal links (per CLAUDE.md the product is per-league, not a browsable directory). count 5 == pages 5 means 5 distinct user-generated pages, not a one-template bug.",
+    "No broken-link findings surfaced at warning severity, so none required live href/404 verification.",
+    "Full title/description length check run separately with text-length.mjs against the sitemap (rendered lengths) - see standard.json / suggestions.json; the crawler's detail.length was not used."
+  ],
+  "calls": [
+    {
+      "tool": "mcp__indexnow-seo__recheck",
+      "params": { "site_id": "fantasyfootballdraftorder-com" },
+      "ok": true,
+      "result": { "queued": 38, "site_id": "fantasyfootballdraftorder-com", "capped": false }
+    },
+    {
+      "tool": "mcp__indexnow-seo__list_sites",
+      "params": {},
+      "ok": true,
+      "result": { "siteId": "fantasyfootballdraftorder-com", "project": "Fantasy Draft Order", "url": "https://fantasyfootballdraftorder.com", "rank": 5, "pages": 38, "audited": 38, "errors": 0, "warnings": 5, "notices": 38, "lastAuditAt": "2026-10-26T03:24:15.671Z" }
+    },
+    {
+      "tool": "mcp__indexnow-seo__audit_report",
+      "params": { "site_id": "fantasyfootballdraftorder-com", "min_severity": "warning" },
+      "ok": true,
+      "result": [
+        {
+          "siteId": "fantasyfootballdraftorder-com",
+          "checkId": "page.orphan",
+          "severity": "warning",
+          "what": "Page is in the sitemap but no other page on the site links to it.",
+          "why": "Engines weight internal links heavily. An orphan is discoverable only via the sitemap and usually ranks accordingly.",
+          "fix": "Link to it from a relevant page, a hub, or the nav.",
+          "count": 5,
+          "pages": 5,
+          "firstSeen": "2026-08-08T20:41:44.073Z",
+          "examples": [
+            { "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs", "instanceKey": "", "detail": null },
+            { "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9", "instanceKey": "", "detail": null },
+            { "url": "https://fantasyfootballdraftorder.com/p/jade-panther-snfe", "instanceKey": "", "detail": null }
+          ]
+        }
+      ]
+    }
+  ]
+}

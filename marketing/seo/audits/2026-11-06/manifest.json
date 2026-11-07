@@ -1,0 +1,41 @@
+{
+  "schema": "audit-seo/v1",
+  "layer": "manifest",
+  "site": "fantasyfootballdraftorder.com",
+  "siteId": "fantasyfootballdraftorder-com",
+  "capturedAt": "2026-11-06",
+  "project": "Fantasy Draft Order",
+  "rank": 5,
+  "repo": "/Users/ianmaccallum/Developer/Repos/fantasy-draft-order",
+  "depth": "triage",
+  "mode": "read-and-persist-only",
+  "targets": {
+    "siteUrl": "https://fantasyfootballdraftorder.com",
+    "gscProperty": "sc-domain:fantasyfootballdraftorder.com",
+    "bingSiteUrl": "https://fantasyfootballdraftorder.com/",
+    "sitemap": "https://fantasyfootballdraftorder.com/sitemap.xml"
+  },
+  "lastCrawlCoverage": { "pages": 38, "audited": 38, "errors": 0, "warnings": 5 },
+  "artifacts": [
+    "manifest.json",
+    "crawl.json",
+    "search-console.json",
+    "bing.json",
+    "standard.json",
+    "pagespeed.json",
+    "suggestions.json"
+  ],
+  "calls": [
+    {
+      "tool": "mcp__indexnow-seo__recheck",
+      "params": { "site_id": "fantasyfootballdraftorder-com" },
+      "ok": true,
+      "result": { "queued": 38, "site_id": "fantasyfootballdraftorder-com", "capped": false }
+    }
+  ],
+  "notes": [
+    "Triage-depth SEO + AEO audit of a single site. Read + persist only; no code changes, git, deploys, or fixes.",
+    "recheck queued all 38 pages (site is small, full re-crawl not a slice).",
+    "list_sites confirms fantasyfootballdraftorder-com: rank 5, pages 38, audited 38, errors 0, warnings 5, notices 38, lastAuditAt 2026-10-26T03:24:15.671Z (pre-recheck)."
+  ]
+}
