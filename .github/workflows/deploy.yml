@@ -2,7 +2,7 @@
 # Cloudflare Workers via OpenNext.
 #
 # There are NO runtime secrets to push. The database is a D1 binding, so there
-# is no DATABASE_URL, and the app has no third-party API keys — hence no
+# is no DATABASE_URL, and the app has no third-party API keys, hence no
 # `wrangler secret bulk` step at all. Everything non-secret is hardcoded in
 # wrangler.jsonc.
 #
@@ -61,6 +61,11 @@ jobs:
   # So this is a copy, and copies drift. If the shared workflow changes, this
   # needs the same change by hand. The alternative to a copy is making
   # cloudflare-infra public, which is worse.
+  #
+  # Fleet standard deviation (2026-11-11 audit): other repos call pulumi.yml
+  # pinned to @v1.24.0. This copy was last reviewed against that tag; it keeps
+  # SHA-pinned actions where the shared file uses major-version tags, which is
+  # stricter and deliberate for a public repo.
   infra:
     name: Infra (Pulumi)
     runs-on: ubuntu-latest
