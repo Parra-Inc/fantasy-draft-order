@@ -3,52 +3,75 @@ import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import {
   AccessProtectedHost,
-  AgentDiscovery,
+  ManagedZone,
   nextApiRoutePrefixes,
   ProjectEmail,
-  WafScannerBlock,
-  WebAnalytics,
-  WwwRedirect,
-  ZoneSecurity,
+  ZoneBaseline,
 } from "@parra/cloudflare-pulumi";
 
 const cfg = new pulumi.Config();
-// An input, not an output: the domain is registered with Cloudflare Registrar,
-// which created and delegated the zone as part of the purchase.
-const zoneId = cfg.require("zoneId");
 const accountId = cfg.require("accountId");
 const destination = cfg.get("destination") ?? "ian@parra.io";
 
 // Doubles as each resource's logical name, so it must stay stable.
 const domain = "fantasyfootballdraftorder.com";
 
-new WebAnalytics(domain, { accountId, zoneId });
+// The zone was created by Cloudflare Registrar with the domain purchase, so it
+// is adopted (import) rather than created. ManagedZone also declares the
+// www-to-apex WwwRedirect, under the same URN the stack-root
+// `new WwwRedirect(...)` had, so dropping that line is a no-op.
+// The id is only used to build import ids, which must be plain strings.
+const zoneImportId = "ff48b5fdfdefac36c5b755b167e7ee22";
+const zone = new ManagedZone({ accountId, domain }, { import: zoneImportId });
+const zoneId = zone.id;
 
 // GA4 is injected by the Worker, not a GoogleAnalytics Snippet: Snippets need a
 // paid zone plan, and @parra/cloudflare-pulumi >= 1.14.0 throws on a Free zone.
-new ZoneSecurity({ zoneId, domain });
-// DNSSEC + DNS-AID SVCB at _index._agents. Registrar is Cloudflare, so the
-// DS record is published automatically.
-new AgentDiscovery({ zoneId, domain });
-new WwwRedirect({ zoneId, domain });
-
-// custom-worker.ts short-circuits the same scanner paths as a second line of
-// defense in case this rule is ever missing.
 //
-// Unknown /api paths are blocked too: the allow list is generated from the
-// Next app's route.ts files under src/app/api, so a new route is covered on
-// the next infra deploy. The storybook host is a separate Worker, so only the
-// apex and www (both served by this app's Worker) are scoped.
+// ZoneBaseline = ZoneSecurity, WafScannerBlock, WafRateLimit, AgentDiscovery
+// (DNSSEC + DNS-AID SVCB; Registrar is Cloudflare so the DS record is
+// automatic) and WebAnalytics. Each child aliases its old stack-root URN, so
+// this adopts the existing resources; only the rate limit rule is new.
+//
+// Scanner block: custom-worker.ts short-circuits the same scanner paths as a
+// second line of defense. Unknown /api paths are blocked too: the allow list is
+// generated from the Next app's route.ts files under src/app/api, so a new
+// route is covered on the next infra deploy. The storybook host is a separate
+// Worker, so only the apex and www (both served by this app's Worker) are
+// scoped.
 const apiRoutes = nextApiRoutePrefixes([path.join(__dirname, "../src/app")]);
-new WafScannerBlock(domain, {
+new ZoneBaseline(domain, {
+  accountId,
   zoneId,
-  knownApiPrefixes: apiRoutes,
-  apiHosts: [domain, `www.${domain}`],
+  domain,
+  scannerBlock: {
+    knownApiPrefixes: apiRoutes,
+    apiHosts: [domain, `www.${domain}`],
+  },
+  // There is no sign-in, so the one free-plan rule goes on the anonymous write
+  // endpoints that create rows in D1. Presence heartbeats are excluded: an
+  // open draft page posts them on a timer.
+  rateLimit: {
+    expression:
+      '(http.request.method eq "POST" and (http.request.uri.path in {"/api/drafts" "/api/feedback" "/api/punishment-ideas" "/api/punishments"} or starts_with(http.request.uri.path, "/api/drafts/import/")))',
+    description: "Anonymous write endpoints",
+  },
+  skip: { wwwRedirect: "declared by ManagedZone" },
 });
 
 // Inbound only: drafts are shared by URL and creatorEmail is only stored, so
 // the app sends no mail.
-new ProjectEmail(domain, { zoneId, domain, destination });
+//
+// DMARC: ProjectEmail declares p=reject by default. The _dmarc TXT record
+// already exists (added in the dashboard, never in this stack), so it is
+// adopted by id instead of colliding with a create. TTL 1 (auto) matches it.
+new ProjectEmail(domain, {
+  zoneId,
+  domain,
+  destination,
+  dmarcTtl: 1,
+  dmarcImportId: `${zoneImportId}/d331997d3f03440ae7d516dd2a787be2`,
+});
 
 // Search Console ownership. Adopted, not created: the TXT record already
 // exists live, so it is imported by id. Content keeps the surrounding quotes
@@ -66,7 +89,7 @@ new cloudflare.Record(
       '"google-site-verification=zy6Vu51KCUexXLRb9o_Owu-gi9_pO_EyNmmbd5uS9Us"',
     ttl: 3600,
   },
-  { import: `${zoneId}/083d02debab43fa32287120e96a80c6b` },
+  { import: `${zoneImportId}/083d02debab43fa32287120e96a80c6b` },
 );
 
 // ---------------------------------------------------------------------------

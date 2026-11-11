@@ -6,7 +6,8 @@
   // resource in program/index.ts. This is an assets-only Worker: no `main`,
   // nothing runs, it just serves the build in storybook-static.
   "name": "fantasy-draft-order-web-storybook-production",
-  "compatibility_date": "2025-12-01",
+  "compatibility_date": "2026-08-01",
+  // No nodejs_compat: assets-only Worker with no `main`, so no code runs.
 
   "assets": {
     // Output of `pnpm build-storybook` (repo root -> storybook-static).
@@ -24,6 +25,8 @@
     { "pattern": "storybook.fantasyfootballdraftorder.com", "custom_domain": true }
   ],
 
+  // No Grafana OTLP destinations: storybook Workers are exempt from the fleet
+  // logs/traces export (static assets only, nothing worth tracing).
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
