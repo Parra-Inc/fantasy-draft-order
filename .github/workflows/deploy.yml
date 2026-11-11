@@ -1,10 +1,9 @@
 # Deploys fantasyfootballdraftorder.com: infra first (Pulumi), then the app to
 # Cloudflare Workers via OpenNext.
 #
-# There are NO runtime secrets to push. The database is a D1 binding, so there
-# is no DATABASE_URL, and the app has no third-party API keys, hence no
-# `wrangler secret bulk` step at all. Everything non-secret is hardcoded in
-# wrangler.jsonc.
+# The only runtime secret is REVENUE_HOG_API_KEY (optional), pushed after the
+# worker deploys. The database is a D1 binding, so there is no DATABASE_URL.
+# Everything non-secret is hardcoded in wrangler.jsonc.
 #
 # The `infra` job runs the Cloudflare Pulumi program in `program/` (Web
 # Analytics, WAF scanner block, email routing) before the app builds, so the
@@ -304,6 +303,20 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: pnpm exec wrangler deploy
+
+      # Optional: copies site feedback to RevenueHog. Skipped when unset, so a
+      # fork or a fresh repo still deploys; feedback keeps saving to D1.
+      - name: Push runtime secrets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          REVENUE_HOG_API_KEY: ${{ secrets.REVENUE_HOG_API_KEY }}
+        run: |
+          if [ -z "${REVENUE_HOG_API_KEY:-}" ]; then
+            echo "REVENUE_HOG_API_KEY not set; skipping"
+            exit 0
+          fi
+          printf '%s' "$REVENUE_HOG_API_KEY" | pnpm exec wrangler secret put REVENUE_HOG_API_KEY
 
   # --------------------------------------------------------- deploy-storybook --
   # The Storybook, served static behind Cloudflare Access at

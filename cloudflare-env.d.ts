@@ -46,11 +46,16 @@ declare interface CloudflareEnv {
   // missing namespace as "no presence available" rather than an error.
   DRAFT_PRESENCE?: CloudflareDurableObjectNamespace;
 
-  // Vars from wrangler.jsonc. This app has no secrets: the database is a
-  // binding, so there is no DATABASE_URL to keep anywhere.
+  // Vars from wrangler.jsonc. The database is a binding, so there is no
+  // DATABASE_URL to keep anywhere.
   NEXT_PUBLIC_BASE_URL: string;
   NEXT_PUBLIC_COMMIT_SHA?: string;
   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?: string;
   DRAFT_FIRST_PICK_DELAY_MS?: string;
   DRAFT_PICK_INTERVAL_MS?: string;
+
+  // The one secret, pushed by the deploy workflow when the GitHub secret is
+  // set. A RevenueHog server key (feedback:write) that copies site feedback to
+  // RevenueHog; feedback still saves to D1 without it.
+  REVENUE_HOG_API_KEY?: string;
 }

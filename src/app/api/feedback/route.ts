@@ -3,6 +3,7 @@ import { z } from "zod";
 import { FEEDBACK_TYPES } from "@/lib/db-enums";
 import { newId } from "@/lib/ids";
 import { prisma } from "@/lib/prisma";
+import { forwardFeedbackToRevenueHog } from "@/lib/revenuehog";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,19 @@ export async function POST(req: Request) {
     },
     select: { id: true },
   });
+
+  // Best-effort copy to RevenueHog. The forwarder never throws, and the D1 row
+  // above is the record, so a RevenueHog failure never fails the request.
+  const revenueHog = await forwardFeedbackToRevenueHog({
+    category: parsed.data.type,
+    message: parsed.data.message,
+    email: parsed.data.email,
+    platform: "web",
+    context: { feedbackId: feedback.id, page: parsed.data.page, userAgent },
+  });
+  if (!revenueHog.success) {
+    console.warn("[feedback] revenuehog_forward_failed", { error: revenueHog.error });
+  }
 
   return NextResponse.json({ id: feedback.id });
 }
