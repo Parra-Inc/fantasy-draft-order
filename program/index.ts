@@ -50,6 +50,25 @@ new WafScannerBlock(domain, {
 // the app sends no mail.
 new ProjectEmail(domain, { zoneId, domain, destination });
 
+// Search Console ownership. Adopted, not created: the TXT record already
+// exists live, so it is imported by id. Content keeps the surrounding quotes
+// and there is no comment because that is exactly what the API returns; any
+// difference would show as an update on import. Preview still shows a one-time
+// state-only update (+allowOverwrite false, +content): provider 5.x import does
+// not populate those fields, so the value written is identical to live.
+new cloudflare.Record(
+  `${domain}-google-site-verification`,
+  {
+    zoneId,
+    name: domain,
+    type: "TXT",
+    content:
+      '"google-site-verification=zy6Vu51KCUexXLRb9o_Owu-gi9_pO_EyNmmbd5uS9Us"',
+    ttl: 3600,
+  },
+  { import: `${zoneId}/083d02debab43fa32287120e96a80c6b` },
+);
+
 // ---------------------------------------------------------------------------
 // Storybook, gated by Cloudflare Access.
 //
