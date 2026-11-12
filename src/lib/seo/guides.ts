@@ -362,36 +362,35 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "how-to-randomize-draft-order-on-sleeper",
-    title: "How to randomize draft order on Sleeper (and how to do it better)",
-    metaTitle: "How to Randomize or Set Draft Order on Sleeper (2026)",
+    title:
+      "What Sleeper's draft order randomizer shows your league (and what it hides)",
+    metaTitle: "Is Sleeper's Draft Order Randomizer Fair? (2026)",
     description:
-      "Gear icon, Draft, Draft Order, Randomize, Save: the exact taps in Sleeper, what the rest of your league cannot see, and how to run a draw they can check.",
+      "The Sleeper Randomize Order button is a fair shuffle, but only the commissioner sees it fire and it can be re-rolled before saving. What your league sees.",
     excerpt:
-      "Sleeper's randomize button is one click. Here's where it is — plus when you should use a public, scheduled draw instead.",
+      "Sleeper's randomizer is one tap for the commissioner and invisible to everyone else. What the league actually sees, and when that is a problem.",
     datePublished: "2026-03-18",
     readingMinutes: 4,
     category: "Platform guides",
     keywords: [
-      "how to randomize draft order on sleeper",
-      "sleeper draft order",
-      "sleeper randomize draft",
+      "is sleeper draft order random",
+      "sleeper randomize draft order fair",
+      "sleeper draft order randomizer",
     ],
     sections: [
       {
         kind: "p",
-        text: "Sleeper has a built-in draft order randomizer that the commissioner can trigger from the league dashboard. It's fast — one click — but only the commissioner sees it fire and the result is unverifiable. Here's the exact path, plus when to skip it. On another platform? The same walkthrough exists for [ESPN](/guides/how-to-randomize-draft-order-on-espn) and for [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
+        text: "Sleeper's built-in draft order randomizer is a real shuffle, but it is a private one: only the commissioner sees it fire, and the rest of the league only ever sees the saved result. This guide is about that gap. For the tap-by-tap steps, see [how to randomize draft order in Sleeper](/sleeper). On another platform? The same breakdown exists for [ESPN](/guides/how-to-randomize-draft-order-on-espn) and for [Yahoo](/guides/how-to-randomize-draft-order-on-yahoo).",
       },
-      { kind: "h2", text: "The exact steps in the Sleeper app" },
+      { kind: "h2", text: "What the commissioner sees" },
       {
-        kind: "ol",
-        items: [
-          "Open your Sleeper league in the web app or mobile app.",
-          "Tap the gear icon (League Settings).",
-          "Scroll to the Draft section.",
-          "Open Draft Order.",
-          "Tap Randomize Order. The order shuffles on screen.",
-          "Tap Save. The order is now committed to the draft room.",
-        ],
+        kind: "p",
+        text: "The commissioner opens League Settings (gear icon), then Draft, then Draft Order, taps Randomize Order, and watches the order shuffle on screen. Nothing is saved until they tap Save, so they can tap Randomize again as many times as they like first. The full walkthrough is on the [Sleeper draft order page](/sleeper).",
+      },
+      { kind: "h2", text: "What the rest of the league sees" },
+      {
+        kind: "p",
+        text: "Only the saved order in the draft room. There is no record of when the shuffle ran, how many times it ran, or what the earlier results were. Sleeper does not publish a seed or a log, so nobody outside the commissioner can check that the order came from a single, untouched shuffle.",
       },
       { kind: "h2", text: "What's the catch?" },
       {

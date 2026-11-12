@@ -7,9 +7,9 @@ import { LEAGUE_ID_GUIDES } from "@/lib/seo/league-id-guides";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-  title: "Fantasy League ID Finder: Sleeper, ESPN, Yahoo and More",
+  title: "League ID Guides by Platform: Sleeper, ESPN, Yahoo, MFL",
   description:
-    "Find your fantasy league ID on Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker. Exact web and app steps, what the ID looks like, and what to leave out.",
+    "Index of league ID guides for every fantasy platform. Pick Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker for the exact web and app steps.",
   path: "/league-id",
 });
 
@@ -48,11 +48,10 @@ export default function LeagueIdHubPage() {
         </div>
         <div className="relative mx-auto max-w-3xl px-4 pt-20 pb-12 text-center sm:px-6 sm:pt-28 sm:pb-16">
           <p className="text-signal font-mono text-xs font-medium tracking-wider uppercase">
-            League ID finder
+            League ID guides
           </p>
           <h1 className="font-display text-chalk mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-            Where to find your{" "}
-            <span className="text-signal">fantasy league ID.</span>
+            League ID guides, <span className="text-signal">by platform.</span>
           </h1>
           <p className="text-hashmark mx-auto mt-5 max-w-xl text-lg leading-relaxed">
             Every platform hides it somewhere slightly different. Pick yours for
@@ -60,16 +59,13 @@ export default function LeagueIdHubPage() {
             and the parts of the URL to leave out.
           </p>
           <p className="text-chalk/80 mx-auto mt-4 max-w-xl text-sm leading-relaxed">
-            On ESPN? Your league ID is the number after{" "}
-            <code className="font-mono">leagueId=</code> in your league URL. See
-            the{" "}
+            On ESPN?{" "}
             <Link
               href="/league-id/espn"
-              className="text-signal underline underline-offset-4"
+              className="text-signal font-semibold underline underline-offset-4"
             >
-              ESPN league ID
-            </Link>{" "}
-            guide for the app steps.
+              How to find your ESPN league ID
+            </Link>
           </p>
         </div>
       </section>
