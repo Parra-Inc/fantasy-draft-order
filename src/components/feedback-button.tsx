@@ -75,18 +75,43 @@ function FeedbackModal({
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const pathname = usePathname();
   const titleId = useId();
   const messageId = useId();
   const typeId = useId();
   const emailId = useId();
+  const emailErrorId = useId();
+  const errorId = useId();
+  const disclosureId = useId();
+
+  const trimmedEmail = email.trim();
+  const emailInvalid =
+    trimmedEmail.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
 
   useEffect(() => {
     if (!open) return;
     const t = setTimeout(() => messageRef.current?.focus(), 50);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      // Keep Tab inside the dialog while it is open.
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), select:not([disabled]), textarea:not([disabled]), input:not([disabled])',
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -102,15 +127,18 @@ function FeedbackModal({
     setType("BUG");
     setMessage("");
     setEmail("");
+    setError(null);
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
     if (message.trim().length < 5) {
-      toast.error("Add a few more details so we can help.");
+      setError("Add a few more details so we can help.");
       return;
     }
+    if (emailInvalid) return;
+    setError(null);
     setSubmitting(true);
     try {
       const res = await fetch("/api/feedback", {
@@ -119,7 +147,7 @@ function FeedbackModal({
         body: JSON.stringify({
           type,
           message: message.trim(),
-          email: email.trim() || undefined,
+          email: trimmedEmail || undefined,
           page: pathname ?? undefined,
         }),
       });
@@ -128,7 +156,7 @@ function FeedbackModal({
       reset();
       onClose();
     } catch {
-      toast.error("Couldn't send feedback. Try again in a sec.");
+      setError("Couldn't send feedback. Check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -158,6 +186,7 @@ function FeedbackModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
+            ref={dialogRef}
             className="border-sideline/60 bg-midnight relative w-full max-w-lg rounded-t-2xl border shadow-2xl sm:rounded-2xl"
           >
             <header className="border-sideline/40 flex items-start justify-between gap-3 border-b p-5">
@@ -185,7 +214,12 @@ function FeedbackModal({
               </button>
             </header>
 
-            <form onSubmit={submit} className="space-y-4 p-5">
+            <form
+              onSubmit={submit}
+              noValidate
+              aria-describedby={disclosureId}
+              className="space-y-4 p-5"
+            >
               <div>
                 <label
                   htmlFor={typeId}
@@ -251,8 +285,31 @@ function FeedbackModal({
                   className="input"
                   disabled={submitting}
                   autoComplete="email"
+                  aria-invalid={emailInvalid || undefined}
+                  aria-describedby={emailInvalid ? emailErrorId : undefined}
                 />
+                {emailInvalid && (
+                  <p id={emailErrorId} className="text-blitz mt-1 text-xs">
+                    Enter a valid email, or leave it blank.
+                  </p>
+                )}
               </div>
+
+              {error && (
+                <p
+                  id={errorId}
+                  role="alert"
+                  className="border-blitz/40 bg-blitz/10 text-blitz rounded-lg border px-3 py-2 text-sm"
+                >
+                  {error}
+                </p>
+              )}
+
+              <p id={disclosureId} className="text-hashmark/70 text-[11px]">
+                We send your feedback type, message, email (if you add one), the
+                page you&apos;re on, and your browser&apos;s user agent. Feedback
+                is processed by RevenueHog.
+              </p>
 
               <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
                 <button
@@ -266,7 +323,7 @@ function FeedbackModal({
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={submitting || message.trim().length < 5}
+                  disabled={submitting || message.trim().length < 5 || emailInvalid}
                 >
                   {submitting ? "Sending…" : "Send feedback"}
                 </button>
