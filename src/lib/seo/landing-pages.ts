@@ -58,9 +58,9 @@ export const LANDING_PAGES: LandingPage[] = [
   {
     slug: "sleeper",
     updated: "2026-11-02",
-    title: "Sleeper Draft Order Randomizer: Drawn Live, Free (2026)",
+    title: "How to Randomize Draft Order in Sleeper (2026 Steps)",
     description:
-      "Randomize your Sleeper draft order where the whole league can watch. Paste your league ID, pick a time, and everyone sees the same live draw. Free, no login.",
+      "In Sleeper: gear icon, Draft, Draft Order, Randomize Order, Save. Or draw it live so the whole league watches: paste your league ID, pick a time. Free.",
     eyebrow: "Sleeper",
     h1: "Sleeper draft order randomizer.",
     h1Accent: "Drawn live. Auditable forever.",
@@ -72,6 +72,7 @@ export const LANDING_PAGES: LandingPage[] = [
       "sleeper draft order generator",
       "sleeper draft order picker",
       "how to randomize draft order on sleeper",
+      "how to randomize draft order in sleeper",
       "fair sleeper draft order",
     ],
     highlightPlatform: "Sleeper",
@@ -93,7 +94,7 @@ export const LANDING_PAGES: LandingPage[] = [
       },
       {
         q: "Can I still use Sleeper's built-in randomizer instead?",
-        a: "You can, but only the commissioner sees it fire. Fantasy Football Draft Order is the tool you reach for when your league wants a single scheduled reveal time and a permanent, shareable audit trail everyone can verify.",
+        a: "You can, but only the commissioner sees it fire, and it can be re-rolled before saving. Fantasy Football Draft Order is the tool you reach for when your league wants a single scheduled reveal time and a permanent, shareable audit trail everyone can verify.",
       },
       NAMES_FAQ,
       TRUST_FAQ,
@@ -456,7 +457,8 @@ export const LANDING_PAGES: LandingPage[] = [
       ],
       sources: [
         {
-          label: "Fantasy Nerds: New Feature: Random Draft Order LIVE (Aug 2016)",
+          label:
+            "Fantasy Nerds: New Feature: Random Draft Order LIVE (Aug 2016)",
           url: "https://www.fantasynerds.com/news/article/335/new-feature-random-draft-order-live",
         },
         {
