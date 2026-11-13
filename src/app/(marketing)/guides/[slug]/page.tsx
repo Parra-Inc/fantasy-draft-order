@@ -9,6 +9,10 @@ import { Faq } from "@/components/marketing/faq";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Every guide is prerendered from GUIDES, so unknown slugs get the static 404
+// instead of a dynamic render (and a read-only incremental cache write).
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
 }
