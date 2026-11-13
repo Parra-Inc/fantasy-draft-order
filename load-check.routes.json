@@ -1,0 +1,6 @@
+{
+  "$comment": "Routes the Worker load check requests (pnpm check:load) after the Cloudflare build. OpenNext loads route code lazily, so each route group needs one request. Bindings are stubbed (local D1/R2/KV, dummy Hyperdrive, placeholder secrets). See scripts/worker-load-check.mjs.",
+  "workers": [
+    { "name": "web", "config": "wrangler.jsonc", "routes": ["/", "/robots.txt", { "path": "/api/feedback", "method": "POST", "body": {} }, "/api/drafts"] }
+  ]
+}

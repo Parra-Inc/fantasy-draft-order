@@ -21,6 +21,9 @@ pnpm test
 echo "==> Build: Next.js + OpenNext (pnpm exec turbo run build:cf)"
 pnpm exec turbo run build:cf
 
+echo "==> Worker load check (pnpm check:load: boots the bundle in workerd)"
+pnpm check:load
+
 echo "==> Build: Storybook (pnpm build-storybook)"
 pnpm build-storybook
 
