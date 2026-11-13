@@ -20,6 +20,7 @@
     "start": "next start",
     "lint": "eslint",
     "check": "bash scripts/check.sh",
+    "check:load": "node scripts/worker-load-check.mjs",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio --port 5564 --browser none",
