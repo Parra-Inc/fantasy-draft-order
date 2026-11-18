@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GithubIcon } from "@/components/icons/github";
 import { BrandMark } from "@/components/brand-mark";
 import { Wordmark } from "@/components/wordmark";
+import { NewsletterForm } from "@/components/newsletter/newsletter-form";
 
 const GITHUB_URL = "https://github.com/Parra-Inc/fantasy-draft-order";
 
@@ -104,6 +105,16 @@ export default function MarketingLayout({
                 <GithubIcon className="size-3.5" />
                 Source on GitHub
               </a>
+              <div className="mt-6 max-w-sm">
+                <h4 className="font-display text-chalk text-sm font-bold">
+                  Subscribe to our newsletter
+                </h4>
+                <p className="text-hashmark mt-1.5 text-sm">
+                  Get the latest draft guides and punishment ideas delivered to
+                  your inbox.
+                </p>
+                <NewsletterForm source="footer" size="sm" className="mt-3" />
+              </div>
             </div>
             <div>
               <h4 className="font-display text-chalk text-sm font-bold">

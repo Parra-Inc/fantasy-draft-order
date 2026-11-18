@@ -53,7 +53,7 @@ new ZoneBaseline(domain, {
   // open draft page posts them on a timer.
   rateLimit: {
     expression:
-      '(http.request.method eq "POST" and (http.request.uri.path in {"/api/drafts" "/api/feedback" "/api/punishment-ideas" "/api/punishments"} or starts_with(http.request.uri.path, "/api/drafts/import/")))',
+      '(http.request.method eq "POST" and (http.request.uri.path in {"/api/drafts" "/api/feedback" "/api/newsletter/subscribe" "/api/newsletter/unsubscribe" "/api/punishment-ideas" "/api/punishments"} or starts_with(http.request.uri.path, "/api/drafts/import/")))',
     description: "Anonymous write endpoints",
   },
   skip: { wwwRedirect: "declared by ManagedZone" },

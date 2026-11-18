@@ -25,7 +25,9 @@ export type IdPrefix =
   // public ideas database.
   | "pun"
   | "pop"
-  | "pid";
+  | "pid"
+  // Newsletter subscriber.
+  | "sub";
 
 export function newId(prefix: IdPrefix): string {
   return `${prefix}_${nano()}`;
