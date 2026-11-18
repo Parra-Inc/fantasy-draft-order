@@ -5,6 +5,7 @@ import { Integrations } from "@/components/marketing/integrations";
 import { GuidesTeaser } from "@/components/marketing/guides-teaser";
 import { Faq } from "@/components/marketing/faq";
 import { FinalCta } from "@/components/marketing/cta";
+import { NewsletterSection } from "@/components/marketing/newsletter-section";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { SoftwareApplicationLd } from "@/lib/seo/jsonld";
 
@@ -26,6 +27,9 @@ export default function HomePage() {
       <GuidesTeaser />
       <Faq />
       <FinalCta />
+      <div id="newsletter">
+        <NewsletterSection />
+      </div>
     </main>
   );
 }

@@ -1,0 +1,19 @@
+// One row per address. Never deleted: unsubscribing flips isActive and stamps
+// unsubscribedAt, and a later signup reactivates the same row (same token).
+// email is lowercased before every write. No IP or user agent is stored.
+
+model NewsletterSubscriber {
+  id               String    @id
+  email            String    @unique
+  /// Which form the address came from, e.g. "footer" or "home".
+  source           String?
+  /// Random UUID set at insert, never rotated, used in unsubscribe links.
+  unsubscribeToken String    @unique
+  isActive         Boolean   @default(true)
+  subscribedAt     DateTime  @default(now())
+  unsubscribedAt   DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @default(now())
+
+  @@index([isActive])
+}
