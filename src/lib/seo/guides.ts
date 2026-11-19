@@ -572,7 +572,7 @@ export const GUIDES: Guide[] = [
     title: "Commissioner's guide: running a fair fantasy draft order reveal",
     metaTitle: "Commissioner's Guide to a Fair Draft Order Reveal",
     description:
-      "Everything a commissioner needs to do to run a draft order reveal that nobody can dispute. Schedule, message, run, archive.",
+      "Everything a commissioner needs to run a draft order reveal nobody can dispute: when to schedule it, what to send the league, how to run it, and what to keep.",
     excerpt:
       "If you're the commissioner, the draft order reveal is the most political moment of your year. Here's the playbook.",
     datePublished: "2026-02-25",
