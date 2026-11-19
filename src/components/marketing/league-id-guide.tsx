@@ -122,6 +122,11 @@ export function LeagueIdGuideView({ guide }: { guide: LeagueIdGuide }) {
           <h1 className="font-display text-chalk mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
             {guide.h1} <span className="text-signal">{guide.h1Accent}</span>
           </h1>
+          {guide.answer ? (
+            <p className="border-signal/30 bg-signal/5 text-chalk mt-6 max-w-2xl rounded-xl border px-5 py-4 text-lg leading-relaxed">
+              {guide.answer}
+            </p>
+          ) : null}
           <p className="text-hashmark mt-6 max-w-2xl text-lg leading-relaxed">
             {guide.intro}
           </p>
@@ -133,6 +138,9 @@ export function LeagueIdGuideView({ guide }: { guide: LeagueIdGuide }) {
       </section>
 
       <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-16">
+        <h2 className="font-display text-chalk mb-6 text-2xl font-bold sm:text-3xl">
+          How to find your {guide.short} league ID
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Steps
             icon={Globe}

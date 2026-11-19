@@ -6,7 +6,7 @@ import { WhyFair } from "@/components/marketing/why-fair";
 import { Integrations } from "@/components/marketing/integrations";
 import { Faq } from "@/components/marketing/faq";
 import { FinalCta } from "@/components/marketing/cta";
-import { BreadcrumbLd } from "@/lib/seo/jsonld";
+import { BreadcrumbLd, HowToLd } from "@/lib/seo/jsonld";
 import type { LandingPage } from "@/lib/seo/landing-pages";
 import { getGuide } from "@/lib/seo/guides";
 
@@ -156,6 +156,14 @@ export function LandingPageView({ page }: { page: LandingPage }) {
           { name: page.breadcrumbName, path: `/${page.slug}` },
         ]}
       />
+      {page.quickAnswer ? (
+        <HowToLd
+          name={page.quickAnswer.question}
+          description={page.quickAnswer.answer}
+          path={`/${page.slug}`}
+          steps={page.quickAnswer.steps}
+        />
+      ) : null}
 
       <section className="border-sideline/50 relative overflow-hidden border-b">
         <div className="pointer-events-none absolute inset-0">
@@ -174,6 +182,29 @@ export function LandingPageView({ page }: { page: LandingPage }) {
               </>
             ) : null}
           </h1>
+          {page.quickAnswer ? (
+            <div className="border-signal/30 bg-signal/5 mx-auto mt-8 max-w-2xl rounded-2xl border p-6 text-left">
+              <h2 className="font-display text-chalk text-xl font-bold">
+                {page.quickAnswer.question}
+              </h2>
+              <p className="text-chalk/85 mt-2 leading-relaxed">
+                {page.quickAnswer.answer}
+              </p>
+              <ol className="mt-4 space-y-2.5">
+                {page.quickAnswer.steps.map((step, i) => (
+                  <li
+                    key={step}
+                    className="text-chalk/85 flex gap-3 text-sm leading-relaxed"
+                  >
+                    <span className="bg-sideline text-signal mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-bold">
+                      {i + 1}
+                    </span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
           <p className="text-hashmark mx-auto mt-6 max-w-2xl text-lg leading-relaxed">
             {page.intro}
           </p>
