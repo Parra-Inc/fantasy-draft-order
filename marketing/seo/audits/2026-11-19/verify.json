@@ -1,0 +1,8 @@
+{"schema":"audit-seo/v1","layer":"verify","site":"fantasyfootballdraftorder.com","capturedAt":"2026-11-19T23:55:00Z",
+"deploy":{"workflow":"Deploy","run":44638097932,"sha":"66bceec","conclusion":"success"},
+"findings":[
+ {"id":"undeployed-53-54","before":"database 404, old titles","after":"database 200 with 188 ideas; new Sleeper title live","cleared":true},
+ {"id":"A4-descriptions","before":12,"after":5,"cleared":"partial","note":"8 fixed pages pass live; remaining: 4 user-generated /p/* (skipped) + new /database page at 147, fixed in PR #56"},
+ {"id":"heading.skip","before":36,"after":20,"cleared":"pending","note":"crawler recheck still running; live curl of a flagged guide shows h1 then h2 only. Re-read audit_report to confirm 0."},
+ {"id":"indexnow","note":"14 changed URLs submitted, IndexNow 200"}
+]}

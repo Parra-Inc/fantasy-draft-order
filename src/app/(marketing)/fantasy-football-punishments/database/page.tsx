@@ -36,7 +36,7 @@ const FAQS = [
 export const metadata = buildMetadata({
   title: "Fantasy Football Punishments Database",
   description:
-    "Every fantasy football last-place punishment in one searchable table. Filter by cost, duration, remote-friendly and more, then spin your shortlist.",
+    "Every fantasy football last-place punishment in one searchable table. Filter by cost, duration, remote-friendly and more, then spin your own shortlist live.",
   path: "/fantasy-football-punishments/database",
 });
 
