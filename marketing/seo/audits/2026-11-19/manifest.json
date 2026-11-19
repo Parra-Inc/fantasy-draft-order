@@ -1,0 +1,71 @@
+{
+ "schema": "audit-seo/v1",
+ "site": "fantasyfootballdraftorder.com",
+ "siteId": "fantasyfootballdraftorder-com",
+ "rank": 5,
+ "scope": "single-site, full depth",
+ "coverage": {
+  "pages": 38,
+  "audited": 38,
+  "lastAuditAtBeforeRecheck": "2026-11-06T16:04:29.031Z",
+  "recheckQueued": 38
+ },
+ "gscWindow": {
+  "start": "2026-10-20",
+  "end": "2026-11-16",
+  "days": 28
+ },
+ "context": "Run after PR #53 (punishments database) and PR #54 (answer-first league ID/Sleeper pages) merged to main. Deploy state checked separately.",
+ "phases": {
+  "1-crawl": {
+   "ran": true,
+   "file": "crawl.json",
+   "note": "recheck 38/38 queued first; 0 err / 5 warn / 38 notices"
+  },
+  "2-search-console": {
+   "ran": true,
+   "file": "search-console.json",
+   "note": "all 12 required calls; Bing crawl_issues via bing-webmaster instead (sc-domain property)"
+  },
+  "2b-bing": {
+   "ran": true,
+   "file": "bing.json",
+   "note": "get_rank_and_traffic_stats failed (MCP validation bug)"
+  },
+  "3-pagespeed": {
+   "ran": true,
+   "file": "pagespeed.raw.json",
+   "note": "local lighthouse --sample=2, mobile, 1 run per URL, 24 URLs; no PSI call (no template over threshold)"
+  },
+  "4-standard": {
+   "ran": true,
+   "file": "standard.json",
+   "note": "seo-standard.mjs --repo=.; 25/3/6/6 n-a/6 manual"
+  },
+  "5-correlate": {
+   "ran": true,
+   "file": "summary.md"
+  },
+  "6-fix-verify": {
+   "ran": "partial",
+   "note": "fixes committed on seo/audit-2026-11-19; deploy + recheck pending user approval"
+  },
+  "extra-content-gaps": {
+   "ran": true,
+   "files": [
+    "content-gaps.txt",
+    "gsc-export/Queries.csv",
+    "gsc-export/Pages.csv",
+    "topic-clusters.json",
+    "keyword-research.json"
+   ],
+   "note": "16-month GSC gap report with hand-written topic clusters; Bing keyword stats for 7 head terms"
+  },
+  "extra-text-length": {
+   "ran": true,
+   "file": "text-length.json",
+   "note": "every sitemap URL, rendered length"
+  }
+ },
+ "pagespeedSample": "--sample=2 per path family, mobile, 1 run"
+}

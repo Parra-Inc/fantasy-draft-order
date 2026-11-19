@@ -1,0 +1,553 @@
+[
+  {
+    "url": "https://fantasyfootballdraftorder.com/",
+    "strategy": "mobile",
+    "score": 98,
+    "lcp": 962.1065,
+    "tbt": 148.4999999999999,
+    "cls": 0,
+    "fcp": 962.1065,
+    "ttfb": 747,
+    "si": 2015.6851703979696,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 647
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 993.5125,
+    "tbt": 54,
+    "cls": 0,
+    "fcp": 993.5125,
+    "ttfb": 64,
+    "si": 993.5125,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/draft-lottery",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1026.3380000000002,
+    "tbt": 71,
+    "cls": 0,
+    "fcp": 1026.3380000000002,
+    "ttfb": 97,
+    "si": 1239.9312860044363,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/espn",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1169.888,
+    "tbt": 58,
+    "cls": 0,
+    "fcp": 1169.888,
+    "ttfb": 62,
+    "si": 1169.888,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-baseball",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 984.997,
+    "tbt": 79.99999999999989,
+    "cls": 0,
+    "fcp": 984.997,
+    "ttfb": 69,
+    "si": 1300.1860179982955,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 924,
+    "tbt": 50,
+    "cls": 0,
+    "fcp": 924,
+    "ttfb": 66,
+    "si": 924,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-football",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 990.932,
+    "tbt": 86,
+    "cls": 0,
+    "fcp": 990.932,
+    "ttfb": 721,
+    "si": 1738.2020999944089,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 621
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-football-facebook-groups",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 1040.5085,
+    "tbt": 113.5,
+    "cls": 0,
+    "fcp": 1040.5085,
+    "ttfb": 845,
+    "si": 2109.255936004603,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 745
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-football-punishments",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 989.529,
+    "tbt": 71,
+    "cls": 0,
+    "fcp": 989.529,
+    "ttfb": 364,
+    "si": 1720.6913980074582,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 264
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 991.329,
+    "tbt": 54,
+    "cls": 0,
+    "fcp": 991.329,
+    "ttfb": 578,
+    "si": 2363.919587999397,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 478
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/fleaflicker",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 999.4285,
+    "tbt": 66,
+    "cls": 0,
+    "fcp": 999.4285,
+    "ttfb": 537,
+    "si": 1508.821537991011,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 437
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/guides",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1056.4375,
+    "tbt": 66,
+    "cls": 0,
+    "fcp": 1056.4375,
+    "ttfb": 143,
+    "si": 1470.7077920069696,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/guides/weighted-vs-random-draft-lottery",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1166.0079999999998,
+    "tbt": 68,
+    "cls": 0,
+    "fcp": 1166.0079999999998,
+    "ttfb": 555,
+    "si": 1974.516284007805,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 455
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/how-it-works",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 1067.297,
+    "tbt": 113,
+    "cls": 0,
+    "fcp": 1067.297,
+    "ttfb": 142,
+    "si": 1832.0826000089705,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/league-id",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1009.8805,
+    "tbt": 51,
+    "cls": 0,
+    "fcp": 1009.8805,
+    "ttfb": 647,
+    "si": 1952.35855401867,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 547
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/league-id/yahoo",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 969.656,
+    "tbt": 83,
+    "cls": 0,
+    "fcp": 969.656,
+    "ttfb": 819,
+    "si": 1810.2846320020792,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 719
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/mfl",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1050.1755000000003,
+    "tbt": 68.99999999999955,
+    "cls": 0,
+    "fcp": 1050.1755000000003,
+    "ttfb": 131,
+    "si": 1050.1755000000003,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/new",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 1054.856,
+    "tbt": 73,
+    "cls": 0,
+    "fcp": 1054.856,
+    "ttfb": 863,
+    "si": 2792.0270259950394,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 763
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+    "strategy": "mobile",
+    "score": 84,
+    "lcp": 4239.582,
+    "tbt": 52,
+    "cls": 0,
+    "fcp": 854.855,
+    "ttfb": 1329,
+    "si": 3592.4013839739155,
+    "verdicts": {
+      "lcp": "POOR",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 1229
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 890
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs",
+    "strategy": "mobile",
+    "score": 99,
+    "lcp": 809.417,
+    "tbt": 104,
+    "cls": 0,
+    "fcp": 809.417,
+    "ttfb": 356,
+    "si": 1154.4628960049029,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Initial server response time was short",
+        "savingsMs": 256
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/punishment/new",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1012.4659999999999,
+    "tbt": 53,
+    "cls": 0,
+    "fcp": 1012.4659999999999,
+    "ttfb": 936,
+    "si": 1976.5033679930807,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 836
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/sleeper",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 954.264,
+    "tbt": 79,
+    "cls": 0,
+    "fcp": 954.264,
+    "ttfb": 86,
+    "si": 1146.2501299997748,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/why-fair",
+    "strategy": "mobile",
+    "score": 100,
+    "lcp": 1003.706,
+    "tbt": 69,
+    "cls": 0,
+    "fcp": 1003.706,
+    "ttfb": 858,
+    "si": 2261.9344060163435,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 758
+      }
+    ],
+    "failedDiagnostics": []
+  },
+  {
+    "url": "https://fantasyfootballdraftorder.com/yahoo",
+    "strategy": "mobile",
+    "score": 98,
+    "lcp": 1785.4744999999998,
+    "tbt": 69,
+    "cls": 0,
+    "fcp": 1785.4744999999998,
+    "ttfb": 992,
+    "si": 2909.818540001076,
+    "verdicts": {
+      "lcp": "good",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 892
+      }
+    ],
+    "failedDiagnostics": []
+  }
+]

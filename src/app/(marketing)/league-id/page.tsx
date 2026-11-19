@@ -9,7 +9,7 @@ import { buildMetadata } from "@/lib/seo/metadata";
 export const metadata = buildMetadata({
   title: "League ID Guides by Platform: Sleeper, ESPN, Yahoo, MFL",
   description:
-    "Index of league ID guides for every fantasy platform. Pick Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker for the exact web and app steps.",
+    "Index of league ID guides for every fantasy platform. Pick Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker to get the exact web and app steps for it.",
   path: "/league-id",
 });
 

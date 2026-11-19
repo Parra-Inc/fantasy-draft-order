@@ -217,7 +217,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "mfl",
     title: "MFL Draft Order Randomizer: Free and Open Source",
     description:
-      "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
+      "Free MyFantasyLeague draft order generator. Import your MFL league by its ID, schedule a time, and share one link so the whole league can watch the draw live.",
     eyebrow: "MyFantasyLeague",
     h1: "MFL draft order, verifiable by everyone.",
     h1Accent: "Not just the commish.",
@@ -291,7 +291,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "fantasy-football",
     title: "Fantasy Football Draft Order Generator: Free, Open Source",
     description:
-      "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. Any league size.",
+      "Free fantasy football draft order generator. Schedule a draw, share one link, and the whole league watches the order drawn live from open-source code. Any size.",
     eyebrow: "Fantasy football",
     h1: "Fantasy football draft order,",
     h1Accent: "your league can trust.",
@@ -523,7 +523,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "how-it-works",
     title: "How Fantasy Football Draft Order Works: Scheduled and Signed",
     description:
-      "Three steps: schedule the draw, share the link, watch the order drawn live from open-source code. Here's exactly what happens behind the scenes.",
+      "Three steps: schedule the draw, share the link, and watch the order drawn live from open-source code. Here is exactly what happens behind the scenes, and when.",
     eyebrow: "How it works",
     h1: "How a trustworthy draft order",
     h1Accent: "actually works.",
@@ -562,7 +562,7 @@ export const LANDING_PAGES: LandingPage[] = [
     slug: "why-fair",
     title: "Why Fantasy Football Draft Order Is Actually Fair",
     description:
-      "Every other draft randomizer asks you to trust the commissioner. We took them out of the loop. Here's the four-pillar trust model.",
+      "Most draft randomizers ask the league to trust the commissioner. This one takes the commissioner out of the loop. How the four-part trust model works.",
     eyebrow: "Why it's fair",
     h1: "Trust, not by promise.",
     h1Accent: "By design.",

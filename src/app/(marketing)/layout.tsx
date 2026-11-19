@@ -106,9 +106,9 @@ export default function MarketingLayout({
                 Source on GitHub
               </a>
               <div className="mt-6 max-w-sm">
-                <h4 className="font-display text-chalk text-sm font-bold">
+                <h2 className="font-display text-chalk text-sm font-bold">
                   Subscribe to our newsletter
-                </h4>
+                </h2>
                 <p className="text-hashmark mt-1.5 text-sm">
                   Get the latest draft guides and punishment ideas delivered to
                   your inbox.
@@ -117,9 +117,9 @@ export default function MarketingLayout({
               </div>
             </div>
             <div>
-              <h4 className="font-display text-chalk text-sm font-bold">
+              <h2 className="font-display text-chalk text-sm font-bold">
                 Product
-              </h4>
+              </h2>
               <ul className="mt-4 space-y-2.5 text-sm">
                 {PRODUCT_LINKS.map((l) => (
                   <li key={l.href}>
@@ -134,9 +134,9 @@ export default function MarketingLayout({
               </ul>
             </div>
             <div>
-              <h4 className="font-display text-chalk text-sm font-bold">
+              <h2 className="font-display text-chalk text-sm font-bold">
                 Platforms
-              </h4>
+              </h2>
               <ul className="mt-4 space-y-2.5 text-sm">
                 {PLATFORM_LINKS.map((l) => (
                   <li key={l.href}>
@@ -151,9 +151,9 @@ export default function MarketingLayout({
               </ul>
             </div>
             <div>
-              <h4 className="font-display text-chalk text-sm font-bold">
+              <h2 className="font-display text-chalk text-sm font-bold">
                 Sports
-              </h4>
+              </h2>
               <ul className="mt-4 space-y-2.5 text-sm">
                 {SPORT_LINKS.map((l) => (
                   <li key={l.href}>

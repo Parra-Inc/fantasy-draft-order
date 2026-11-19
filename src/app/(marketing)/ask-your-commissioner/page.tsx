@@ -151,7 +151,7 @@ function Point({
   return (
     <div className="border-sideline/50 bg-sideline/20 rounded-2xl border p-5">
       <Icon className="text-signal size-5" />
-      <h3 className="font-display text-chalk mt-3 font-bold">{title}</h3>
+      <h2 className="font-display text-chalk mt-3 font-bold">{title}</h2>
       <p className="text-hashmark mt-1.5 text-sm leading-relaxed">{body}</p>
     </div>
   );

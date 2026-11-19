@@ -59,7 +59,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     draftOrderGuide: "how-to-randomize-draft-order-on-sleeper",
     title: "Sleeper League ID: Where to Find It (App and Web, 2026)",
     description:
-      "Sleeper app: gear icon > General > Copy League ID. Web: the 18-digit number after /leagues/ in your league URL. Plus why last season's ID fails.",
+      "Sleeper app: tap the gear icon, then General, then Copy League ID. On the web it is the 18-digit number after /leagues/ in your league URL. Why old IDs fail.",
     keywords: [
       "sleeper league id finder",
       "sleeper league id",
@@ -430,7 +430,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     platformPage: "/fleaflicker",
     title: "Fleaflicker League ID Finder: Where to Find Your League ID",
     description:
-      "Your Fleaflicker league ID is the number at the end of your league URL, after /leagues/. Here is how to read it and the parts of the URL to ignore.",
+      "Your Fleaflicker league ID is the number at the end of your league URL, right after /leagues/. Here is how to read it and which parts of the URL to ignore.",
     keywords: [
       "fleaflicker league id finder",
       "fleaflicker league id",
