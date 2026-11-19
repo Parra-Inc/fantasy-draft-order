@@ -201,7 +201,7 @@ arrive as an elimination round, not as an announcement (see below).
 ### Punishment ideas database
 
 `/fantasy-football-punishments` reads `PunishmentIdea` where `status = 'APPROVED'`. Every
-idea lives in D1, including the ~40 curated ones seeded by `0003_punishment_wheel.sql`, so
+idea lives in D1, including the curated ones seeded by `0003_punishment_wheel.sql` and `0005_punishment_tags.sql` (which also adds the `tags` column behind the searchable `/fantasy-football-punishments/database` table), so
 that page is **force-dynamic** — unlike every other marketing page. Do not make it static
 without first moving the ideas back into git.
 

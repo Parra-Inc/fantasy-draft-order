@@ -65,6 +65,9 @@ model PunishmentIdea {
   id         String    @id
   label      String
   category   String
+  /// Comma-separated tag slugs from PUNISHMENT_TAGS (src/lib/punishments.ts).
+  /// Drives the filters on /fantasy-football-punishments/database.
+  tags       String    @default("")
   status     String    @default("PENDING")
   /// Submitter's optional contact, so a good idea can get a thank-you.
   /// Never rendered on any public page.
