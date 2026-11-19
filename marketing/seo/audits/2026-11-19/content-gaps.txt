@@ -1,0 +1,107 @@
+# sc-domain:fantasyfootballdraftorder.com  2025-07-24 to 2026-11-16
+
+wrote marketing/seo/audits/2026-11-19/gsc-export/Queries.csv (829 rows)
+wrote marketing/seo/audits/2026-11-19/gsc-export/Pages.csv (35 rows)
+TOTALS: 469 clicks, 64495 impressions, 829 queries, 35 pages, CTR 0.73%
+
+==============================================================================
+1. DEMAND BY CLUSTER
+==============================================================================
+CLUSTER                          IMPR  CLK  AVGPOS
+League ID lookup                 8655    7     9.2
+Platform draft order how-to      3575   21    11.3
+Punishments                       633   11    61.3
+Draft order generator / randomizer (tool)    278    3    69.0
+Snake vs linear draft formats     175    0    51.9
+Other sports draft order          113    2    18.7
+Draft lottery                     107    0    52.9
+Draft order (general)              40    0    57.1
+Fun ways to decide draft order     40    0    60.6
+(unclustered)                     419
+
+==============================================================================
+2. RANKING BUT NO DEDICATED PAGE (best result is a generic index)
+==============================================================================
+   47 pos= 71.9 | draft order generator                                    -> /
+   34 pos= 75.7 | fantasy football draft order generator                   -> /
+   17 pos= 52.2 | random draft order generator                             -> /
+   12 pos= 73.6 | draft order randomizer                                   -> /
+   10 pos= 42.0 | fantasy draft order generator live                       -> /
+    9 pos= 77.0 | fantasy football draft order randomizer                  -> /
+    9 pos= 86.0 | snake draft generator                                    -> /guides
+    8 pos= 72.3 | generate draft order                                     -> /
+    7 pos= 71.0 | fantasy order generator                                  -> /
+    7 pos= 42.8 | live draft order generator                               -> /
+    6 pos= 64.7 | randomizer for fantasy football draft                    -> /
+    5 pos= 73.7 | draft order picker                                       -> /
+    5 pos= 65.0 | fantasy draft pick randomizer                            -> /
+    5 pos= 60.0 | fantasy football draft randomizer                        -> /
+    5 pos= 66.0 | fantasy football randomizer                              -> /
+    5 pos= 74.0 | nfl fantasy draft order generator                        -> /
+    4 pos= 68.3 | draft randomizer fantasy                                 -> /
+    4 pos= 71.5 | fantasy draft order randomizer                           -> /
+    4 pos= 65.5 | fantasy draft randomizer                                 -> /
+    4 pos= 86.0 | fantasy football draft order simulator                   -> /
+    4 pos= 66.8 | random draft order                                       -> /
+    4 pos= 69.0 | random fantasy draft order generator                     -> /
+    4 pos= 65.0 | random number generator for fantasy football             -> /
+    3 pos= 73.5 | draft pick generator                                     -> /
+    3 pos= 85.7 | fantasy draft order generator race                       -> /
+    3 pos= 72.0 | fantasy draft order simulator                            -> /
+    3 pos= 78.0 | fantasy draft pick generator                             -> /
+    3 pos= 60.0 | fantasy football draft pick generator                    -> /
+    3 pos= 12.0 | fantasy order                                            -> /
+    3 pos= 52.0 | fantasy randomizer                                       -> /
+    3 pos= 39.5 | order randomizer draft                                   -> /
+    3 pos= 66.0 | random draft generator                                   -> /
+    2 pos= 38.0 | draft order decider                                      -> /
+    2 pos= 69.0 | draft pick order generator                               -> /
+    2 pos= 82.0 | fantasy draft order picker                               -> /
+    2 pos= 65.0 | fantasy football division randomizer                     -> /
+    2 pos= 78.0 | fantasy football draft order lottery                     -> /
+    2 pos= 32.0 | fantasy football draft pick randomizer                   -> /
+    2 pos= 49.0 | fantasy football order                                   -> /
+    2 pos= 72.0 | fantasy football random draft order                      -> /
+    2 pos= 55.0 | fantasy nerds random draft order                         -> /
+    2 pos= 74.5 | fun draft order generator                                -> /
+    2 pos=  8.0 | how to randomize draft order espn fantasy                -> /
+    2 pos= 67.0 | how to randomize fantasy football draft order            -> /
+    2 pos= 60.0 | nfl draft randomizer                                     -> /
+    2 pos=  1.0 | open source fantasy football                             -> /
+    2 pos= 69.0 | random draft order fantasy football                      -> /
+    2 pos= 66.0 | random draft order generator fantasy football            -> /
+    2 pos= 74.5 | random fantasy draft order                               -> /guides
+    2 pos= 74.0 | randomized draft order                                   -> /
+    2 pos= 68.5 | randomizer draft order                                   -> /
+
+==============================================================================
+3. WRONG-LOCALE PAGE IS RANKING (hreflang / canonical leak)
+==============================================================================
+
+==============================================================================
+4. LOW TOPICAL COVERAGE (>=40% of query terms absent from every slug, pos > 25)
+==============================================================================
+!! HIGH FALSE-POSITIVE RATE. This section scores a query against SLUG TOKENS only,
+!! so a query is flagged whenever its wording differs from the URL -- even when a
+!! perfectly good page exists ('floc' vs /glossary/flocculant, and any one-word slug
+!! like /headers/linkedin). Queries whose best result is already a dedicated page are
+!! suppressed below, but you MUST still confirm no page covers the topic before
+!! calling anything here a gap. Most rows are ranking problems, not missing pages.
+
+   10 pos= 42.0 gap=40% | fantasy draft order generator live                   -> /
+    7 pos= 42.8 gap=50% | live draft order generator                           -> /
+    5 pos= 65.0 gap=50% | fantasy draft pick randomizer                        -> /
+    5 pos= 74.0 gap=40% | nfl fantasy draft order generator                    -> /
+    4 pos= 65.0 gap=40% | random number generator for fantasy football         -> /
+    3 pos= 73.5 gap=67% | draft pick generator                                 -> /
+    3 pos= 85.7 gap=40% | fantasy draft order generator race                   -> /
+    3 pos= 78.0 gap=50% | fantasy draft pick generator                         -> /
+    3 pos= 60.0 gap=40% | fantasy football draft pick generator                -> /
+    3 pos= 52.0 gap=50% | fantasy randomizer                                   -> /
+    2 pos= 69.0 gap=50% | draft pick order generator                           -> /
+    2 pos= 65.0 gap=50% | fantasy football division randomizer                 -> /
+    2 pos= 32.0 gap=40% | fantasy football draft pick randomizer               -> /
+    2 pos= 60.0 gap=67% | nfl draft randomizer                                 -> /
+
+(54 rows suppressed: a dedicated page already ranks for them, so they are
+ ranking/CTR problems rather than content gaps. Re-run with --show-covered to see them.)

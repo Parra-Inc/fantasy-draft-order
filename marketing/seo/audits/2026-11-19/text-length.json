@@ -1,0 +1,448 @@
+{
+ "measured": 38,
+ "outside": 12,
+ "rows": [
+  {
+   "url": "https://fantasyfootballdraftorder.com/",
+   "status": 200,
+   "title": "Fantasy Football Draft Order: Free, Open-Source Randomizer",
+   "titleLength": 58,
+   "titleRawLength": 58,
+   "description": "Free, open-source fantasy football draft order generator. Schedule the draw, share one link, and watch your order picked live. Sleeper, ESPN, MFL and more.",
+   "descriptionLength": 155,
+   "descriptionRawLength": 155,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/ask-your-commissioner",
+   "status": 200,
+   "title": "How to Ask Your Commissioner for a Fair Draft Order",
+   "titleLength": 51,
+   "titleRawLength": 51,
+   "description": "Want the draft order drawn in public? How to raise it with your fantasy commissioner without a fight, plus a message to paste straight into the league chat.",
+   "descriptionLength": 156,
+   "descriptionRawLength": 156,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/draft-lottery",
+   "status": 200,
+   "title": "Fantasy Draft Lottery: Free, Sealed & Open Source",
+   "titleLength": 49,
+   "titleRawLength": 53,
+   "description": "Run a sealed fantasy draft lottery your league cannot re-spin. Schedule the reveal, share one link, and every team watches the order drawn live. No re-rolls.",
+   "descriptionLength": 157,
+   "descriptionRawLength": 157,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/espn",
+   "status": 200,
+   "title": "ESPN Fantasy Football Draft Order Randomizer: Free and Live",
+   "titleLength": 59,
+   "titleRawLength": 59,
+   "description": "Free ESPN fantasy football draft order generator. Import a public ESPN league by ID, share one link, and the whole league watches the order drawn live.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 151,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-baseball",
+   "status": 200,
+   "title": "Fantasy Baseball Draft Order Generator: Free & Fair",
+   "titleLength": 51,
+   "titleRawLength": 55,
+   "description": "Free fantasy baseball draft order generator for MLB leagues. Schedule a draw, share one link, and the whole league watches it drawn live from open-source code.",
+   "descriptionLength": 159,
+   "descriptionRawLength": 159,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-basketball",
+   "status": 200,
+   "title": "Fantasy Basketball Draft Order Generator: Free & Fair",
+   "titleLength": 53,
+   "titleRawLength": 57,
+   "description": "Free fantasy basketball draft order generator for NBA leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+   "descriptionLength": 155,
+   "descriptionRawLength": 155,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-football",
+   "status": 200,
+   "title": "Fantasy Football Draft Order Generator: Free, Open Source",
+   "titleLength": 57,
+   "titleRawLength": 57,
+   "description": "Free fantasy football draft order generator. Schedule a draw, share one link, and watch the order drawn live from open-source code. Any league size.",
+   "descriptionLength": 148,
+   "descriptionRawLength": 148,
+   "problems": [
+    "description 148 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-football-facebook-groups",
+   "status": 200,
+   "title": "The Best Fantasy Football Facebook Groups (2026)",
+   "titleLength": 48,
+   "titleRawLength": 48,
+   "description": "The fantasy football Facebook groups worth joining, what each is for, how to find a league that will not fold by week six, and what never to put to a vote.",
+   "descriptionLength": 155,
+   "descriptionRawLength": 155,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-football-punishments",
+   "status": 200,
+   "title": "Fantasy Football Punishments: 40+ Ideas, Drawn Fairly",
+   "titleLength": 53,
+   "titleRawLength": 53,
+   "description": "40+ fantasy football last-place punishments, from cheap and silly to permanent. Pick the ones your league will do, then draw one live so no one cries rigged.",
+   "descriptionLength": 157,
+   "descriptionRawLength": 157,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fantasy-hockey",
+   "status": 200,
+   "title": "Fantasy Hockey Draft Order Generator: Free & Transparent",
+   "titleLength": 56,
+   "titleRawLength": 60,
+   "description": "Free fantasy hockey draft order generator for NHL leagues. Schedule a draw, share one link, and the whole league watches it live from open-source code.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 151,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/fleaflicker",
+   "status": 200,
+   "title": "Fleaflicker Draft Order Randomizer: Free, Live, Auditable",
+   "titleLength": 57,
+   "titleRawLength": 57,
+   "description": "Free Fleaflicker draft order generator. Randomize your league draft order, share one link, and the whole league watches it drawn live from open-source code.",
+   "descriptionLength": 156,
+   "descriptionRawLength": 156,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides",
+   "status": 200,
+   "title": "Fantasy Football Draft Order Guides: Trust and Tradition",
+   "titleLength": 56,
+   "titleRawLength": 56,
+   "description": "Guides to running fair fantasy football drafts: snake vs straight, weighted vs random lotteries, platform randomizer walkthroughs, and fun ways to pick order.",
+   "descriptionLength": 158,
+   "descriptionRawLength": 158,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/commissioner-guide-running-a-fair-draft-order-reveal",
+   "status": 200,
+   "title": "Commissioner's Guide to a Fair Draft Order Reveal",
+   "titleLength": 49,
+   "titleRawLength": 54,
+   "description": "Everything a commissioner needs to do to run a draft order reveal that nobody can dispute. Schedule, message, run, archive.",
+   "descriptionLength": 123,
+   "descriptionRawLength": 123,
+   "problems": [
+    "description 123 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/fun-ways-to-determine-fantasy-draft-order",
+   "status": 200,
+   "title": "10 fun ways to determine your fantasy football draft order",
+   "titleLength": 58,
+   "titleRawLength": 58,
+   "description": "Pizza races, paper airplanes, fantasy combines, NASCAR. Ten creative ways to pick draft order, plus one boring, perfectly fair backup when chaos fails.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 151,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/how-to-randomize-draft-order-on-espn",
+   "status": 200,
+   "title": "How to Randomize or Set Draft Order on ESPN (2026)",
+   "titleLength": 50,
+   "titleRawLength": 50,
+   "description": "ESPN randomizes your draft order one hour before the draft if nobody sets it. The clicks to set it yourself, the cutoff, and how to make the result checkable.",
+   "descriptionLength": 158,
+   "descriptionRawLength": 158,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/how-to-randomize-draft-order-on-sleeper",
+   "status": 200,
+   "title": "Is Sleeper's Draft Order Randomizer Fair? (2026)",
+   "titleLength": 48,
+   "titleRawLength": 53,
+   "description": "The Sleeper Randomize Order button is a fair shuffle, but only the commissioner sees it fire and it can be re-rolled before saving. What your league sees.",
+   "descriptionLength": 154,
+   "descriptionRawLength": 154,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/how-to-randomize-draft-order-on-yahoo",
+   "status": 200,
+   "title": "How to Set or Change Draft Order in Yahoo Fantasy (2026)",
+   "titleLength": 56,
+   "titleRawLength": 56,
+   "description": "Yahoo hides the draft order behind Edit next to Draft Type and Time. The exact path to set, reorder, or randomize it, and the deadline that closes it.",
+   "descriptionLength": 150,
+   "descriptionRawLength": 150,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/is-your-draft-order-actually-random",
+   "status": 200,
+   "title": "Is your fantasy draft order actually random?",
+   "titleLength": 44,
+   "titleRawLength": 44,
+   "description": "Most fantasy draft randomizers ask you to take their word for it. How to tell if your league's draft order is verifiably random, and what to do if not.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 156,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/snake-vs-straight-draft-order",
+   "status": 200,
+   "title": "Snake vs Straight Draft: Which Order Should Your League Use?",
+   "titleLength": 60,
+   "titleRawLength": 60,
+   "description": "Snake drafts reverse every round. Straight drafts repeat. Here's the difference, when each makes sense, and why almost every fantasy league uses snake.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 156,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/guides/weighted-vs-random-draft-lottery",
+   "status": 200,
+   "title": "Weighted vs Random Draft Lottery: Which Is Fairer?",
+   "titleLength": 50,
+   "titleRawLength": 50,
+   "description": "A random lottery gives every team equal odds. A weighted lottery gives worse teams better odds, like the NBA. Which one should your league use, and why?",
+   "descriptionLength": 152,
+   "descriptionRawLength": 152,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/how-it-works",
+   "status": 200,
+   "title": "How Fantasy Football Draft Order Works: Scheduled and Signed",
+   "titleLength": 60,
+   "titleRawLength": 60,
+   "description": "Three steps: schedule the draw, share the link, watch the order drawn live from open-source code. Here's exactly what happens behind the scenes.",
+   "descriptionLength": 144,
+   "descriptionRawLength": 149,
+   "problems": [
+    "description 144 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id",
+   "status": 200,
+   "title": "League ID Guides by Platform: Sleeper, ESPN, Yahoo, MFL",
+   "titleLength": 55,
+   "titleRawLength": 55,
+   "description": "Index of league ID guides for every fantasy platform. Pick Sleeper, ESPN, Yahoo, MyFantasyLeague, or Fleaflicker for the exact web and app steps.",
+   "descriptionLength": 145,
+   "descriptionRawLength": 145,
+   "problems": [
+    "description 145 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/espn",
+   "status": 200,
+   "title": "How to Find Your ESPN Fantasy League ID (Web and App)",
+   "titleLength": 53,
+   "titleRawLength": 53,
+   "description": "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
+   "descriptionLength": 154,
+   "descriptionRawLength": 154,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/fleaflicker",
+   "status": 200,
+   "title": "Fleaflicker League ID Finder: Where to Find Your League ID",
+   "titleLength": 58,
+   "titleRawLength": 58,
+   "description": "Your Fleaflicker league ID is the number at the end of your league URL, after /leagues/. Here is how to read it and the parts of the URL to ignore.",
+   "descriptionLength": 147,
+   "descriptionRawLength": 147,
+   "problems": [
+    "description 147 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/mfl",
+   "status": 200,
+   "title": "MFL League ID Finder: Where to Find Your MyFantasyLeague ID",
+   "titleLength": 59,
+   "titleRawLength": 59,
+   "description": "Your MFL league ID is the 5-digit number at the end of your league home URL, right after the season year. How to read it correctly and what to leave out.",
+   "descriptionLength": 153,
+   "descriptionRawLength": 153,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/sleeper",
+   "status": 200,
+   "title": "How to Find Your Sleeper League ID (Web and App, 2026)",
+   "titleLength": 54,
+   "titleRawLength": 54,
+   "description": "Sleeper app: gear icon > General > Copy League ID. Web: the 18-digit number after /leagues/ in your league URL. Plus why last season's ID fails.",
+   "descriptionLength": 144,
+   "descriptionRawLength": 155,
+   "problems": [
+    "description 144 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/league-id/yahoo",
+   "status": 200,
+   "title": "Yahoo League ID Finder: Where to Find Your League ID",
+   "titleLength": 52,
+   "titleRawLength": 52,
+   "description": "Your Yahoo league ID is the number after /f1/ in your league URL, and the first row of your league settings page. Where to find it and what to do with it.",
+   "descriptionLength": 154,
+   "descriptionRawLength": 154,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/mfl",
+   "status": 200,
+   "title": "MFL Draft Order Randomizer: Free and Open Source",
+   "titleLength": 48,
+   "titleRawLength": 48,
+   "description": "Free MyFantasyLeague draft order generator. Import your MFL league by ID, schedule a time, and share one link the whole league can watch live.",
+   "descriptionLength": 142,
+   "descriptionRawLength": 142,
+   "problems": [
+    "description 142 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/new",
+   "status": 200,
+   "title": "Schedule a Fantasy Football Draft Order",
+   "titleLength": 39,
+   "titleRawLength": 39,
+   "description": "Set up a fair, transparent fantasy football draft order in a minute. Pick a time, add or import your teams, and share one link. The league watches it live.",
+   "descriptionLength": 155,
+   "descriptionRawLength": 155,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+   "status": 200,
+   "title": "Fantasy fairy — Punishment Wheel",
+   "titleLength": 32,
+   "titleRawLength": 33,
+   "description": "Fantasy fairy finished last in Quit your bitching and drew their punishment live from 5 options: Public Apology – Record a 60-second video apologizing to the…",
+   "descriptionLength": 158,
+   "descriptionRawLength": 158,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/indigo-eagle-j2v4",
+   "status": 200,
+   "title": "Huh — Punishment Wheel",
+   "titleLength": 22,
+   "titleRawLength": 22,
+   "description": "Huh finished last in Huh and drew their punishment live from 4 options: This.",
+   "descriptionLength": 77,
+   "descriptionRawLength": 77,
+   "problems": [
+    "description 77 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/jade-panther-snfe",
+   "status": 200,
+   "title": "tbd — Punishment Wheel",
+   "titleLength": 22,
+   "titleRawLength": 22,
+   "description": "tbd finished last in Taliban and drew their punishment live from 8 options: eating like a hungry caterpillar.",
+   "descriptionLength": 109,
+   "descriptionRawLength": 109,
+   "problems": [
+    "description 109 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/teal-grizzly-63pz",
+   "status": 200,
+   "title": "Joey — Punishment Wheel",
+   "titleLength": 23,
+   "titleRawLength": 23,
+   "description": "Joey finished last in Egg and drew their punishment live from 4 options: #3.",
+   "descriptionLength": 76,
+   "descriptionRawLength": 76,
+   "problems": [
+    "description 76 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/p/violet-otter-v5cs",
+   "status": 200,
+   "title": "tgrfedwqs — Punishment Wheel",
+   "titleLength": 28,
+   "titleRawLength": 28,
+   "description": "tgrfedwqs finished last in gtrfedwqs and drew their punishment live from 5 options: The milk mile: run a mile, drink a gallon of milk, keep it down.",
+   "descriptionLength": 148,
+   "descriptionRawLength": 148,
+   "problems": [
+    "description 148 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/punishment/new",
+   "status": 200,
+   "title": "Punishment Wheel: Draw a Fantasy Last-Place Punishment",
+   "titleLength": 54,
+   "titleRawLength": 54,
+   "description": "Build a fantasy league punishment wheel. Add candidates, pick a time, share one link. The result is sealed up front and revealed live, so no one cries rigged.",
+   "descriptionLength": 158,
+   "descriptionRawLength": 158,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/sleeper",
+   "status": 200,
+   "title": "How to Randomize Draft Order in Sleeper (2026 Steps)",
+   "titleLength": 52,
+   "titleRawLength": 52,
+   "description": "In Sleeper: gear icon, Draft, Draft Order, Randomize Order, Save. Or draw it live so the whole league watches: paste your league ID, pick a time. Free.",
+   "descriptionLength": 151,
+   "descriptionRawLength": 151,
+   "problems": []
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/why-fair",
+   "status": 200,
+   "title": "Why Fantasy Football Draft Order Is Actually Fair",
+   "titleLength": 49,
+   "titleRawLength": 49,
+   "description": "Every other draft randomizer asks you to trust the commissioner. We took them out of the loop. Here's the four-pillar trust model.",
+   "descriptionLength": 130,
+   "descriptionRawLength": 135,
+   "problems": [
+    "description 130 < 150"
+   ]
+  },
+  {
+   "url": "https://fantasyfootballdraftorder.com/yahoo",
+   "status": 200,
+   "title": "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+   "titleLength": 60,
+   "titleRawLength": 60,
+   "description": "A fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
+   "descriptionLength": 158,
+   "descriptionRawLength": 158,
+   "problems": []
+  }
+ ]
+}

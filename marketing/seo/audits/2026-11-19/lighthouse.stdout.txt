@@ -1,0 +1,185 @@
+sitemap: https://fantasyfootballdraftorder.com/sitemap.xml → 38 URLs
+  family /: 1 pages → 1 sampled
+  family /ask-your-commissioner: 1 pages → 1 sampled
+  family /draft-lottery: 1 pages → 1 sampled
+  family /espn: 1 pages → 1 sampled
+  family /fantasy-baseball: 1 pages → 1 sampled
+  family /fantasy-basketball: 1 pages → 1 sampled
+  family /fantasy-football: 1 pages → 1 sampled
+  family /fantasy-football-facebook-groups: 1 pages → 1 sampled
+  family /fantasy-football-punishments: 1 pages → 1 sampled
+  family /fantasy-hockey: 1 pages → 1 sampled
+  family /fleaflicker: 1 pages → 1 sampled
+  family /guides: 9 pages → 2 sampled
+  family /how-it-works: 1 pages → 1 sampled
+  family /league-id: 6 pages → 2 sampled
+  family /mfl: 1 pages → 1 sampled
+  family /new: 1 pages → 1 sampled
+  family /p: 5 pages → 2 sampled
+  family /punishment: 1 pages → 1 sampled
+  family /sleeper: 1 pages → 1 sampled
+  family /why-fair: 1 pages → 1 sampled
+  family /yahoo: 1 pages → 1 sampled
+24 URLs x 1 strategy x 1 run = 24 runs, roughly 12 min. Sequential by design.
+
+▸ [1/24] https://fantasyfootballdraftorder.com/  [mobile]
+  score 98   LCP 0.96s (good)   TBT 0.15s (good)   CLS 0.000 (good)
+  FCP 0.96s   TTFB 0.75s   SpeedIndex 2.02s
+  opportunities:
+      647ms  Reduce initial server response time
+
+▸ [2/24] https://fantasyfootballdraftorder.com/ask-your-commissioner  [mobile]
+  score 100   LCP 0.99s (good)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 0.99s   TTFB 0.06s   SpeedIndex 0.99s
+
+▸ [3/24] https://fantasyfootballdraftorder.com/draft-lottery  [mobile]
+  score 100   LCP 1.03s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.03s   TTFB 0.10s   SpeedIndex 1.24s
+
+▸ [4/24] https://fantasyfootballdraftorder.com/espn  [mobile]
+  score 100   LCP 1.17s (good)   TBT 0.06s (good)   CLS 0.000 (good)
+  FCP 1.17s   TTFB 0.06s   SpeedIndex 1.17s
+
+▸ [5/24] https://fantasyfootballdraftorder.com/fantasy-baseball  [mobile]
+  score 100   LCP 0.98s (good)   TBT 0.08s (good)   CLS 0.000 (good)
+  FCP 0.98s   TTFB 0.07s   SpeedIndex 1.30s
+
+▸ [6/24] https://fantasyfootballdraftorder.com/fantasy-basketball  [mobile]
+  score 100   LCP 0.92s (good)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 0.92s   TTFB 0.07s   SpeedIndex 0.92s
+
+▸ [7/24] https://fantasyfootballdraftorder.com/fantasy-football  [mobile]
+  score 100   LCP 0.99s (good)   TBT 0.09s (good)   CLS 0.000 (good)
+  FCP 0.99s   TTFB 0.72s   SpeedIndex 1.74s
+  opportunities:
+      621ms  Reduce initial server response time
+
+▸ [8/24] https://fantasyfootballdraftorder.com/fantasy-football-facebook-groups  [mobile]
+  score 99   LCP 1.04s (good)   TBT 0.11s (good)   CLS 0.000 (good)
+  FCP 1.04s   TTFB 0.84s   SpeedIndex 2.11s
+  opportunities:
+      745ms  Reduce initial server response time
+
+▸ [9/24] https://fantasyfootballdraftorder.com/fantasy-football-punishments  [mobile]
+  score 100   LCP 0.99s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 0.99s   TTFB 0.36s   SpeedIndex 1.72s
+  opportunities:
+      264ms  Initial server response time was short
+
+▸ [10/24] https://fantasyfootballdraftorder.com/fantasy-hockey  [mobile]
+  score 100   LCP 0.99s (good)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 0.99s   TTFB 0.58s   SpeedIndex 2.36s
+  opportunities:
+      478ms  Initial server response time was short
+
+▸ [11/24] https://fantasyfootballdraftorder.com/fleaflicker  [mobile]
+  score 100   LCP 1.00s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.00s   TTFB 0.54s   SpeedIndex 1.51s
+  opportunities:
+      437ms  Initial server response time was short
+
+▸ [12/24] https://fantasyfootballdraftorder.com/guides  [mobile]
+  score 100   LCP 1.06s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.06s   TTFB 0.14s   SpeedIndex 1.47s
+
+▸ [13/24] https://fantasyfootballdraftorder.com/guides/weighted-vs-random-draft-lottery  [mobile]
+  score 100   LCP 1.17s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.17s   TTFB 0.56s   SpeedIndex 1.97s
+  opportunities:
+      455ms  Initial server response time was short
+
+▸ [14/24] https://fantasyfootballdraftorder.com/how-it-works  [mobile]
+  score 99   LCP 1.07s (good)   TBT 0.11s (good)   CLS 0.000 (good)
+  FCP 1.07s   TTFB 0.14s   SpeedIndex 1.83s
+
+▸ [15/24] https://fantasyfootballdraftorder.com/league-id  [mobile]
+  score 100   LCP 1.01s (good)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 1.01s   TTFB 0.65s   SpeedIndex 1.95s
+  opportunities:
+      547ms  Reduce initial server response time
+
+▸ [16/24] https://fantasyfootballdraftorder.com/league-id/yahoo  [mobile]
+  score 100   LCP 0.97s (good)   TBT 0.08s (good)   CLS 0.000 (good)
+  FCP 0.97s   TTFB 0.82s   SpeedIndex 1.81s
+  opportunities:
+      719ms  Reduce initial server response time
+
+▸ [17/24] https://fantasyfootballdraftorder.com/mfl  [mobile]
+  score 100   LCP 1.05s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.05s   TTFB 0.13s   SpeedIndex 1.05s
+
+▸ [18/24] https://fantasyfootballdraftorder.com/new  [mobile]
+  score 99   LCP 1.05s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.05s   TTFB 0.86s   SpeedIndex 2.79s
+  opportunities:
+      763ms  Reduce initial server response time
+
+▸ [19/24] https://fantasyfootballdraftorder.com/p/amber-tiger-69j9  [mobile]
+  score 84   LCP 4.24s (POOR)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 0.85s   TTFB 1.33s   SpeedIndex 3.59s
+  opportunities:
+     1229ms  Reduce initial server response time
+      890ms  Reduce unused JavaScript
+
+▸ [20/24] https://fantasyfootballdraftorder.com/p/violet-otter-v5cs  [mobile]
+  score 99   LCP 0.81s (good)   TBT 0.10s (good)   CLS 0.000 (good)
+  FCP 0.81s   TTFB 0.36s   SpeedIndex 1.15s
+  opportunities:
+      256ms  Initial server response time was short
+
+▸ [21/24] https://fantasyfootballdraftorder.com/punishment/new  [mobile]
+  score 100   LCP 1.01s (good)   TBT 0.05s (good)   CLS 0.000 (good)
+  FCP 1.01s   TTFB 0.94s   SpeedIndex 1.98s
+  opportunities:
+      836ms  Reduce initial server response time
+
+▸ [22/24] https://fantasyfootballdraftorder.com/sleeper  [mobile]
+  score 100   LCP 0.95s (good)   TBT 0.08s (good)   CLS 0.000 (good)
+  FCP 0.95s   TTFB 0.09s   SpeedIndex 1.15s
+
+▸ [23/24] https://fantasyfootballdraftorder.com/why-fair  [mobile]
+  score 100   LCP 1.00s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.00s   TTFB 0.86s   SpeedIndex 2.26s
+  opportunities:
+      758ms  Reduce initial server response time
+
+▸ [24/24] https://fantasyfootballdraftorder.com/yahoo  [mobile]
+  score 98   LCP 1.79s (good)   TBT 0.07s (good)   CLS 0.000 (good)
+  FCP 1.79s   TTFB 0.99s   SpeedIndex 2.91s
+  opportunities:
+      892ms  Reduce initial server response time
+
+========================================================================
+Worst first (24 pages)
+
+  score   LCP     TBT     CLS    page
+!    84    4.24s   0.05s  0.000   /p/amber-tiger-69j9
+     98    1.79s   0.07s  0.000   /yahoo
+    100    1.17s   0.06s  0.000   /espn
+    100    1.17s   0.07s  0.000   /guides/weighted-vs-random-draft-lottery
+     99    1.07s   0.11s  0.000   /how-it-works
+    100    1.06s   0.07s  0.000   /guides
+     99    1.05s   0.07s  0.000   /new
+    100    1.05s   0.07s  0.000   /mfl
+     99    1.04s   0.11s  0.000   /fantasy-football-facebook-groups
+    100    1.03s   0.07s  0.000   /draft-lottery
+    100    1.01s   0.05s  0.000   /punishment/new
+    100    1.01s   0.05s  0.000   /league-id
+    100    1.00s   0.07s  0.000   /why-fair
+    100    1.00s   0.07s  0.000   /fleaflicker
+    100    0.99s   0.05s  0.000   /ask-your-commissioner
+    100    0.99s   0.05s  0.000   /fantasy-hockey
+    100    0.99s   0.09s  0.000   /fantasy-football
+    100    0.99s   0.07s  0.000   /fantasy-football-punishments
+    100    0.98s   0.08s  0.000   /fantasy-baseball
+    100    0.97s   0.08s  0.000   /league-id/yahoo
+     98    0.96s   0.15s  0.000   /
+    100    0.95s   0.08s  0.000   /sleeper
+    100    0.92s   0.05s  0.000   /fantasy-basketball
+     99    0.81s   0.10s  0.000   /p/violet-otter-v5cs
+
+1 of 24 pages miss the LCP threshold.
+
+results written to marketing/seo/audits/2026-11-19/pagespeed.raw.json
+
+TBT is the lab proxy for INP; real INP needs field data (PageSpeed Insights / CrUX).

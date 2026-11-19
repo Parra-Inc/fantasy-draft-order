@@ -1,0 +1,32 @@
+[
+  {
+    "url": "https://fantasyfootballdraftorder.com/p/amber-tiger-69j9",
+    "strategy": "mobile",
+    "score": 82,
+    "lcp": 4628.841,
+    "tbt": 83,
+    "cls": 0,
+    "fcp": 839.385,
+    "ttfb": 911,
+    "si": 2473.081703019903,
+    "verdicts": {
+      "lcp": "POOR",
+      "tbt": "good",
+      "cls": "good"
+    },
+    "lcpElement": null,
+    "opportunities": [
+      {
+        "id": "server-response-time",
+        "title": "Reduce initial server response time",
+        "savingsMs": 1464
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savingsMs": 900
+      }
+    ],
+    "failedDiagnostics": []
+  }
+]

@@ -1,0 +1,46 @@
+[
+ [
+  "League ID lookup",
+  "\\b(league ?id|leagueid|draft id|sleeper id|user id|espn id|fantasy id|league url|league link|league search|find my (fantasy|espn|team|league)|find-my-team|join sleeper league|connect to my sleeper)\\b|id sleeper"
+ ],
+ [
+  "Punishments",
+  "punish|loser|last place|sacko|toilet bowl|challenges|forfeit|penalt|dares"
+ ],
+ [
+  "Draft lottery",
+  "lottery|lotto|weighted"
+ ],
+ [
+  "Snake vs linear draft formats",
+  "snake|snaking|serpentine|straight draft|linear|third round reversal|3rd round reversal|auction"
+ ],
+ [
+  "Fun ways to decide draft order",
+  "fun way|ways to (decide|determine|pick|choose)|how to (decide|determine) draft order|ideas"
+ ],
+ [
+  "Platform draft order how-to",
+  "(sleeper|espn|yahoo|nfl\\.com|nfl fantasy|cbs|fleaflicker|mfl|myfantasyleague).*(draft order|randomi|draft position)|(draft order|randomi).*(sleeper|espn|yahoo|nfl|cbs|fleaflicker|mfl)"
+ ],
+ [
+  "Other sports draft order",
+  "basketball|nba|baseball|mlb|hockey|nhl|soccer|premier"
+ ],
+ [
+  "Draft order generator / randomizer (tool)",
+  "generator|randomi[sz]er|randomi[sz]e|random draft|picker|spinner|wheel|draw"
+ ],
+ [
+  "Draft order (general)",
+  "draft order|draft position|draft pick order|draft slot"
+ ],
+ [
+  "Brand",
+  "fantasyfootballdraftorder|fantasy football draft order\\.com"
+ ],
+ [
+  "Platform brand / navigational (Fleaflicker, MFL, Yahoo, Sleeper)",
+  "fleaflick|flea flicker|myfantasyleague|my fantasy league|\\bmfl\\b|^yahoo$|^sleeper$|sleeper order|yahoo fantasy order"
+ ]
+]
