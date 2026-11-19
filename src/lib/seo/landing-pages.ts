@@ -8,6 +8,13 @@ export type LandingPage = {
   intro: string;
   keywords: string[];
   highlightPlatform?: string;
+  /**
+   * The platform's own answer to the page's main "how do I" query, rendered
+   * as a short answer plus numbered steps directly under the H1 (with HowTo
+   * JSON-LD). Searchers want the native steps first; the pitch for the live
+   * draw follows in `intro`.
+   */
+  quickAnswer?: { question: string; answer: string; steps: string[] };
   /** Slug in LEAGUE_ID_GUIDES, when this page is about a platform. */
   leagueIdSlug?: string;
   /**
@@ -57,7 +64,7 @@ export const LANDING_PAGES: LandingPage[] = [
   // Platform pages
   {
     slug: "sleeper",
-    updated: "2026-11-02",
+    updated: "2026-11-19",
     title: "How to Randomize Draft Order in Sleeper (2026 Steps)",
     description:
       "In Sleeper: gear icon, Draft, Draft Order, Randomize Order, Save. Or draw it live so the whole league watches: paste your league ID, pick a time. Free.",
@@ -65,7 +72,19 @@ export const LANDING_PAGES: LandingPage[] = [
     h1: "Sleeper draft order randomizer.",
     h1Accent: "Drawn live. Auditable forever.",
     intro:
-      "To randomize draft order natively on Sleeper, the commissioner opens League Settings (gear icon), then Draft, then Draft Order, taps Randomize Order and saves. Use Fantasy Football Draft Order instead when the league wants to watch the draw: it imports your Sleeper teams by league ID, draws the order at a scheduled public time from open-source code, and keeps a permanent seed and commit hash that nobody can re-roll.",
+      "Sleeper's randomizer runs privately on the commissioner's screen and can be re-rolled before saving. When the league wants to watch the draw instead, Fantasy Football Draft Order imports your Sleeper teams by league ID, draws the order at a scheduled public time from open-source code, and keeps a permanent seed and commit hash that nobody can re-roll.",
+    quickAnswer: {
+      question: "How to randomize draft order in Sleeper",
+      answer:
+        "The commissioner randomizes the draft order from league settings, in the Sleeper app or on sleeper.com. It takes five taps and only the commissioner sees it happen.",
+      steps: [
+        "Open your league in the Sleeper app or on sleeper.com.",
+        "Tap the gear icon to open League Settings.",
+        "Open Draft, then Draft Order.",
+        "Tap Randomize Order. The order shuffles on screen.",
+        "Tap Save. The order is now set in the draft room.",
+      ],
+    },
     keywords: [
       "sleeper draft order randomizer",
       "sleeper fantasy draft order",
@@ -91,6 +110,14 @@ export const LANDING_PAGES: LandingPage[] = [
       {
         q: "Where do I find my Sleeper league ID?",
         a: "Open your league in Sleeper's web app. The league ID is the long number in the URL — e.g. sleeper.com/leagues/123456789. Paste the whole URL or just the ID; we'll accept either.",
+      },
+      {
+        q: "Does Sleeper randomize draft order automatically?",
+        a: "Sleeper does not document an automatic randomization time the way ESPN does (ESPN shuffles one hour before the draft if nobody sets an order). Do not count on it: have the commissioner set the order from League Settings, then Draft, then Draft Order, well before draft day.",
+      },
+      {
+        q: "Can you randomize draft order in the Sleeper app?",
+        a: "Yes. The steps are the same in the app and on sleeper.com: gear icon, Draft, Draft Order, Randomize Order, Save. Only the commissioner sees the option.",
       },
       {
         q: "Can I still use Sleeper's built-in randomizer instead?",
@@ -150,7 +177,7 @@ export const LANDING_PAGES: LandingPage[] = [
   },
   {
     slug: "yahoo",
-    title: "Yahoo Fantasy Football Draft Order Randomizer: Free and Live",
+    title: "Yahoo Fantasy Football Draft Order Generator: Free and Live",
     description:
       "A fair, public fantasy football draft order for your Yahoo league. Add your team names, schedule a time, and watch the order drawn live from open-source code.",
     eyebrow: "Yahoo",
@@ -160,6 +187,7 @@ export const LANDING_PAGES: LandingPage[] = [
       "Yahoo doesn't expose a public league API, so Fantasy Football Draft Order uses manual entry for Yahoo leagues — type in your teams and owners once, and everything else is identical: scheduled draw, synchronized reveal, permanent seed and commit, no way for the commissioner to re-roll.",
     keywords: [
       "yahoo fantasy draft order",
+      "yahoo fantasy football draft order generator",
       "yahoo draft order randomizer",
       "yahoo fantasy league draft randomizer",
     ],

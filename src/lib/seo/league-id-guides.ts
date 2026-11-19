@@ -22,6 +22,12 @@ export type LeagueIdGuide = {
   h1: string;
   h1Accent: string;
   intro: string;
+  /**
+   * One or two sentences that fully answer "where is my <platform> league ID",
+   * rendered first under the H1. This is the passage Google lifts into
+   * featured snippets and AI Overviews, so it must stand alone.
+   */
+  answer?: string;
   /** One-line shape of the ID, e.g. "18 digits, numbers only". */
   idShape: string;
   exampleUrl: string;
@@ -41,6 +47,7 @@ export type LeagueIdGuide = {
 };
 
 const UPDATED = "2026-07-25";
+const UPDATED_STRIKING = "2026-11-19";
 
 export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
   {
@@ -50,7 +57,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     source: "SLEEPER",
     platformPage: "/sleeper",
     draftOrderGuide: "how-to-randomize-draft-order-on-sleeper",
-    title: "How to Find Your Sleeper League ID (Web and App, 2026)",
+    title: "Sleeper League ID: Where to Find It (App and Web, 2026)",
     description:
       "Sleeper app: gear icon > General > Copy League ID. Web: the 18-digit number after /leagues/ in your league URL. Plus why last season's ID fails.",
     keywords: [
@@ -69,6 +76,8 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     ],
     h1: "Where to find your",
     h1Accent: "Sleeper league ID.",
+    answer:
+      "Your Sleeper league ID is the 18-digit number after /leagues/ in your league URL on sleeper.com. In the Sleeper app, open the league, tap the gear icon, open General, scroll to the bottom and tap Copy League ID.",
     intro:
       "Sleeper gives every league an 18-digit ID. It is in the URL on the web and behind a Copy League ID button in the mobile app. Both take about ten seconds, and you only need the number itself: no login, no password, nothing about your account.",
     idShape: "18 digits, numbers only",
@@ -129,11 +138,19 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
         a: "Yes. Sleeper's league API is the same across sports, so any Sleeper league with rosters imports the same way.",
       },
       {
+        q: "How do I find my Sleeper league ID on a computer?",
+        a: "Open sleeper.com in any desktop browser, sign in, and select the league. The league ID is the 18-digit number in the address bar right after /leagues/. Copy only the digits, not the /team or /matchup that follows.",
+      },
+      {
+        q: "Is the Sleeper draft ID the same as the league ID?",
+        a: "No. Each Sleeper draft has its own ID, which appears in the draft room URL after /draft/nfl/. Tools that import teams want the league ID, the number after /leagues/ in your league URL.",
+      },
+      {
         q: "The ID does not work. What went wrong?",
         a: "Nine times out of ten it is last season's ID, or an invite code pasted instead of the ID. Re-open the league in the app and use Copy League ID to get the current one.",
       },
     ],
-    updated: UPDATED,
+    updated: UPDATED_STRIKING,
   },
   {
     slug: "espn",
@@ -142,7 +159,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     source: "ESPN",
     platformPage: "/espn",
     draftOrderGuide: "how-to-randomize-draft-order-on-espn",
-    title: "How to Find Your ESPN Fantasy League ID (Web and App)",
+    title: "ESPN League ID: How to Find It on Web and App (2026)",
     description:
       "Your ESPN league ID is the number after leagueId= in your league URL. In the ESPN Fantasy app, it is under the League tab. Exact steps for web and mobile.",
     keywords: [
@@ -160,6 +177,8 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
     ],
     h1: "Where to find your",
     h1Accent: "ESPN league ID.",
+    answer:
+      "Your ESPN league ID is the number after leagueId= in your league URL on fantasy.espn.com, for example leagueId=1234567. In the ESPN Fantasy app, open your league and tap the League tab, where the League ID is listed with your league info.",
     intro:
       "ESPN puts the league ID directly in the URL as leagueId=, and lists it under the League tab in the mobile app. The one thing to know up front: automatic import works for public ESPN leagues. Private leagues still work here, you just type the team names in.",
     idShape: "6 to 8 digits, numbers only",
@@ -208,6 +227,10 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
         a: "It is the 6 to 8 digit number ESPN assigns your league. It appears after leagueId= in your league URL, and it is listed under the League tab in the ESPN Fantasy app.",
       },
       {
+        q: "Where is the league ID in the ESPN Fantasy app?",
+        a: "Open the app, select your league, and tap the League tab. The League ID is listed on that screen. To copy it, open the same league at fantasy.espn.com in your phone's browser and take the digits after leagueId= from the address bar.",
+      },
+      {
         q: "Why does my ESPN league fail to import?",
         a: "Almost always because the league is private. ESPN blocks anonymous reads on private leagues and returns a 401, which we surface as a private-league message. Either make the league public in league settings or add the teams manually.",
       },
@@ -224,7 +247,7 @@ export const LEAGUE_ID_GUIDES: LeagueIdGuide[] = [
         a: "Yes. Switch to manual entry on the create form and type in the team names, one per line. The draw, the reveal, and the audit trail are identical.",
       },
     ],
-    updated: UPDATED,
+    updated: UPDATED_STRIKING,
   },
   {
     slug: "yahoo",
