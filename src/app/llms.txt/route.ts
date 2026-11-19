@@ -52,6 +52,9 @@ export async function GET() {
     `- [Fantasy football punishments](${SITE_URL}/fantasy-football-punishments): A community list of last-place punishment ideas, with a fair way to draw one.`,
   );
   lines.push(
+    `- [Fantasy football punishments database](${SITE_URL}/fantasy-football-punishments/database): Every punishment idea in one table, searchable and filterable by category and tag (cost, duration, remote-friendly).`,
+  );
+  lines.push(
     `- [Ask your commissioner](${SITE_URL}/ask-your-commissioner): How to propose a public draw in the league chat, with a message to paste.`,
   );
   lines.push(

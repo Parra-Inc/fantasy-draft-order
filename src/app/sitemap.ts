@@ -101,6 +101,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${base}/fantasy-football-punishments/database`,
+      lastModified: new Date("2026-11-19"),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${base}/punishment/new`,
       lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",

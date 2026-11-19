@@ -39,9 +39,9 @@ const FAQS = [
 ];
 
 export const metadata = buildMetadata({
-  title: "Fantasy Football Punishments: 40+ Ideas, Drawn Fairly",
+  title: "Fantasy Football Punishments: 180+ Ideas, Drawn Fairly",
   description:
-    "40+ fantasy football last-place punishments, from cheap and silly to permanent. Pick the ones your league will do, then draw one live so no one cries rigged.",
+    "180+ fantasy football last-place punishments, from cheap and silly to permanent. Pick the ones your league will do, then draw one live so no one cries rigged.",
   path: "/fantasy-football-punishments",
 });
 
@@ -69,7 +69,14 @@ export default async function PunishmentsPage() {
           <Link href="/punishment/new" className="text-signal hover:underline">
             create your own punishment wheel
           </Link>{" "}
-          from scratch.
+          from scratch, or{" "}
+          <Link
+            href="/fantasy-football-punishments/database"
+            className="text-signal hover:underline"
+          >
+            search and filter the full punishments database
+          </Link>{" "}
+          by cost, duration and tag.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <Link
@@ -77,6 +84,12 @@ export default async function PunishmentsPage() {
             className="bg-signal text-midnight hover:bg-signal-dark inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold transition-colors"
           >
             Build a wheel from scratch
+          </Link>
+          <Link
+            href="/fantasy-football-punishments/database"
+            className="border-sideline text-chalk hover:border-signal/50 inline-flex h-11 items-center rounded-xl border px-5 text-sm font-semibold transition-colors"
+          >
+            Search the punishments database
           </Link>
           <Link
             href="/new"

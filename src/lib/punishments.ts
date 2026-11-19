@@ -115,3 +115,64 @@ export async function resolveIdeaLabels(
   const labelById = new Map(rows.map((r) => [r.id, r.label]));
   return ids.map((id) => labelById.get(id)).filter((l): l is string => !!l);
 }
+
+/**
+ * Tag vocabulary for the punishments database table.
+ *
+ * Stored on PunishmentIdea.tags as a comma-separated list of these slugs.
+ * Unknown slugs are dropped on read, so a typo in a hand-written row hides a
+ * tag rather than inventing a filter chip for it. Order here is the order the
+ * filter chips render in.
+ */
+export const PUNISHMENT_TAGS = {
+  free: "Free",
+  cheap: "Cheap",
+  "costs-money": "Costs money",
+  "one-day": "One day",
+  "multi-day": "Multi-day",
+  "season-long": "Season-long",
+  permanent: "Permanent",
+  "remote-friendly": "Remote-friendly",
+  "in-person": "In person",
+  online: "Online",
+  outdoors: "Outdoors",
+  physical: "Physical",
+  food: "Food",
+  wearable: "Wearable",
+  creative: "Creative",
+  embarrassing: "Embarrassing",
+  "family-friendly": "Family-friendly",
+  "commissioner-duty": "League chores",
+  "photo-proof": "Photo proof",
+  "video-proof": "Video proof",
+  classic: "Classic",
+} as const;
+
+export type PunishmentTag = keyof typeof PUNISHMENT_TAGS;
+
+export function parseTags(raw: string | null | undefined): PunishmentTag[] {
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((t) => t.trim())
+    .filter((t): t is PunishmentTag => t in PUNISHMENT_TAGS);
+}
+
+export type PunishmentRow = PunishmentIdeaView & { tags: PunishmentTag[] };
+
+/** Every approved idea with its tags, for the searchable database table. */
+export async function listApprovedRows(): Promise<PunishmentRow[]> {
+  const rows = await prisma.punishmentIdea.findMany({
+    where: { status: "APPROVED" },
+    select: { id: true, label: true, category: true, tags: true },
+    orderBy: [{ category: "asc" }, { createdAt: "asc" }],
+  });
+  const order = new Map(PUNISHMENT_CATEGORIES.map((c, i) => [c, i]));
+  return rows
+    .flatMap((row) => {
+      const category = toPunishmentCategory(row.category);
+      if (!category) return [];
+      return [{ id: row.id, label: row.label, category, tags: parseTags(row.tags) }];
+    })
+    .sort((a, b) => order.get(a.category)! - order.get(b.category)!);
+}
