@@ -559,7 +559,7 @@ function WheelStage({
       />
 
       <div className="mt-5 flex min-h-10 items-center justify-center">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           {chosen ? (
             <motion.p
               key="chosen"
@@ -613,8 +613,10 @@ function Result({
 }) {
   return (
     <motion.section
-      initial={{ scale: 0.96, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
+      // No opacity in `initial`: this card is the LCP element on a revealed
+      // wheel, and an opacity-0 start hid it until hydration (LCP 4.6s).
+      initial={{ scale: 0.96 }}
+      animate={{ scale: 1 }}
       transition={{ type: "spring", stiffness: 220, damping: 20 }}
       className="border-signal/40 bg-signal/5 rounded-2xl border p-8 text-center"
     >
@@ -710,9 +712,9 @@ function TrustPanel({ state }: { state: PunishmentStateView }) {
       <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-6">
         <div className="mb-3 flex items-center gap-2">
           <Shield className="text-signal size-4" />
-          <h3 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
+          <h2 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
             How this wheel works
-          </h3>
+          </h2>
         </div>
         <ul className="text-hashmark space-y-2 text-sm">
           <li className="flex gap-2">
@@ -754,9 +756,9 @@ function TrustPanel({ state }: { state: PunishmentStateView }) {
     <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-6">
       <div className="mb-4 flex items-center gap-2">
         <Shield className="text-signal size-4" />
-        <h3 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
+        <h2 className="font-display text-signal text-sm font-bold tracking-wider uppercase">
           Audit trail
-        </h3>
+        </h2>
       </div>
       <dl className="grid grid-cols-1 gap-y-3 text-sm sm:grid-cols-[180px_1fr]">
         <AuditRow label="Method">
@@ -836,9 +838,9 @@ function ShareRow({ state }: { state: PunishmentStateView }) {
 
   return (
     <section className="border-sideline/50 bg-sideline/10 rounded-2xl border p-6">
-      <h3 className="font-display text-chalk text-sm font-bold">
+      <h2 className="font-display text-chalk text-sm font-bold">
         Put it in the group chat
-      </h3>
+      </h2>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <button
           type="button"
